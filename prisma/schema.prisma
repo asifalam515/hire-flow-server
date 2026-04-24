@@ -94,10 +94,11 @@ enum InterviewType {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  passwordHash String?  // Nullable if using OAuth only
+  name         String?
+  password String?  // Nullable if using OAuth only
   role         Role     @default(CANDIDATE)
   isActive     Boolean  @default(true)
-  isVerified   Boolean  @default(false)
+  emailVerified Boolean @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
