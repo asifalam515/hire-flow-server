@@ -262,7 +262,7 @@ export type ApplicationNoteCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   application: Prisma.ApplicationCreateNestedOneWithoutNotesInput
-  author: Prisma.UserCreateNestedOneWithoutNotesInput
+  author: Prisma.UserCreateNestedOneWithoutApplicationNotesInput
 }
 
 export type ApplicationNoteUncheckedCreateInput = {
@@ -282,7 +282,7 @@ export type ApplicationNoteUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   application?: Prisma.ApplicationUpdateOneRequiredWithoutNotesNestedInput
-  author?: Prisma.UserUpdateOneRequiredWithoutNotesNestedInput
+  author?: Prisma.UserUpdateOneRequiredWithoutApplicationNotesNestedInput
 }
 
 export type ApplicationNoteUncheckedUpdateInput = {
@@ -510,7 +510,7 @@ export type ApplicationNoteCreateWithoutApplicationInput = {
   isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  author: Prisma.UserCreateNestedOneWithoutNotesInput
+  author: Prisma.UserCreateNestedOneWithoutApplicationNotesInput
 }
 
 export type ApplicationNoteUncheckedCreateWithoutApplicationInput = {
@@ -599,7 +599,7 @@ export type ApplicationNoteUpdateWithoutApplicationInput = {
   isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  author?: Prisma.UserUpdateOneRequiredWithoutNotesNestedInput
+  author?: Prisma.UserUpdateOneRequiredWithoutApplicationNotesNestedInput
 }
 
 export type ApplicationNoteUncheckedUpdateWithoutApplicationInput = {

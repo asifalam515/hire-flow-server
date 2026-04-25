@@ -406,7 +406,7 @@ export type InterviewCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   application: Prisma.ApplicationCreateNestedOneWithoutInterviewsInput
-  scheduledBy: Prisma.UserCreateNestedOneWithoutInterviewsInput
+  scheduledBy: Prisma.UserCreateNestedOneWithoutScheduledInterviewsInput
 }
 
 export type InterviewUncheckedCreateInput = {
@@ -442,7 +442,7 @@ export type InterviewUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   application?: Prisma.ApplicationUpdateOneRequiredWithoutInterviewsNestedInput
-  scheduledBy?: Prisma.UserUpdateOneRequiredWithoutInterviewsNestedInput
+  scheduledBy?: Prisma.UserUpdateOneRequiredWithoutScheduledInterviewsNestedInput
 }
 
 export type InterviewUncheckedUpdateInput = {
@@ -772,7 +772,7 @@ export type InterviewCreateWithoutApplicationInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  scheduledBy: Prisma.UserCreateNestedOneWithoutInterviewsInput
+  scheduledBy: Prisma.UserCreateNestedOneWithoutScheduledInterviewsInput
 }
 
 export type InterviewUncheckedCreateWithoutApplicationInput = {
@@ -917,7 +917,7 @@ export type InterviewUpdateWithoutApplicationInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  scheduledBy?: Prisma.UserUpdateOneRequiredWithoutInterviewsNestedInput
+  scheduledBy?: Prisma.UserUpdateOneRequiredWithoutScheduledInterviewsNestedInput
 }
 
 export type InterviewUncheckedUpdateWithoutApplicationInput = {

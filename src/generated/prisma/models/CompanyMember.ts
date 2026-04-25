@@ -235,7 +235,7 @@ export type CompanyMemberCreateInput = {
   id?: string
   isOwner?: boolean
   joinedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutCompanyInput
+  user: Prisma.UserCreateNestedOneWithoutCompanyMemberInput
   company: Prisma.CompanyCreateNestedOneWithoutMembersInput
 }
 
@@ -251,7 +251,7 @@ export type CompanyMemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   isOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutCompanyNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCompanyMemberNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutMembersNestedInput
 }
 
@@ -446,7 +446,7 @@ export type CompanyMemberCreateWithoutCompanyInput = {
   id?: string
   isOwner?: boolean
   joinedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutCompanyInput
+  user: Prisma.UserCreateNestedOneWithoutCompanyMemberInput
 }
 
 export type CompanyMemberUncheckedCreateWithoutCompanyInput = {
@@ -504,7 +504,7 @@ export type CompanyMemberUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   isOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutCompanyNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutCompanyMemberNestedInput
 }
 
 export type CompanyMemberUncheckedUpdateWithoutCompanyInput = {

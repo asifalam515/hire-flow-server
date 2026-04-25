@@ -52,9 +52,6 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  RefreshToken: 'RefreshToken',
-  EmailVerification: 'EmailVerification',
-  PasswordReset: 'PasswordReset',
   CandidateProfile: 'CandidateProfile',
   WorkExperience: 'WorkExperience',
   Education: 'Education',
@@ -66,10 +63,9 @@ export const ModelName = {
   ApplicationNote: 'ApplicationNote',
   AuditLog: 'AuditLog',
   Interview: 'Interview',
-  Notification: 'Notification',
-  JobAlert: 'JobAlert',
-  JobAnalyticsSnapshot: 'JobAnalyticsSnapshot',
-  PlatformDailyStats: 'PlatformDailyStats'
+  Session: 'Session',
+  Account: 'Account',
+  Verification: 'Verification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,55 +86,16 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
   name: 'name',
-  password: 'password',
-  role: 'role',
-  isActive: 'isActive',
+  email: 'email',
   emailVerified: 'emailVerified',
+  image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const RefreshTokenScalarFieldEnum = {
-  id: 'id',
-  token: 'token',
-  userId: 'userId',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt',
-  revokedAt: 'revokedAt',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress'
-} as const
-
-export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
-
-
-export const EmailVerificationScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  token: 'token',
-  expiresAt: 'expiresAt',
-  usedAt: 'usedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type EmailVerificationScalarFieldEnum = (typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum]
-
-
-export const PasswordResetScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  token: 'token',
-  expiresAt: 'expiresAt',
-  usedAt: 'usedAt',
-  createdAt: 'createdAt'
-} as const
-
-export type PasswordResetScalarFieldEnum = (typeof PasswordResetScalarFieldEnum)[keyof typeof PasswordResetScalarFieldEnum]
 
 
 export const CandidateProfileScalarFieldEnum = {
@@ -345,68 +302,49 @@ export const InterviewScalarFieldEnum = {
 export type InterviewScalarFieldEnum = (typeof InterviewScalarFieldEnum)[keyof typeof InterviewScalarFieldEnum]
 
 
-export const NotificationScalarFieldEnum = {
+export const SessionScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
-  type: 'type',
-  title: 'title',
-  body: 'body',
-  data: 'data',
-  isRead: 'isRead',
-  readAt: 'readAt',
-  createdAt: 'createdAt'
+  expiresAt: 'expiresAt',
+  token: 'token',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  userId: 'userId'
 } as const
 
-export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
-export const JobAlertScalarFieldEnum = {
+export const AccountScalarFieldEnum = {
   id: 'id',
+  accountId: 'accountId',
+  providerId: 'providerId',
   userId: 'userId',
-  keywords: 'keywords',
-  jobTypes: 'jobTypes',
-  minSalary: 'minSalary',
-  location: 'location',
-  isRemote: 'isRemote',
-  frequency: 'frequency',
-  isActive: 'isActive',
-  lastSentAt: 'lastSentAt',
-  createdAt: 'createdAt'
-} as const
-
-export type JobAlertScalarFieldEnum = (typeof JobAlertScalarFieldEnum)[keyof typeof JobAlertScalarFieldEnum]
-
-
-export const JobAnalyticsSnapshotScalarFieldEnum = {
-  id: 'id',
-  jobId: 'jobId',
-  appliedCount: 'appliedCount',
-  screeningCount: 'screeningCount',
-  assessmentCount: 'assessmentCount',
-  interviewCount: 'interviewCount',
-  offerCount: 'offerCount',
-  hiredCount: 'hiredCount',
-  rejectedCount: 'rejectedCount',
-  withdrawnCount: 'withdrawnCount',
-  avgTimeToHire: 'avgTimeToHire',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
+  password: 'password',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
-export type JobAnalyticsSnapshotScalarFieldEnum = (typeof JobAnalyticsSnapshotScalarFieldEnum)[keyof typeof JobAnalyticsSnapshotScalarFieldEnum]
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
 
 
-export const PlatformDailyStatsScalarFieldEnum = {
+export const VerificationScalarFieldEnum = {
   id: 'id',
-  date: 'date',
-  newUsers: 'newUsers',
-  newJobs: 'newJobs',
-  newApplications: 'newApplications',
-  activeJobs: 'activeJobs',
-  totalHired: 'totalHired',
-  createdAt: 'createdAt'
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
-export type PlatformDailyStatsScalarFieldEnum = (typeof PlatformDailyStatsScalarFieldEnum)[keyof typeof PlatformDailyStatsScalarFieldEnum]
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -415,14 +353,6 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-export const NullableJsonNullValueInput = {
-  DbNull: DbNull,
-  JsonNull: JsonNull
-} as const
-
-export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -439,13 +369,4 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-export const JsonNullValueFilter = {
-  DbNull: DbNull,
-  JsonNull: JsonNull,
-  AnyNull: AnyNull
-} as const
-
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
