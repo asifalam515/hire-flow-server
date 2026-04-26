@@ -29,5 +29,8 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql", // or "mysql", "postgresql", ...etc
     }),
+    advanced: {
+        disableOriginCheck: process.env.NODE_ENV !== "production",
+    },
 });
 //# sourceMappingURL=auth.js.map

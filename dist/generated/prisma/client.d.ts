@@ -27,21 +27,6 @@ export { Prisma };
  */
 export type User = Prisma.UserModel;
 /**
- * Model RefreshToken
- *
- */
-export type RefreshToken = Prisma.RefreshTokenModel;
-/**
- * Model EmailVerification
- *
- */
-export type EmailVerification = Prisma.EmailVerificationModel;
-/**
- * Model PasswordReset
- *
- */
-export type PasswordReset = Prisma.PasswordResetModel;
-/**
  * Model CandidateProfile
  *
  */
@@ -97,23 +82,18 @@ export type AuditLog = Prisma.AuditLogModel;
  */
 export type Interview = Prisma.InterviewModel;
 /**
- * Model Notification
+ * Model Session
  *
  */
-export type Notification = Prisma.NotificationModel;
+export type Session = Prisma.SessionModel;
 /**
- * Model JobAlert
+ * Model Account
  *
  */
-export type JobAlert = Prisma.JobAlertModel;
+export type Account = Prisma.AccountModel;
 /**
- * Model JobAnalyticsSnapshot
+ * Model Verification
  *
  */
-export type JobAnalyticsSnapshot = Prisma.JobAnalyticsSnapshotModel;
-/**
- * Model PlatformDailyStats
- *
- */
-export type PlatformDailyStats = Prisma.PlatformDailyStatsModel;
+export type Verification = Prisma.VerificationModel;
 //# sourceMappingURL=client.d.ts.map

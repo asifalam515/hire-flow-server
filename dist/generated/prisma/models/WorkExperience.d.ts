@@ -423,6 +423,9 @@ export type WorkExperienceUncheckedUpdateManyWithoutProfileNestedInput = {
 export type WorkExperienceCreateskillsInput = {
     set: string[];
 };
+export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null;
+};
 export type WorkExperienceUpdateskillsInput = {
     set?: string[];
     push?: string | string[];

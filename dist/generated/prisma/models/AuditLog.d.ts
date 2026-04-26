@@ -214,7 +214,7 @@ export type AuditLogCreateInput = {
     reason?: string | null;
     createdAt?: Date | string;
     application: Prisma.ApplicationCreateNestedOneWithoutAuditLogsInput;
-    changedBy: Prisma.UserCreateNestedOneWithoutStageChangesInput;
+    changedBy: Prisma.UserCreateNestedOneWithoutAuditLogsInput;
 };
 export type AuditLogUncheckedCreateInput = {
     id?: string;
@@ -232,7 +232,7 @@ export type AuditLogUpdateInput = {
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     application?: Prisma.ApplicationUpdateOneRequiredWithoutAuditLogsNestedInput;
-    changedBy?: Prisma.UserUpdateOneRequiredWithoutStageChangesNestedInput;
+    changedBy?: Prisma.UserUpdateOneRequiredWithoutAuditLogsNestedInput;
 };
 export type AuditLogUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -437,7 +437,7 @@ export type AuditLogCreateWithoutApplicationInput = {
     toStage: $Enums.ApplicationStage;
     reason?: string | null;
     createdAt?: Date | string;
-    changedBy: Prisma.UserCreateNestedOneWithoutStageChangesInput;
+    changedBy: Prisma.UserCreateNestedOneWithoutAuditLogsInput;
 };
 export type AuditLogUncheckedCreateWithoutApplicationInput = {
     id?: string;
@@ -514,7 +514,7 @@ export type AuditLogUpdateWithoutApplicationInput = {
     toStage?: Prisma.EnumApplicationStageFieldUpdateOperationsInput | $Enums.ApplicationStage;
     reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    changedBy?: Prisma.UserUpdateOneRequiredWithoutStageChangesNestedInput;
+    changedBy?: Prisma.UserUpdateOneRequiredWithoutAuditLogsNestedInput;
 };
 export type AuditLogUncheckedUpdateWithoutApplicationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;

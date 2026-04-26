@@ -127,39 +127,6 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
-     * `prisma.refreshToken`: Exposes CRUD operations for the **RefreshToken** model.
-      * Example usage:
-      * ```ts
-      * // Fetch zero or more RefreshTokens
-      * const refreshTokens = await prisma.refreshToken.findMany()
-      * ```
-      */
-    get refreshToken(): Prisma.RefreshTokenDelegate<ExtArgs, {
-        omit: OmitOpts;
-    }>;
-    /**
-     * `prisma.emailVerification`: Exposes CRUD operations for the **EmailVerification** model.
-      * Example usage:
-      * ```ts
-      * // Fetch zero or more EmailVerifications
-      * const emailVerifications = await prisma.emailVerification.findMany()
-      * ```
-      */
-    get emailVerification(): Prisma.EmailVerificationDelegate<ExtArgs, {
-        omit: OmitOpts;
-    }>;
-    /**
-     * `prisma.passwordReset`: Exposes CRUD operations for the **PasswordReset** model.
-      * Example usage:
-      * ```ts
-      * // Fetch zero or more PasswordResets
-      * const passwordResets = await prisma.passwordReset.findMany()
-      * ```
-      */
-    get passwordReset(): Prisma.PasswordResetDelegate<ExtArgs, {
-        omit: OmitOpts;
-    }>;
-    /**
      * `prisma.candidateProfile`: Exposes CRUD operations for the **CandidateProfile** model.
       * Example usage:
       * ```ts
@@ -281,47 +248,36 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
-     * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+     * `prisma.session`: Exposes CRUD operations for the **Session** model.
       * Example usage:
       * ```ts
-      * // Fetch zero or more Notifications
-      * const notifications = await prisma.notification.findMany()
+      * // Fetch zero or more Sessions
+      * const sessions = await prisma.session.findMany()
       * ```
       */
-    get notification(): Prisma.NotificationDelegate<ExtArgs, {
+    get session(): Prisma.SessionDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     /**
-     * `prisma.jobAlert`: Exposes CRUD operations for the **JobAlert** model.
+     * `prisma.account`: Exposes CRUD operations for the **Account** model.
       * Example usage:
       * ```ts
-      * // Fetch zero or more JobAlerts
-      * const jobAlerts = await prisma.jobAlert.findMany()
+      * // Fetch zero or more Accounts
+      * const accounts = await prisma.account.findMany()
       * ```
       */
-    get jobAlert(): Prisma.JobAlertDelegate<ExtArgs, {
+    get account(): Prisma.AccountDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
     /**
-     * `prisma.jobAnalyticsSnapshot`: Exposes CRUD operations for the **JobAnalyticsSnapshot** model.
+     * `prisma.verification`: Exposes CRUD operations for the **Verification** model.
       * Example usage:
       * ```ts
-      * // Fetch zero or more JobAnalyticsSnapshots
-      * const jobAnalyticsSnapshots = await prisma.jobAnalyticsSnapshot.findMany()
+      * // Fetch zero or more Verifications
+      * const verifications = await prisma.verification.findMany()
       * ```
       */
-    get jobAnalyticsSnapshot(): Prisma.JobAnalyticsSnapshotDelegate<ExtArgs, {
-        omit: OmitOpts;
-    }>;
-    /**
-     * `prisma.platformDailyStats`: Exposes CRUD operations for the **PlatformDailyStats** model.
-      * Example usage:
-      * ```ts
-      * // Fetch zero or more PlatformDailyStats
-      * const platformDailyStats = await prisma.platformDailyStats.findMany()
-      * ```
-      */
-    get platformDailyStats(): Prisma.PlatformDailyStatsDelegate<ExtArgs, {
+    get verification(): Prisma.VerificationDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

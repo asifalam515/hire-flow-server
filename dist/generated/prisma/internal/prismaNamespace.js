@@ -69,9 +69,6 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
-    RefreshToken: 'RefreshToken',
-    EmailVerification: 'EmailVerification',
-    PasswordReset: 'PasswordReset',
     CandidateProfile: 'CandidateProfile',
     WorkExperience: 'WorkExperience',
     Education: 'Education',
@@ -83,10 +80,9 @@ export const ModelName = {
     ApplicationNote: 'ApplicationNote',
     AuditLog: 'AuditLog',
     Interview: 'Interview',
-    Notification: 'Notification',
-    JobAlert: 'JobAlert',
-    JobAnalyticsSnapshot: 'JobAnalyticsSnapshot',
-    PlatformDailyStats: 'PlatformDailyStats'
+    Session: 'Session',
+    Account: 'Account',
+    Verification: 'Verification'
 };
 /**
  * Enums
@@ -99,40 +95,13 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 });
 export const UserScalarFieldEnum = {
     id: 'id',
-    email: 'email',
     name: 'name',
-    passwordHash: 'passwordHash',
-    role: 'role',
-    isActive: 'isActive',
-    isVerified: 'isVerified',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-};
-export const RefreshTokenScalarFieldEnum = {
-    id: 'id',
-    token: 'token',
-    userId: 'userId',
-    expiresAt: 'expiresAt',
-    createdAt: 'createdAt',
-    revokedAt: 'revokedAt',
-    userAgent: 'userAgent',
-    ipAddress: 'ipAddress'
-};
-export const EmailVerificationScalarFieldEnum = {
-    id: 'id',
     email: 'email',
-    token: 'token',
-    expiresAt: 'expiresAt',
-    usedAt: 'usedAt',
-    createdAt: 'createdAt'
-};
-export const PasswordResetScalarFieldEnum = {
-    id: 'id',
-    userId: 'userId',
-    token: 'token',
-    expiresAt: 'expiresAt',
-    usedAt: 'usedAt',
-    createdAt: 'createdAt'
+    emailVerified: 'emailVerified',
+    image: 'image',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    role: 'role'
 };
 export const CandidateProfileScalarFieldEnum = {
     id: 'id',
@@ -294,61 +263,42 @@ export const InterviewScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-export const NotificationScalarFieldEnum = {
+export const SessionScalarFieldEnum = {
     id: 'id',
-    userId: 'userId',
-    type: 'type',
-    title: 'title',
-    body: 'body',
-    data: 'data',
-    isRead: 'isRead',
-    readAt: 'readAt',
-    createdAt: 'createdAt'
+    expiresAt: 'expiresAt',
+    token: 'token',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    userId: 'userId'
 };
-export const JobAlertScalarFieldEnum = {
+export const AccountScalarFieldEnum = {
     id: 'id',
+    accountId: 'accountId',
+    providerId: 'providerId',
     userId: 'userId',
-    keywords: 'keywords',
-    jobTypes: 'jobTypes',
-    minSalary: 'minSalary',
-    location: 'location',
-    isRemote: 'isRemote',
-    frequency: 'frequency',
-    isActive: 'isActive',
-    lastSentAt: 'lastSentAt',
-    createdAt: 'createdAt'
-};
-export const JobAnalyticsSnapshotScalarFieldEnum = {
-    id: 'id',
-    jobId: 'jobId',
-    appliedCount: 'appliedCount',
-    screeningCount: 'screeningCount',
-    assessmentCount: 'assessmentCount',
-    interviewCount: 'interviewCount',
-    offerCount: 'offerCount',
-    hiredCount: 'hiredCount',
-    rejectedCount: 'rejectedCount',
-    withdrawnCount: 'withdrawnCount',
-    avgTimeToHire: 'avgTimeToHire',
+    accessToken: 'accessToken',
+    refreshToken: 'refreshToken',
+    idToken: 'idToken',
+    accessTokenExpiresAt: 'accessTokenExpiresAt',
+    refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+    scope: 'scope',
+    password: 'password',
+    createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-export const PlatformDailyStatsScalarFieldEnum = {
+export const VerificationScalarFieldEnum = {
     id: 'id',
-    date: 'date',
-    newUsers: 'newUsers',
-    newJobs: 'newJobs',
-    newApplications: 'newApplications',
-    activeJobs: 'activeJobs',
-    totalHired: 'totalHired',
-    createdAt: 'createdAt'
+    identifier: 'identifier',
+    value: 'value',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
-};
-export const NullableJsonNullValueInput = {
-    DbNull: DbNull,
-    JsonNull: JsonNull
 };
 export const QueryMode = {
     default: 'default',
@@ -357,11 +307,6 @@ export const QueryMode = {
 export const NullsOrder = {
     first: 'first',
     last: 'last'
-};
-export const JsonNullValueFilter = {
-    DbNull: DbNull,
-    JsonNull: JsonNull,
-    AnyNull: AnyNull
 };
 export const defineExtension = runtime.Extensions.defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map

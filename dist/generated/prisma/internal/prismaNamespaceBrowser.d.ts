@@ -27,9 +27,6 @@ export declare const JsonNull: import("@prisma/client-runtime-utils").JsonNullCl
 export declare const AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
 export declare const ModelName: {
     readonly User: "User";
-    readonly RefreshToken: "RefreshToken";
-    readonly EmailVerification: "EmailVerification";
-    readonly PasswordReset: "PasswordReset";
     readonly CandidateProfile: "CandidateProfile";
     readonly WorkExperience: "WorkExperience";
     readonly Education: "Education";
@@ -41,10 +38,9 @@ export declare const ModelName: {
     readonly ApplicationNote: "ApplicationNote";
     readonly AuditLog: "AuditLog";
     readonly Interview: "Interview";
-    readonly Notification: "Notification";
-    readonly JobAlert: "JobAlert";
-    readonly JobAnalyticsSnapshot: "JobAnalyticsSnapshot";
-    readonly PlatformDailyStats: "PlatformDailyStats";
+    readonly Session: "Session";
+    readonly Account: "Account";
+    readonly Verification: "Verification";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -56,45 +52,15 @@ export declare const TransactionIsolationLevel: {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
 export declare const UserScalarFieldEnum: {
     readonly id: "id";
-    readonly email: "email";
     readonly name: "name";
-    readonly passwordHash: "passwordHash";
-    readonly role: "role";
-    readonly isActive: "isActive";
-    readonly isVerified: "isVerified";
+    readonly email: "email";
+    readonly emailVerified: "emailVerified";
+    readonly image: "image";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
+    readonly role: "role";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
-export declare const RefreshTokenScalarFieldEnum: {
-    readonly id: "id";
-    readonly token: "token";
-    readonly userId: "userId";
-    readonly expiresAt: "expiresAt";
-    readonly createdAt: "createdAt";
-    readonly revokedAt: "revokedAt";
-    readonly userAgent: "userAgent";
-    readonly ipAddress: "ipAddress";
-};
-export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum];
-export declare const EmailVerificationScalarFieldEnum: {
-    readonly id: "id";
-    readonly email: "email";
-    readonly token: "token";
-    readonly expiresAt: "expiresAt";
-    readonly usedAt: "usedAt";
-    readonly createdAt: "createdAt";
-};
-export type EmailVerificationScalarFieldEnum = (typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum];
-export declare const PasswordResetScalarFieldEnum: {
-    readonly id: "id";
-    readonly userId: "userId";
-    readonly token: "token";
-    readonly expiresAt: "expiresAt";
-    readonly usedAt: "usedAt";
-    readonly createdAt: "createdAt";
-};
-export type PasswordResetScalarFieldEnum = (typeof PasswordResetScalarFieldEnum)[keyof typeof PasswordResetScalarFieldEnum];
 export declare const CandidateProfileScalarFieldEnum: {
     readonly id: "id";
     readonly userId: "userId";
@@ -266,68 +232,47 @@ export declare const InterviewScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type InterviewScalarFieldEnum = (typeof InterviewScalarFieldEnum)[keyof typeof InterviewScalarFieldEnum];
-export declare const NotificationScalarFieldEnum: {
+export declare const SessionScalarFieldEnum: {
     readonly id: "id";
-    readonly userId: "userId";
-    readonly type: "type";
-    readonly title: "title";
-    readonly body: "body";
-    readonly data: "data";
-    readonly isRead: "isRead";
-    readonly readAt: "readAt";
+    readonly expiresAt: "expiresAt";
+    readonly token: "token";
     readonly createdAt: "createdAt";
-};
-export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum];
-export declare const JobAlertScalarFieldEnum: {
-    readonly id: "id";
+    readonly updatedAt: "updatedAt";
+    readonly ipAddress: "ipAddress";
+    readonly userAgent: "userAgent";
     readonly userId: "userId";
-    readonly keywords: "keywords";
-    readonly jobTypes: "jobTypes";
-    readonly minSalary: "minSalary";
-    readonly location: "location";
-    readonly isRemote: "isRemote";
-    readonly frequency: "frequency";
-    readonly isActive: "isActive";
-    readonly lastSentAt: "lastSentAt";
-    readonly createdAt: "createdAt";
 };
-export type JobAlertScalarFieldEnum = (typeof JobAlertScalarFieldEnum)[keyof typeof JobAlertScalarFieldEnum];
-export declare const JobAnalyticsSnapshotScalarFieldEnum: {
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum];
+export declare const AccountScalarFieldEnum: {
     readonly id: "id";
-    readonly jobId: "jobId";
-    readonly appliedCount: "appliedCount";
-    readonly screeningCount: "screeningCount";
-    readonly assessmentCount: "assessmentCount";
-    readonly interviewCount: "interviewCount";
-    readonly offerCount: "offerCount";
-    readonly hiredCount: "hiredCount";
-    readonly rejectedCount: "rejectedCount";
-    readonly withdrawnCount: "withdrawnCount";
-    readonly avgTimeToHire: "avgTimeToHire";
+    readonly accountId: "accountId";
+    readonly providerId: "providerId";
+    readonly userId: "userId";
+    readonly accessToken: "accessToken";
+    readonly refreshToken: "refreshToken";
+    readonly idToken: "idToken";
+    readonly accessTokenExpiresAt: "accessTokenExpiresAt";
+    readonly refreshTokenExpiresAt: "refreshTokenExpiresAt";
+    readonly scope: "scope";
+    readonly password: "password";
+    readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
-export type JobAnalyticsSnapshotScalarFieldEnum = (typeof JobAnalyticsSnapshotScalarFieldEnum)[keyof typeof JobAnalyticsSnapshotScalarFieldEnum];
-export declare const PlatformDailyStatsScalarFieldEnum: {
+export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum];
+export declare const VerificationScalarFieldEnum: {
     readonly id: "id";
-    readonly date: "date";
-    readonly newUsers: "newUsers";
-    readonly newJobs: "newJobs";
-    readonly newApplications: "newApplications";
-    readonly activeJobs: "activeJobs";
-    readonly totalHired: "totalHired";
+    readonly identifier: "identifier";
+    readonly value: "value";
+    readonly expiresAt: "expiresAt";
     readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
 };
-export type PlatformDailyStatsScalarFieldEnum = (typeof PlatformDailyStatsScalarFieldEnum)[keyof typeof PlatformDailyStatsScalarFieldEnum];
+export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
-export declare const NullableJsonNullValueInput: {
-    readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
-    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
-};
-export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";
@@ -338,10 +283,4 @@ export declare const NullsOrder: {
     readonly last: "last";
 };
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
-export declare const JsonNullValueFilter: {
-    readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
-    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
-    readonly AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
-};
-export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 //# sourceMappingURL=prismaNamespaceBrowser.d.ts.map
