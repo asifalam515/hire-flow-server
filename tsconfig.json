@@ -4,11 +4,18 @@
     // File Layout
     "rootDir": "./src",
     "outDir": "./dist",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"],
+      "@lib/*": ["./lib/*"],
+      "@middleware/*": ["./middleware/*"],
+      "@types/*": ["./types/*"]
+    },
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "target": "ES2023",
     "ignoreDeprecations": "6.0",
 

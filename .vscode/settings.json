@@ -1,0 +1,20 @@
+{
+  "typescript.tsserver.autoImportSuggestions": true,
+  "typescript.suggest.autoImports": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferGoToSourceDefinitionWithoutPrompts": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  }
+}
