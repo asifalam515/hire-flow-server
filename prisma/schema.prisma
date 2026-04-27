@@ -109,7 +109,7 @@ model User {
   applicationNotes ApplicationNote[]
   auditLogs     AuditLog[]
   scheduledInterviews Interview[]
-
+  postedJobs    Job[]
 
   @@unique([email])
   @@map("user")
@@ -256,6 +256,7 @@ model Job {
   // Trigger updates it on insert/update from title + description + techStack
   searchVector     Unsupported("tsvector")?
   applications      Application[]   // One-to-many relation to applications
+  recruiter         User            @relation(fields: [postedById], references: [id], onDelete: Cascade)
 
   company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   // applications Application[]

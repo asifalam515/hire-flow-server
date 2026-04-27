@@ -28,7 +28,17 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
   },
-
+  callbacks: {
+    session: async ({ user, session }: any) => {
+      return {
+        ...session,
+        user: {
+          ...user,
+          role: user.role, // 👈 IMPORTANT
+        },
+      };
+    },
+  },
   database: prismaAdapter(prisma, {
     provider: "postgresql", // or "mysql", "postgresql", ...etc
   }),
