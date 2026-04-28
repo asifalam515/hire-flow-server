@@ -1575,7 +1575,8 @@ export const UserScalarFieldEnum = {
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  role: 'role'
+  role: 'role',
+  isSuspended: 'isSuspended'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1602,6 +1603,9 @@ export const CandidateProfileScalarFieldEnum = {
   expectedSalaryMax: 'expectedSalaryMax',
   salaryCurrency: 'salaryCurrency',
   openToWork: 'openToWork',
+  jobAlerts: 'jobAlerts',
+  applicationUpdates: 'applicationUpdates',
+  promotionalEmails: 'promotionalEmails',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -44,10 +44,12 @@ export type ExperienceLevel = (typeof ExperienceLevel)[keyof typeof ExperienceLe
 
 export const JobStatus = {
   DRAFT: 'DRAFT',
+  PENDING_APPROVAL: 'PENDING_APPROVAL',
   PUBLISHED: 'PUBLISHED',
   PAUSED: 'PAUSED',
   CLOSED: 'CLOSED',
-  EXPIRED: 'EXPIRED'
+  EXPIRED: 'EXPIRED',
+  REJECTED: 'REJECTED'
 } as const
 
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]

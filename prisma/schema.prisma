@@ -38,10 +38,12 @@ enum ExperienceLevel {
 
 enum JobStatus {
   DRAFT
+  PENDING_APPROVAL
   PUBLISHED
   PAUSED
   CLOSED
   EXPIRED
+  REJECTED
 }
 
 enum ApplicationStage {
@@ -98,6 +100,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   role          Role      @default(CANDIDATE)
+  isSuspended   Boolean   @default(false)
   sessions      Session[]
   accounts      Account[]
 
@@ -135,9 +138,12 @@ model CandidateProfile {
   expectedSalaryMin Int?
   expectedSalaryMax Int?
   salaryCurrency   String?  @default("USD")
-  openToWork       Boolean  @default(true)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  openToWork         Boolean  @default(true)
+  jobAlerts          Boolean  @default(true)
+  applicationUpdates Boolean  @default(true)
+  promotionalEmails  Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   experiences WorkExperience[]
