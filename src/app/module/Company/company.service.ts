@@ -298,8 +298,17 @@ const addCompanyMemberInDb = async (
   const existingMember = await prisma.companyMember.findUnique({
     where: { userId },
   });
-  if (existingMember?.companyId === companyId) {
-    throw new AppError("User is already a member of this company", 400);
+  if (existingMember) {
+    if (existingMember.companyId === companyId) {
+      throw new AppError("User is already a member of this company", 400);
+    }
+
+    // Schema currently restricts a user to a single company (userId @unique)
+    // Prevent attempts to add the same user to a different company.
+    throw new AppError(
+      "User already belongs to another company. Remove them from that company first.",
+      400,
+    );
   }
 
   const member = await prisma.companyMember.create({

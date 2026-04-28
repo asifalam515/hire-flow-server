@@ -22,6 +22,14 @@ router.post(
   companyController.createCompany,
 );
 
+// Recruiter self-join route
+router.post(
+  "/:id/join",
+  authenticate,
+  requireRecruiter,
+  companyController.joinCompany,
+);
+
 // Routes requiring company ownership or admin
 router.patch("/:id", authenticate, companyController.updateCompany);
 router.delete("/:id", authenticate, companyController.deleteCompany);

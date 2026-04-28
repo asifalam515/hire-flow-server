@@ -15,6 +15,13 @@ router.get(
   applicationController.getMyApplications,
 );
 
+router.get(
+  "/job/:id",
+  authenticate,
+  requireRecruiter,
+  applicationController.getApplicantsForJob,
+);
+
 router.put(
   "/:id/stage",
   authenticate,

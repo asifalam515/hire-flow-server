@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { prisma } from "../src/lib/prisma";
 
 const companiesData = [
@@ -210,6 +211,52 @@ async function main() {
       console.log(
         `✅ Created: ${createdCompany.name} (${createdCompany.slug})`,
       );
+    }
+
+    // Create a global admin user (if not exists) and a recruiter for each company
+    console.log("\n🔐 Seeding admin and recruiters...");
+
+    // Remove previously seeded example users to avoid duplicates
+    await prisma.user.deleteMany({
+      where: { email: { contains: "@example.com" } },
+    });
+
+    const adminId = randomUUID();
+    const admin = await prisma.user.create({
+      data: {
+        id: adminId,
+        name: "System Admin",
+        email: "admin@example.com",
+        emailVerified: true,
+        role: "ADMIN",
+      },
+    });
+    console.log(`🛡️  Created admin: ${admin.email}`);
+
+    const companies = await prisma.company.findMany();
+    for (const c of companies) {
+      const recruiterId = randomUUID();
+      const recruiterEmail = `recruiter+${c.slug}@example.com`;
+      const recruiter = await prisma.user.create({
+        data: {
+          id: recruiterId,
+          name: `Recruiter — ${c.name}`,
+          email: recruiterEmail,
+          emailVerified: true,
+          role: "RECRUITER",
+          image: "",
+        },
+      });
+
+      await prisma.companyMember.create({
+        data: {
+          userId: recruiter.id,
+          companyId: c.id,
+          isOwner: true,
+        },
+      });
+
+      console.log(`👤 Created recruiter ${recruiter.email} for ${c.slug}`);
     }
 
     console.log("\n🎉 Database seeded successfully!");
