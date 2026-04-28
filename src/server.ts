@@ -2,6 +2,7 @@ import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import type { Application, Request, Response } from "express";
 import express from "express";
+import { applicationRouter } from "./app/module/Applications/application.router";
 import { companyRouter } from "./app/module/Company/company.router";
 import { jobRouter } from "./app/module/Jobs/Job.router";
 import { auth } from "./lib/auth";
@@ -30,6 +31,7 @@ app.use(cors());
 // Routes
 app.use("/api/v1/companies", companyRouter);
 app.use("/api/v1/jobs", jobRouter);
+app.use("/api/v1/applications", applicationRouter);
 
 // Basic route
 app.get("/", (req: Request, res: Response) => {
