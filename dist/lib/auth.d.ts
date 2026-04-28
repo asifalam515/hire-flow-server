@@ -21,6 +21,9 @@ export declare const auth: import("better-auth").Auth<{
             clientSecret: string;
         };
     };
+    callbacks: {
+        session: ({ user, session }: any) => Promise<any>;
+    };
     database: (options: import("better-auth").BetterAuthOptions) => import("better-auth").DBAdapter<import("better-auth").BetterAuthOptions>;
     advanced: {
         disableOriginCheck: boolean;

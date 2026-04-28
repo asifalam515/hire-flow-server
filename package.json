@@ -12,6 +12,7 @@
     "dev": "tsx watch src/server.ts",
     "lint": "eslint ./src/**/*",
     "migrate": "prisma migrate dev",
+    "seed": "tsx prisma/seed.ts",
     "studio": "prisma studio",
     "push": "prisma db push",
     "pull": "prisma db pull",
