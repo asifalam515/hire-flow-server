@@ -28,11 +28,11 @@ enum JobType {
 }
 
 enum ExperienceLevel {
-  ENTRY       // 0-1 years
-  JUNIOR      // 1-3 years
-  MID         // 3-5 years
-  SENIOR      // 5-8 years
-  LEAD        // 8+ years
+  ENTRY // 0-1 years
+  JUNIOR // 1-3 years
+  MID // 3-5 years
+  SENIOR // 5-8 years
+  LEAD // 8+ years
   EXECUTIVE
 }
 
@@ -58,22 +58,22 @@ enum ApplicationStage {
 }
 
 enum CompanySize {
-  STARTUP      // 1-10
-  SMALL        // 11-50
-  MEDIUM       // 51-200
-  LARGE        // 201-1000
-  ENTERPRISE   // 1000+
+  STARTUP // 1-10
+  SMALL // 11-50
+  MEDIUM // 51-200
+  LARGE // 201-1000
+  ENTERPRISE // 1000+
 }
 
 enum NotificationType {
-  APPLICATION_RECEIVED   // To recruiter
-  STAGE_UPDATED          // To candidate
-  JOB_EXPIRING_SOON      // To recruiter
-  JOB_ALERT_MATCH        // To candidate
-  INTERVIEW_SCHEDULED    // To candidate
-  OFFER_EXTENDED         // To candidate
-  APPLICATION_WITHDRAWN  // To recruiter
-  SYSTEM                 // Admin broadcasts
+  APPLICATION_RECEIVED // To recruiter
+  STAGE_UPDATED // To candidate
+  JOB_EXPIRING_SOON // To recruiter
+  JOB_ALERT_MATCH // To candidate
+  INTERVIEW_SCHEDULED // To candidate
+  OFFER_EXTENDED // To candidate
+  APPLICATION_WITHDRAWN // To recruiter
+  SYSTEM // Admin broadcasts
 }
 
 enum AlertFrequency {
@@ -90,6 +90,11 @@ enum InterviewType {
   PANEL
 }
 
+enum QuestionType {
+  TEXT
+  MULTIPLE_CHOICE
+  YES_NO
+}
 
 model User {
   id            String    @id
@@ -105,39 +110,39 @@ model User {
   accounts      Account[]
 
   // relations
-  profile       CandidateProfile?
-  companyMember CompanyMember?
-  savedJobs     SavedJob[]
-  applications  Application[]
-  applicationNotes ApplicationNote[]
-  auditLogs     AuditLog[]
+  profile             CandidateProfile?
+  companyMember       CompanyMember?
+  savedJobs           SavedJob[]
+  applications        Application[]
+  applicationNotes    ApplicationNote[]
+  auditLogs           AuditLog[]
   scheduledInterviews Interview[]
-  postedJobs    Job[]
+  postedJobs          Job[]
 
   @@unique([email])
   @@map("user")
 }
 
 model CandidateProfile {
-  id               String   @id @default(cuid())
-  userId           String   @unique
-  firstName        String
-  lastName         String
-  avatarUrl        String?  // Cloudinary URL
-  headline         String?  // "Full Stack Developer | React · Node.js"
-  bio              String?
-  location         String?
-  country          String?
-  phone            String?
-  linkedinUrl      String?
-  githubUrl        String?
-  portfolioUrl     String?
-  resumeUrl        String?  // Default resume (Cloudinary PDF)
-  resumeFileName   String?
-  skills           String[] // ["TypeScript", "Next.js", "Prisma"]
-  expectedSalaryMin Int?
-  expectedSalaryMax Int?
-  salaryCurrency   String?  @default("USD")
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  firstName          String
+  lastName           String
+  avatarUrl          String? // Cloudinary URL
+  headline           String? // "Full Stack Developer | React · Node.js"
+  bio                String?
+  location           String?
+  country            String?
+  phone              String?
+  linkedinUrl        String?
+  githubUrl          String?
+  portfolioUrl       String?
+  resumeUrl          String? // Default resume (Cloudinary PDF)
+  resumeFileName     String?
+  skills             String[] // ["TypeScript", "Next.js", "Prisma"]
+  expectedSalaryMin  Int?
+  expectedSalaryMax  Int?
+  salaryCurrency     String?  @default("USD")
   openToWork         Boolean  @default(true)
   jobAlerts          Boolean  @default(true)
   applicationUpdates Boolean  @default(true)
@@ -151,6 +156,7 @@ model CandidateProfile {
 
   @@map("candidate_profiles")
 }
+
 model WorkExperience {
   id          String    @id @default(cuid())
   profileId   String
@@ -174,8 +180,8 @@ model Education {
   id          String    @id @default(cuid())
   profileId   String
   institution String
-  degree      String    // "Bachelor of Science"
-  field       String    // "Computer Science"
+  degree      String // "Bachelor of Science"
+  field       String // "Computer Science"
   startDate   DateTime
   endDate     DateTime?
   current     Boolean   @default(false)
@@ -189,26 +195,26 @@ model Education {
 }
 
 model Company {
-  id          String      @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
-  slug        String      @unique // URL-friendly: "acme-corp"
+  slug        String       @unique // URL-friendly: "acme-corp"
   logoUrl     String?
   bannerUrl   String?
   website     String?
   linkedinUrl String?
-  description String?     // Rich text / Markdown
+  description String? // Rich text / Markdown
   industry    String?
   size        CompanySize?
-  founded     Int?        // Year
+  founded     Int? // Year
   country     String?
   city        String?
-  isVerified  Boolean     @default(false)
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  isVerified  Boolean      @default(false)
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
-  members     CompanyMember[]
-  jobs        Job[]
+  members CompanyMember[]
+  jobs    Job[]
 
   @@index([slug])
   @@map("companies")
@@ -227,13 +233,14 @@ model CompanyMember {
   @@index([companyId])
   @@map("company_members")
 }
+
 model Job {
   id               String          @id @default(cuid())
   companyId        String
-  postedById       String          // Recruiter user id (for audit)
+  postedById       String // Recruiter user id (for audit)
   title            String
   slug             String          @unique
-  description      String          // Rich text (Tiptap HTML/Markdown)
+  description      String // Rich text (Tiptap HTML/Markdown)
   requirements     String?
   responsibilities String?
   benefits         String?
@@ -247,26 +254,26 @@ model Job {
   salaryMax        Int?
   salaryCurrency   String?         @default("USD")
   salaryPeriod     String?         @default("YEAR") // YEAR | MONTH | HOUR
-  techStack        String[]        // ["React", "Node.js", "PostgreSQL"]
+  techStack        String[] // ["React", "Node.js", "PostgreSQL"]
   status           JobStatus       @default(DRAFT)
-  applicationCount Int             @default(0)    // Denormalized counter
+  applicationCount Int             @default(0) // Denormalized counter
   viewCount        Int             @default(0)
   publishedAt      DateTime?
   expiresAt        DateTime?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  
 
   // Full-text search vector — updated via DB trigger
   // Raw SQL: ALTER TABLE jobs ADD COLUMN search_vector tsvector;
   // Trigger updates it on insert/update from title + description + techStack
-  searchVector     Unsupported("tsvector")?
-  applications      Application[]   // One-to-many relation to applications
-  recruiter         User            @relation(fields: [postedById], references: [id], onDelete: Cascade)
+  searchVector Unsupported("tsvector")?
+  applications Application[] // One-to-many relation to applications
+  recruiter    User                     @relation(fields: [postedById], references: [id], onDelete: Cascade)
 
-  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company            Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
   // applications Application[]
-  savedBy      SavedJob[]
+  savedBy            SavedJob[]
+  screeningQuestions ScreeningQuestion[]
 
   @@index([companyId])
   @@index([status])
@@ -279,6 +286,7 @@ model Job {
   // CREATE INDEX jobs_search_vector_idx ON jobs USING GIN(search_vector);
   @@map("jobs")
 }
+
 model SavedJob {
   id        String   @id @default(cuid())
   userId    String
@@ -292,26 +300,28 @@ model SavedJob {
   @@index([userId])
   @@map("saved_jobs")
 }
-model Application {
-  id            String           @id @default(cuid())
-  candidateId   String
-  jobId         String
-  resumeUrl     String           // Cloudinary PDF URL (snapshot at time of apply)
-  resumeFileName String?
-  coverLetter   String?
-  stage         ApplicationStage @default(APPLIED)
-  aiMatchScore  Int?             // 0-100, from OpenAI scoring (optional feature)
-  source        String?          @default("DIRECT") // DIRECT | REFERRAL | JOB_BOARD
-  referralCode  String?
-  isArchived    Boolean          @default(false)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
 
-  candidate  User              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  job        Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  notes      ApplicationNote[]
-  auditLogs  AuditLog[]
-  interviews Interview[]
+model Application {
+  id             String           @id @default(cuid())
+  candidateId    String
+  jobId          String
+  resumeUrl      String // Cloudinary PDF URL (snapshot at time of apply)
+  resumeFileName String?
+  coverLetter    String?
+  stage          ApplicationStage @default(APPLIED)
+  aiMatchScore   Int? // 0-100, from OpenAI scoring (optional feature)
+  source         String?          @default("DIRECT") // DIRECT | REFERRAL | JOB_BOARD
+  referralCode   String?
+  isArchived     Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  candidate        User              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job              Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  notes            ApplicationNote[]
+  auditLogs        AuditLog[]
+  interviews       Interview[]
+  screeningAnswers ScreeningAnswer[]
 
   // One candidate can only apply once per job
   @@unique([candidateId, jobId])
@@ -325,7 +335,7 @@ model Application {
 model ApplicationNote {
   id            String   @id @default(cuid())
   applicationId String
-  authorId      String   // Recruiter who wrote the note
+  authorId      String // Recruiter who wrote the note
   content       String
   isPinned      Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -339,13 +349,13 @@ model ApplicationNote {
 }
 
 model AuditLog {
-  id            String           @id @default(cuid())
+  id            String            @id @default(cuid())
   applicationId String
-  changedById   String           // Recruiter/system user who made the change
+  changedById   String // Recruiter/system user who made the change
   fromStage     ApplicationStage?
   toStage       ApplicationStage
-  reason        String?          // Optional reason for rejection, etc.
-  createdAt     DateTime         @default(now())
+  reason        String? // Optional reason for rejection, etc.
+  createdAt     DateTime          @default(now())
 
   application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
   changedBy   User        @relation(fields: [changedById], references: [id])
@@ -354,18 +364,19 @@ model AuditLog {
   @@index([createdAt])
   @@map("audit_logs")
 }
+
 model Interview {
   id            String        @id @default(cuid())
   applicationId String
-  scheduledById String        // Recruiter
+  scheduledById String // Recruiter
   type          InterviewType
   scheduledAt   DateTime
   durationMins  Int           @default(60)
-  location      String?       // Address or "Google Meet", "Zoom"
+  location      String? // Address or "Google Meet", "Zoom"
   meetingUrl    String?
-  notes         String?       // Recruiter prep notes (not shared with candidate)
-  feedback      String?       // Post-interview feedback
-  rating        Int?          // 1-5 rating post-interview
+  notes         String? // Recruiter prep notes (not shared with candidate)
+  feedback      String? // Post-interview feedback
+  rating        Int? // 1-5 rating post-interview
   cancelledAt   DateTime?
   cancelReason  String?
   createdAt     DateTime      @default(now())
@@ -378,7 +389,6 @@ model Interview {
   @@index([scheduledAt])
   @@map("interviews")
 }
-
 
 model Session {
   id        String   @id
@@ -426,4 +436,37 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model ScreeningQuestion {
+  id        String       @id @default(cuid())
+  jobId     String
+  question  String
+  type      QuestionType
+  options   String[] // Used for MULTIPLE_CHOICE, stored as array of strings
+  required  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  job     Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  answers ScreeningAnswer[]
+
+  @@index([jobId])
+  @@map("screening_questions")
+}
+
+model ScreeningAnswer {
+  id            String   @id @default(cuid())
+  applicationId String
+  questionId    String
+  answer        String // Stored as string (can be JSON if complex, but simple string usually suffices)
+  createdAt     DateTime @default(now())
+
+  application Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  question    ScreeningQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, questionId])
+  @@index([applicationId])
+  @@index([questionId])
+  @@map("screening_answers")
 }

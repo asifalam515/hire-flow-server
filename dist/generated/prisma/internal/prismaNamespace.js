@@ -14,7 +14,7 @@
  * model files in the `model` directory!
  */
 import * as runtime from "@prisma/client/runtime/client";
-import {} from "./class";
+import {} from "./class.js";
 /**
  * Prisma Errors
  */
@@ -82,7 +82,9 @@ export const ModelName = {
     Interview: 'Interview',
     Session: 'Session',
     Account: 'Account',
-    Verification: 'Verification'
+    Verification: 'Verification',
+    ScreeningQuestion: 'ScreeningQuestion',
+    ScreeningAnswer: 'ScreeningAnswer'
 };
 /**
  * Enums
@@ -101,7 +103,8 @@ export const UserScalarFieldEnum = {
     image: 'image',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    role: 'role'
+    role: 'role',
+    isSuspended: 'isSuspended'
 };
 export const CandidateProfileScalarFieldEnum = {
     id: 'id',
@@ -124,6 +127,9 @@ export const CandidateProfileScalarFieldEnum = {
     expectedSalaryMax: 'expectedSalaryMax',
     salaryCurrency: 'salaryCurrency',
     openToWork: 'openToWork',
+    jobAlerts: 'jobAlerts',
+    applicationUpdates: 'applicationUpdates',
+    promotionalEmails: 'promotionalEmails',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -295,6 +301,23 @@ export const VerificationScalarFieldEnum = {
     expiresAt: 'expiresAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+export const ScreeningQuestionScalarFieldEnum = {
+    id: 'id',
+    jobId: 'jobId',
+    question: 'question',
+    type: 'type',
+    options: 'options',
+    required: 'required',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
+export const ScreeningAnswerScalarFieldEnum = {
+    id: 'id',
+    applicationId: 'applicationId',
+    questionId: 'questionId',
+    answer: 'answer',
+    createdAt: 'createdAt'
 };
 export const SortOrder = {
     asc: 'asc',

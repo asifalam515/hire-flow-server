@@ -30,10 +30,12 @@ export const ExperienceLevel = {
 };
 export const JobStatus = {
     DRAFT: 'DRAFT',
+    PENDING_APPROVAL: 'PENDING_APPROVAL',
     PUBLISHED: 'PUBLISHED',
     PAUSED: 'PAUSED',
     CLOSED: 'CLOSED',
-    EXPIRED: 'EXPIRED'
+    EXPIRED: 'EXPIRED',
+    REJECTED: 'REJECTED'
 };
 export const ApplicationStage = {
     APPLIED: 'APPLIED',
@@ -73,5 +75,10 @@ export const InterviewType = {
     ONSITE: 'ONSITE',
     TECHNICAL: 'TECHNICAL',
     PANEL: 'PANEL'
+};
+export const QuestionType = {
+    TEXT: 'TEXT',
+    MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
+    YES_NO: 'YES_NO'
 };
 //# sourceMappingURL=enums.js.map

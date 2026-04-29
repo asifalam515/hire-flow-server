@@ -1,8 +1,8 @@
 import * as runtime from "@prisma/client/runtime/client";
-import * as $Class from "./internal/class";
-import * as Prisma from "./internal/prismaNamespace";
-export * as $Enums from './enums';
-export * from "./enums";
+import * as $Class from "./internal/class.js";
+import * as Prisma from "./internal/prismaNamespace.js";
+export * as $Enums from './enums.js';
+export * from "./enums.js";
 /**
  * ## Prisma Client
  *
@@ -96,4 +96,14 @@ export type Account = Prisma.AccountModel;
  *
  */
 export type Verification = Prisma.VerificationModel;
+/**
+ * Model ScreeningQuestion
+ *
+ */
+export type ScreeningQuestion = Prisma.ScreeningQuestionModel;
+/**
+ * Model ScreeningAnswer
+ *
+ */
+export type ScreeningAnswer = Prisma.ScreeningAnswerModel;
 //# sourceMappingURL=client.d.ts.map

@@ -1,7 +1,7 @@
-import * as Prisma from './internal/prismaNamespaceBrowser';
+import * as Prisma from './internal/prismaNamespaceBrowser.js';
 export { Prisma };
-export * as $Enums from './enums';
-export * from './enums';
+export * as $Enums from './enums.js';
+export * from './enums.js';
 /**
  * Model User
  *
@@ -77,4 +77,14 @@ export type Account = Prisma.AccountModel;
  *
  */
 export type Verification = Prisma.VerificationModel;
+/**
+ * Model ScreeningQuestion
+ *
+ */
+export type ScreeningQuestion = Prisma.ScreeningQuestionModel;
+/**
+ * Model ScreeningAnswer
+ *
+ */
+export type ScreeningAnswer = Prisma.ScreeningAnswerModel;
 //# sourceMappingURL=browser.d.ts.map

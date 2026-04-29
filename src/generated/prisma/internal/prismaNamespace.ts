@@ -398,7 +398,9 @@ export const ModelName = {
   Interview: 'Interview',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  ScreeningQuestion: 'ScreeningQuestion',
+  ScreeningAnswer: 'ScreeningAnswer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -414,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "candidateProfile" | "workExperience" | "education" | "company" | "companyMember" | "job" | "savedJob" | "application" | "applicationNote" | "auditLog" | "interview" | "session" | "account" | "verification"
+    modelProps: "user" | "candidateProfile" | "workExperience" | "education" | "company" | "companyMember" | "job" | "savedJob" | "application" | "applicationNote" | "auditLog" | "interview" | "session" | "account" | "verification" | "screeningQuestion" | "screeningAnswer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1528,6 +1530,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ScreeningQuestion: {
+      payload: Prisma.$ScreeningQuestionPayload<ExtArgs>
+      fields: Prisma.ScreeningQuestionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScreeningQuestionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScreeningQuestionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        findFirst: {
+          args: Prisma.ScreeningQuestionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScreeningQuestionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        findMany: {
+          args: Prisma.ScreeningQuestionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>[]
+        }
+        create: {
+          args: Prisma.ScreeningQuestionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        createMany: {
+          args: Prisma.ScreeningQuestionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScreeningQuestionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>[]
+        }
+        delete: {
+          args: Prisma.ScreeningQuestionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        update: {
+          args: Prisma.ScreeningQuestionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScreeningQuestionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScreeningQuestionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScreeningQuestionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScreeningQuestionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningQuestionPayload>
+        }
+        aggregate: {
+          args: Prisma.ScreeningQuestionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScreeningQuestion>
+        }
+        groupBy: {
+          args: Prisma.ScreeningQuestionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScreeningQuestionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScreeningQuestionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScreeningQuestionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ScreeningAnswer: {
+      payload: Prisma.$ScreeningAnswerPayload<ExtArgs>
+      fields: Prisma.ScreeningAnswerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ScreeningAnswerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ScreeningAnswerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        findFirst: {
+          args: Prisma.ScreeningAnswerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ScreeningAnswerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        findMany: {
+          args: Prisma.ScreeningAnswerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>[]
+        }
+        create: {
+          args: Prisma.ScreeningAnswerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        createMany: {
+          args: Prisma.ScreeningAnswerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ScreeningAnswerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>[]
+        }
+        delete: {
+          args: Prisma.ScreeningAnswerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        update: {
+          args: Prisma.ScreeningAnswerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        deleteMany: {
+          args: Prisma.ScreeningAnswerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ScreeningAnswerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ScreeningAnswerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>[]
+        }
+        upsert: {
+          args: Prisma.ScreeningAnswerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ScreeningAnswerPayload>
+        }
+        aggregate: {
+          args: Prisma.ScreeningAnswerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateScreeningAnswer>
+        }
+        groupBy: {
+          args: Prisma.ScreeningAnswerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScreeningAnswerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ScreeningAnswerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ScreeningAnswerCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1834,6 +1984,31 @@ export const VerificationScalarFieldEnum = {
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
 
 
+export const ScreeningQuestionScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  question: 'question',
+  type: 'type',
+  options: 'options',
+  required: 'required',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ScreeningQuestionScalarFieldEnum = (typeof ScreeningQuestionScalarFieldEnum)[keyof typeof ScreeningQuestionScalarFieldEnum]
+
+
+export const ScreeningAnswerScalarFieldEnum = {
+  id: 'id',
+  applicationId: 'applicationId',
+  questionId: 'questionId',
+  answer: 'answer',
+  createdAt: 'createdAt'
+} as const
+
+export type ScreeningAnswerScalarFieldEnum = (typeof ScreeningAnswerScalarFieldEnum)[keyof typeof ScreeningAnswerScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2024,6 +2199,20 @@ export type EnumInterviewTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 export type ListEnumInterviewTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InterviewType[]'>
     
 
+
+/**
+ * Reference to a field of type 'QuestionType'
+ */
+export type EnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType'>
+    
+
+
+/**
+ * Reference to a field of type 'QuestionType[]'
+ */
+export type ListEnumQuestionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionType[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2134,6 +2323,8 @@ export type GlobalOmitConfig = {
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  screeningQuestion?: Prisma.ScreeningQuestionOmit
+  screeningAnswer?: Prisma.ScreeningAnswerOmit
 }
 
 /* Types for Logging */

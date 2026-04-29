@@ -1,4 +1,10 @@
-import type { ExperienceLevel, JobStatus, JobType } from "@/generated/prisma/enums";
+import type { ExperienceLevel, JobStatus, JobType, QuestionType } from "@/generated/prisma/enums";
+interface ScreeningQuestionInput {
+    question: string;
+    type: QuestionType;
+    options?: string[];
+    required?: boolean;
+}
 interface CreateJobInput {
     companyId: string;
     title: string;
@@ -20,6 +26,7 @@ interface CreateJobInput {
     techStack?: string[];
     status?: JobStatus;
     expiresAt?: Date;
+    screeningQuestions?: ScreeningQuestionInput[];
 }
 interface UpdateJobInput {
     title?: string;
@@ -40,6 +47,8 @@ interface UpdateJobInput {
     techStack?: string[];
     status?: JobStatus;
     expiresAt?: Date;
+    slug?: string;
+    screeningQuestions?: ScreeningQuestionInput[];
 }
 interface JobFilters {
     companyId?: string;
@@ -57,6 +66,10 @@ interface JobFilters {
 export declare const jobService: {
     getAllJobsFromDb: (page?: number, limit?: number, filters?: JobFilters) => Promise<{
         data: ({
+            _count: {
+                applications: number;
+                savedBy: number;
+            };
             company: {
                 id: string;
                 name: string;
@@ -64,30 +77,25 @@ export declare const jobService: {
                 logoUrl: string | null;
                 isVerified: boolean;
             };
-            _count: {
-                applications: number;
-                savedBy: number;
-            };
-            recruiter: never;
         } & {
             id: string;
             createdAt: Date;
             updatedAt: Date;
             expiresAt: Date | null;
             type: JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -106,42 +114,51 @@ export declare const jobService: {
         };
     }>;
     getJobByIdFromDb: (id: string) => Promise<{
-        company: {
-            id: string;
-            name: string;
-            slug: string;
-            logoUrl: string | null;
-            bannerUrl: string | null;
-            website: string | null;
-            description: string | null;
-            industry: string | null;
-            size: import("@/generated/prisma/enums").CompanySize | null;
-            isVerified: boolean;
-        };
         _count: {
             applications: number;
             savedBy: number;
         };
-        recruiter: never;
+        company: {
+            id: string;
+            name: string;
+            slug: string;
+            description: string | null;
+            logoUrl: string | null;
+            bannerUrl: string | null;
+            website: string | null;
+            industry: string | null;
+            size: import("@/generated/prisma/enums").CompanySize | null;
+            isVerified: boolean;
+        };
+        screeningQuestions: {
+            options: string[];
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            required: boolean;
+            type: QuestionType;
+            jobId: string;
+            question: string;
+        }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         expiresAt: Date | null;
         type: JobType;
-        slug: string;
-        description: string;
-        country: string | null;
-        city: string | null;
         companyId: string;
         postedById: string;
         title: string;
+        slug: string;
+        description: string;
         requirements: string | null;
         responsibilities: string | null;
         benefits: string | null;
         experienceLevel: ExperienceLevel;
         location: string | null;
         isRemote: boolean;
+        country: string | null;
+        city: string | null;
         salaryMin: number | null;
         salaryMax: number | null;
         salaryCurrency: string | null;
@@ -153,42 +170,51 @@ export declare const jobService: {
         publishedAt: Date | null;
     }>;
     getJobBySlugFromDb: (slug: string) => Promise<{
-        company: {
-            id: string;
-            name: string;
-            slug: string;
-            logoUrl: string | null;
-            bannerUrl: string | null;
-            website: string | null;
-            description: string | null;
-            industry: string | null;
-            size: import("@/generated/prisma/enums").CompanySize | null;
-            isVerified: boolean;
-        };
         _count: {
             applications: number;
             savedBy: number;
         };
-        recruiter: never;
+        company: {
+            id: string;
+            name: string;
+            slug: string;
+            description: string | null;
+            logoUrl: string | null;
+            bannerUrl: string | null;
+            website: string | null;
+            industry: string | null;
+            size: import("@/generated/prisma/enums").CompanySize | null;
+            isVerified: boolean;
+        };
+        screeningQuestions: {
+            options: string[];
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            required: boolean;
+            type: QuestionType;
+            jobId: string;
+            question: string;
+        }[];
     } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         expiresAt: Date | null;
         type: JobType;
-        slug: string;
-        description: string;
-        country: string | null;
-        city: string | null;
         companyId: string;
         postedById: string;
         title: string;
+        slug: string;
+        description: string;
         requirements: string | null;
         responsibilities: string | null;
         benefits: string | null;
         experienceLevel: ExperienceLevel;
         location: string | null;
         isRemote: boolean;
+        country: string | null;
+        city: string | null;
         salaryMin: number | null;
         salaryMax: number | null;
         salaryCurrency: string | null;
@@ -201,15 +227,15 @@ export declare const jobService: {
     }>;
     getJobsByCompanyIdFromDb: (companyId: string, page?: number, limit?: number, includeAllStatuses?: boolean) => Promise<{
         data: ({
+            _count: {
+                applications: number;
+                savedBy: number;
+            };
             company: {
                 id: string;
                 name: string;
                 slug: string;
                 logoUrl: string | null;
-            };
-            _count: {
-                applications: number;
-                savedBy: number;
             };
         } & {
             id: string;
@@ -217,19 +243,19 @@ export declare const jobService: {
             updatedAt: Date;
             expiresAt: Date | null;
             type: JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -249,15 +275,15 @@ export declare const jobService: {
     }>;
     getJobsByRecruiterIdFromDb: (recruiterId: string, page?: number, limit?: number) => Promise<{
         data: ({
+            _count: {
+                applications: number;
+                savedBy: number;
+            };
             company: {
                 id: string;
                 name: string;
                 slug: string;
                 logoUrl: string | null;
-            };
-            _count: {
-                applications: number;
-                savedBy: number;
             };
         } & {
             id: string;
@@ -265,19 +291,19 @@ export declare const jobService: {
             updatedAt: Date;
             expiresAt: Date | null;
             type: JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -301,19 +327,19 @@ export declare const jobService: {
         updatedAt: Date;
         expiresAt: Date | null;
         type: JobType;
-        slug: string;
-        description: string;
-        country: string | null;
-        city: string | null;
         companyId: string;
         postedById: string;
         title: string;
+        slug: string;
+        description: string;
         requirements: string | null;
         responsibilities: string | null;
         benefits: string | null;
         experienceLevel: ExperienceLevel;
         location: string | null;
         isRemote: boolean;
+        country: string | null;
+        city: string | null;
         salaryMin: number | null;
         salaryMax: number | null;
         salaryCurrency: string | null;
@@ -325,32 +351,24 @@ export declare const jobService: {
         publishedAt: Date | null;
     }>;
     updateJobInDb: (id: string, userId: string, data: UpdateJobInput) => Promise<{
-        company: {
-            id: string;
-            name: string;
-            slug: string;
-            logoUrl: string | null;
-        };
-        recruiter: never;
-    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
         expiresAt: Date | null;
         type: JobType;
-        slug: string;
-        description: string;
-        country: string | null;
-        city: string | null;
         companyId: string;
         postedById: string;
         title: string;
+        slug: string;
+        description: string;
         requirements: string | null;
         responsibilities: string | null;
         benefits: string | null;
         experienceLevel: ExperienceLevel;
         location: string | null;
         isRemote: boolean;
+        country: string | null;
+        city: string | null;
         salaryMin: number | null;
         salaryMax: number | null;
         salaryCurrency: string | null;
@@ -367,19 +385,19 @@ export declare const jobService: {
         updatedAt: Date;
         expiresAt: Date | null;
         type: JobType;
-        slug: string;
-        description: string;
-        country: string | null;
-        city: string | null;
         companyId: string;
         postedById: string;
         title: string;
+        slug: string;
+        description: string;
         requirements: string | null;
         responsibilities: string | null;
         benefits: string | null;
         experienceLevel: ExperienceLevel;
         location: string | null;
         isRemote: boolean;
+        country: string | null;
+        city: string | null;
         salaryMin: number | null;
         salaryMax: number | null;
         salaryCurrency: string | null;
@@ -389,6 +407,83 @@ export declare const jobService: {
         applicationCount: number;
         viewCount: number;
         publishedAt: Date | null;
+    }>;
+    getSimilarJobsFromDb: (id: string, limit?: number) => Promise<({
+        company: {
+            id: string;
+            name: string;
+            logoUrl: string | null;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        expiresAt: Date | null;
+        type: JobType;
+        companyId: string;
+        postedById: string;
+        title: string;
+        slug: string;
+        description: string;
+        requirements: string | null;
+        responsibilities: string | null;
+        benefits: string | null;
+        experienceLevel: ExperienceLevel;
+        location: string | null;
+        isRemote: boolean;
+        country: string | null;
+        city: string | null;
+        salaryMin: number | null;
+        salaryMax: number | null;
+        salaryCurrency: string | null;
+        salaryPeriod: string | null;
+        techStack: string[];
+        status: JobStatus;
+        applicationCount: number;
+        viewCount: number;
+        publishedAt: Date | null;
+    })[]>;
+    calculateMatchScore: (jobId: string, candidateId: string) => Promise<number>;
+    updateJobStatusInDb: (id: string, userId: string, status: JobStatus) => Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        expiresAt: Date | null;
+        type: JobType;
+        companyId: string;
+        postedById: string;
+        title: string;
+        slug: string;
+        description: string;
+        requirements: string | null;
+        responsibilities: string | null;
+        benefits: string | null;
+        experienceLevel: ExperienceLevel;
+        location: string | null;
+        isRemote: boolean;
+        country: string | null;
+        city: string | null;
+        salaryMin: number | null;
+        salaryMax: number | null;
+        salaryCurrency: string | null;
+        salaryPeriod: string | null;
+        techStack: string[];
+        status: JobStatus;
+        applicationCount: number;
+        viewCount: number;
+        publishedAt: Date | null;
+    }>;
+    saveJobInDb: (jobId: string, userId: string) => Promise<{
+        id: string;
+        createdAt: Date;
+        userId: string;
+        jobId: string;
+    }>;
+    unsaveJobFromDb: (jobId: string, userId: string) => Promise<{
+        id: string;
+        createdAt: Date;
+        userId: string;
+        jobId: string;
     }>;
 };
 export {};

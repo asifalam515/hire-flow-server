@@ -3,7 +3,7 @@ import { asyncHandler } from "@lib/asyncHandler";
 import { jobService } from "./job.service";
 // POST /jobs - Create new job (RECRUITER)
 export const createJob = asyncHandler(async (req, res) => {
-    const { companyId, title, slug, description, requirements, responsibilities, benefits, type, experienceLevel, location, isRemote, country, city, salaryMin, salaryMax, salaryCurrency, salaryPeriod, techStack, status, expiresAt, } = req.body;
+    const { companyId, title, slug, description, requirements, responsibilities, benefits, type, experienceLevel, location, isRemote, country, city, salaryMin, salaryMax, salaryCurrency, salaryPeriod, techStack, status, expiresAt, screeningQuestions, } = req.body;
     if (!companyId ||
         !title ||
         !slug ||
@@ -33,6 +33,7 @@ export const createJob = asyncHandler(async (req, res) => {
         techStack,
         status,
         expiresAt,
+        screeningQuestions,
     }, req.user?.id);
     res.status(201).json({
         success: true,
@@ -67,19 +68,30 @@ export const searchAndFilterJobs = asyncHandler(async (req, res) => {
             ? req.query.techStack
             : [req.query.techStack]
         : undefined;
-    const result = await jobService.getAllJobsFromDb(page, limit, {
-        companyId,
-        status: status,
-        type: type,
-        experienceLevel: experienceLevel,
-        isRemote,
-        country,
-        location,
-        salaryMin,
-        salaryMax,
-        search,
-        techStack,
-    });
+    const filters = {};
+    if (companyId)
+        filters.companyId = companyId;
+    if (status)
+        filters.status = status;
+    if (type)
+        filters.type = type;
+    if (experienceLevel)
+        filters.experienceLevel = experienceLevel;
+    if (isRemote !== undefined)
+        filters.isRemote = isRemote;
+    if (country)
+        filters.country = country;
+    if (location)
+        filters.location = location;
+    if (salaryMin !== undefined)
+        filters.salaryMin = salaryMin;
+    if (salaryMax !== undefined)
+        filters.salaryMax = salaryMax;
+    if (search)
+        filters.search = search;
+    if (techStack)
+        filters.techStack = techStack;
+    const result = await jobService.getAllJobsFromDb(page, limit, filters);
     res.status(200).json({
         success: true,
         data: result.data,
@@ -88,7 +100,7 @@ export const searchAndFilterJobs = asyncHandler(async (req, res) => {
 });
 // GET /jobs/:id - Get single job by ID
 export const getJobById = asyncHandler(async (req, res) => {
-    const { id } = req.params;
+    const id = req.params.id;
     const job = await jobService.getJobByIdFromDb(id);
     res.status(200).json({
         success: true,
@@ -97,7 +109,7 @@ export const getJobById = asyncHandler(async (req, res) => {
 });
 // GET /jobs/slug/:slug - Get single job by slug
 export const getJobBySlug = asyncHandler(async (req, res) => {
-    const { slug } = req.params;
+    const slug = req.params.slug;
     const job = await jobService.getJobBySlugFromDb(slug);
     res.status(200).json({
         success: true,
@@ -106,7 +118,7 @@ export const getJobBySlug = asyncHandler(async (req, res) => {
 });
 // GET /jobs/company/:companyId - Get jobs by company
 export const getJobsByCompany = asyncHandler(async (req, res) => {
-    const { companyId } = req.params;
+    const companyId = req.params.companyId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const result = await jobService.getJobsByCompanyIdFromDb(companyId, page, limit);
@@ -129,8 +141,8 @@ export const getMyJobs = asyncHandler(async (req, res) => {
 });
 // PATCH /jobs/:id - Update job
 export const updateJob = asyncHandler(async (req, res) => {
-    const { id } = req.params;
-    const { title, description, requirements, responsibilities, benefits, type, experienceLevel, location, isRemote, country, city, salaryMin, salaryMax, salaryCurrency, salaryPeriod, techStack, status, expiresAt, slug, } = req.body;
+    const id = req.params.id;
+    const { title, description, requirements, responsibilities, benefits, type, experienceLevel, location, isRemote, country, city, salaryMin, salaryMax, salaryCurrency, salaryPeriod, techStack, status, expiresAt, slug, screeningQuestions, } = req.body;
     const updatedJob = await jobService.updateJobInDb(id, req.user?.id, {
         title,
         description,
@@ -151,6 +163,7 @@ export const updateJob = asyncHandler(async (req, res) => {
         status,
         expiresAt,
         slug,
+        screeningQuestions,
     });
     res.status(200).json({
         success: true,
@@ -160,12 +173,65 @@ export const updateJob = asyncHandler(async (req, res) => {
 });
 // DELETE /jobs/:id - Delete job
 export const deleteJob = asyncHandler(async (req, res) => {
-    const { id } = req.params;
+    const id = req.params.id;
     const deletedJob = await jobService.deleteJobFromDb(id, req.user?.id);
     res.status(200).json({
         success: true,
         data: deletedJob,
         message: "Job deleted successfully",
+    });
+});
+// GET /jobs/:id/similar - Get similar jobs
+export const getSimilarJobs = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const limit = parseInt(req.query.limit) || 5;
+    const similarJobs = await jobService.getSimilarJobsFromDb(id, limit);
+    res.status(200).json({
+        success: true,
+        data: similarJobs,
+    });
+});
+// GET /jobs/:id/match-score - Calculate match score
+export const getMatchScore = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const score = await jobService.calculateMatchScore(id, req.user?.id);
+    res.status(200).json({
+        success: true,
+        data: { score },
+    });
+});
+// PATCH /jobs/:id/status - Update job status
+export const updateJobStatus = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const { status } = req.body;
+    if (!status) {
+        throw new AppError("Status is required", 400);
+    }
+    const updatedJob = await jobService.updateJobStatusInDb(id, req.user?.id, status);
+    res.status(200).json({
+        success: true,
+        data: updatedJob,
+        message: "Job status updated successfully",
+    });
+});
+// POST /jobs/:id/save - Save job
+export const saveJob = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const savedJob = await jobService.saveJobInDb(id, req.user?.id);
+    res.status(201).json({
+        success: true,
+        data: savedJob,
+        message: "Job saved successfully",
+    });
+});
+// DELETE /jobs/:id/save - Unsave job
+export const unsaveJob = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const deletedJob = await jobService.unsaveJobFromDb(id, req.user?.id);
+    res.status(200).json({
+        success: true,
+        data: deletedJob,
+        message: "Job unsaved successfully",
     });
 });
 export const jobController = {
@@ -177,5 +243,10 @@ export const jobController = {
     getMyJobs,
     updateJob,
     deleteJob,
+    getSimilarJobs,
+    getMatchScore,
+    updateJobStatus,
+    saveJob,
+    unsaveJob,
 };
 //# sourceMappingURL=job.controller.js.map

@@ -54,7 +54,17 @@ const createJobInDb = async (data, userId) => {
             salaryPeriod: data.salaryPeriod || "YEAR",
             techStack: data.techStack || [],
             status: data.status || "DRAFT",
-            expiresAt: data.expiresAt,
+            ...(data.expiresAt && { expiresAt: data.expiresAt }),
+            ...(data.screeningQuestions && {
+                screeningQuestions: {
+                    create: data.screeningQuestions.map((q) => ({
+                        question: q.question,
+                        type: q.type,
+                        options: q.options || [],
+                        required: q.required !== undefined ? q.required : true,
+                    })),
+                },
+            }),
         },
         include: {
             company: {
@@ -63,13 +73,6 @@ const createJobInDb = async (data, userId) => {
                     name: true,
                     slug: true,
                     logoUrl: true,
-                },
-            },
-            recruiter: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
                 },
             },
         },
@@ -141,13 +144,6 @@ const getAllJobsFromDb = async (page = 1, limit = 10, filters) => {
                         isVerified: true,
                     },
                 },
-                recruiter: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true,
-                    },
-                },
                 _count: {
                     select: { applications: true, savedBy: true },
                 },
@@ -185,17 +181,10 @@ const getJobByIdFromDb = async (id) => {
                     isVerified: true,
                 },
             },
-            recruiter: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    image: true,
-                },
-            },
             _count: {
                 select: { applications: true, savedBy: true },
             },
+            screeningQuestions: true,
         },
     });
     if (!job) {
@@ -227,17 +216,10 @@ const getJobBySlugFromDb = async (slug) => {
                     isVerified: true,
                 },
             },
-            recruiter: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    image: true,
-                },
-            },
             _count: {
                 select: { applications: true, savedBy: true },
             },
+            screeningQuestions: true,
         },
     });
     if (!job) {
@@ -293,7 +275,6 @@ const getJobsByCompanyIdFromDb = async (companyId, page = 1, limit = 10, include
 const updateJobInDb = async (id, userId, data) => {
     const job = await prisma.job.findUnique({
         where: { id },
-        include: { recruiter: true },
     });
     if (!job) {
         throw new AppError("Job not found", 404);
@@ -311,7 +292,20 @@ const updateJobInDb = async (id, userId, data) => {
     }
     const updatedJob = await prisma.job.update({
         where: { id },
-        data,
+        data: {
+            ...data,
+            ...(data.screeningQuestions && {
+                screeningQuestions: {
+                    deleteMany: {}, // Clean up existing and replace with new
+                    create: data.screeningQuestions.map(q => ({
+                        question: q.question,
+                        type: q.type,
+                        options: q.options || [],
+                        required: q.required !== undefined ? q.required : true,
+                    }))
+                }
+            }),
+        },
         include: {
             company: {
                 select: {
@@ -321,13 +315,7 @@ const updateJobInDb = async (id, userId, data) => {
                     logoUrl: true,
                 },
             },
-            recruiter: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                },
-            },
+            screeningQuestions: true,
         },
     });
     return updatedJob;
@@ -392,6 +380,114 @@ const isUserAdmin = async (userId) => {
     });
     return user?.role === "ADMIN";
 };
+// Get similar jobs
+const getSimilarJobsFromDb = async (id, limit = 5) => {
+    const job = await prisma.job.findUnique({ where: { id } });
+    if (!job)
+        throw new AppError("Job not found", 404);
+    const similarJobs = await prisma.job.findMany({
+        where: {
+            id: { not: id },
+            status: "PUBLISHED",
+            OR: [
+                { type: job.type },
+                { experienceLevel: job.experienceLevel },
+                ...(job.techStack && job.techStack.length > 0 ? [{ techStack: { hasSome: job.techStack } }] : []),
+            ],
+        },
+        take: limit,
+        include: {
+            company: { select: { id: true, name: true, logoUrl: true } },
+        },
+        orderBy: { publishedAt: "desc" },
+    });
+    return similarJobs;
+};
+// Calculate match score
+const calculateMatchScore = async (jobId, candidateId) => {
+    const job = await prisma.job.findUnique({ where: { id: jobId } });
+    const profile = await prisma.candidateProfile.findUnique({ where: { userId: candidateId } });
+    if (!job)
+        throw new AppError("Job not found", 404);
+    if (!profile)
+        throw new AppError("Candidate profile not found", 404);
+    let score = 0;
+    let maxScore = 0;
+    // Tech stack match
+    if (job.techStack && job.techStack.length > 0) {
+        maxScore += 50;
+        const matchingSkills = job.techStack.filter(skill => profile.skills.includes(skill));
+        score += (matchingSkills.length / job.techStack.length) * 50;
+    }
+    // Location match
+    if (job.isRemote) {
+        maxScore += 20;
+        score += 20;
+    }
+    else if (job.location && profile.location) {
+        maxScore += 20;
+        if (profile.location.toLowerCase().includes(job.location.toLowerCase()) || job.location.toLowerCase().includes(profile.location.toLowerCase())) {
+            score += 20;
+        }
+    }
+    // Experience level match (heuristic)
+    maxScore += 30;
+    // This is a naive implementation, ideally we'd compare years of experience
+    score += 15;
+    return maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+};
+// Update job status
+const updateJobStatusInDb = async (id, userId, status) => {
+    const job = await prisma.job.findUnique({ where: { id } });
+    if (!job)
+        throw new AppError("Job not found", 404);
+    if (job.postedById !== userId && !(await isUserAdmin(userId))) {
+        throw new AppError("You do not have permission to update this job status", 403);
+    }
+    const updatedJob = await prisma.job.update({
+        where: { id },
+        data: {
+            status,
+            publishedAt: status === "PUBLISHED" && !job.publishedAt ? new Date() : job.publishedAt
+        },
+    });
+    return updatedJob;
+};
+// Save job
+const saveJobInDb = async (jobId, userId) => {
+    const job = await prisma.job.findUnique({ where: { id: jobId } });
+    if (!job)
+        throw new AppError("Job not found", 404);
+    const existing = await prisma.savedJob.findUnique({
+        where: { userId_jobId: { userId, jobId } },
+    });
+    if (existing)
+        throw new AppError("Job already saved", 400);
+    const savedJob = await prisma.savedJob.create({
+        data: {
+            userId,
+            jobId,
+        },
+    });
+    return savedJob;
+};
+// Unsave job
+const unsaveJobFromDb = async (jobId, userId) => {
+    const existing = await prisma.savedJob.findUnique({
+        where: { userId_jobId: { userId, jobId } },
+    });
+    if (!existing)
+        throw new AppError("Job not saved", 400);
+    const deletedJob = await prisma.savedJob.delete({
+        where: {
+            userId_jobId: {
+                userId,
+                jobId,
+            },
+        },
+    });
+    return deletedJob;
+};
 export const jobService = {
     getAllJobsFromDb,
     getJobByIdFromDb,
@@ -401,5 +497,10 @@ export const jobService = {
     createJobInDb,
     updateJobInDb,
     deleteJobFromDb,
+    getSimilarJobsFromDb,
+    calculateMatchScore,
+    updateJobStatusInDb,
+    saveJobInDb,
+    unsaveJobFromDb,
 };
 //# sourceMappingURL=job.service.js.map

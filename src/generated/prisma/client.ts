@@ -116,3 +116,13 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model ScreeningQuestion
+ * 
+ */
+export type ScreeningQuestion = Prisma.ScreeningQuestionModel
+/**
+ * Model ScreeningAnswer
+ * 
+ */
+export type ScreeningAnswer = Prisma.ScreeningAnswerModel

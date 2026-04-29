@@ -1,5 +1,5 @@
 import * as runtime from "@prisma/client/runtime/client";
-import type * as Prisma from "./prismaNamespace";
+import type * as Prisma from "./prismaNamespace.js";
 export type LogOptions<ClientOptions extends Prisma.PrismaClientOptions> = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never;
 export interface PrismaClientConstructor {
     /**
@@ -278,6 +278,28 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
       * ```
       */
     get verification(): Prisma.VerificationDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.screeningQuestion`: Exposes CRUD operations for the **ScreeningQuestion** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more ScreeningQuestions
+      * const screeningQuestions = await prisma.screeningQuestion.findMany()
+      * ```
+      */
+    get screeningQuestion(): Prisma.ScreeningQuestionDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.screeningAnswer`: Exposes CRUD operations for the **ScreeningAnswer** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more ScreeningAnswers
+      * const screeningAnswers = await prisma.screeningAnswer.findMany()
+      * ```
+      */
+    get screeningAnswer(): Prisma.ScreeningAnswerDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

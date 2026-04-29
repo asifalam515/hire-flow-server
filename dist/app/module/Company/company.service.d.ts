@@ -34,16 +34,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -56,9 +56,9 @@ export declare const companyService: {
             members: {
                 id: string;
                 userId: string;
+                companyId: string;
                 isOwner: boolean;
                 joinedAt: Date;
-                companyId: string;
             }[];
             jobs: {
                 id: string;
@@ -66,19 +66,19 @@ export declare const companyService: {
                 updatedAt: Date;
                 expiresAt: Date | null;
                 type: import("@/generated/prisma/enums").JobType;
-                slug: string;
-                description: string;
-                country: string | null;
-                city: string | null;
                 companyId: string;
                 postedById: string;
                 title: string;
+                slug: string;
+                description: string;
                 requirements: string | null;
                 responsibilities: string | null;
                 benefits: string | null;
                 experienceLevel: import("@/generated/prisma/enums").ExperienceLevel;
                 location: string | null;
                 isRemote: boolean;
+                country: string | null;
+                city: string | null;
                 salaryMin: number | null;
                 salaryMax: number | null;
                 salaryCurrency: string | null;
@@ -95,16 +95,16 @@ export declare const companyService: {
             updatedAt: Date;
             name: string;
             slug: string;
+            description: string | null;
+            country: string | null;
+            city: string | null;
             logoUrl: string | null;
             bannerUrl: string | null;
             website: string | null;
             linkedinUrl: string | null;
-            description: string | null;
             industry: string | null;
             size: CompanySize | null;
             founded: number | null;
-            country: string | null;
-            city: string | null;
             isVerified: boolean;
             isActive: boolean;
         })[];
@@ -126,9 +126,9 @@ export declare const companyService: {
         } & {
             id: string;
             userId: string;
+            companyId: string;
             isOwner: boolean;
             joinedAt: Date;
-            companyId: string;
         })[];
         jobs: {
             id: string;
@@ -136,19 +136,19 @@ export declare const companyService: {
             updatedAt: Date;
             expiresAt: Date | null;
             type: import("@/generated/prisma/enums").JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: import("@/generated/prisma/enums").ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -165,16 +165,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -189,9 +189,9 @@ export declare const companyService: {
         } & {
             id: string;
             userId: string;
+            companyId: string;
             isOwner: boolean;
             joinedAt: Date;
-            companyId: string;
         })[];
         jobs: {
             id: string;
@@ -199,19 +199,19 @@ export declare const companyService: {
             updatedAt: Date;
             expiresAt: Date | null;
             type: import("@/generated/prisma/enums").JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: import("@/generated/prisma/enums").ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -228,16 +228,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -245,9 +245,9 @@ export declare const companyService: {
         members: {
             id: string;
             userId: string;
+            companyId: string;
             isOwner: boolean;
             joinedAt: Date;
-            companyId: string;
         }[];
     } & {
         id: string;
@@ -255,16 +255,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -274,16 +274,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -293,16 +293,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }>;
@@ -311,9 +311,9 @@ export declare const companyService: {
         members: {
             id: string;
             userId: string;
+            companyId: string;
             isOwner: boolean;
             joinedAt: Date;
-            companyId: string;
         }[];
         jobs: {
             id: string;
@@ -321,19 +321,19 @@ export declare const companyService: {
             updatedAt: Date;
             expiresAt: Date | null;
             type: import("@/generated/prisma/enums").JobType;
-            slug: string;
-            description: string;
-            country: string | null;
-            city: string | null;
             companyId: string;
             postedById: string;
             title: string;
+            slug: string;
+            description: string;
             requirements: string | null;
             responsibilities: string | null;
             benefits: string | null;
             experienceLevel: import("@/generated/prisma/enums").ExperienceLevel;
             location: string | null;
             isRemote: boolean;
+            country: string | null;
+            city: string | null;
             salaryMin: number | null;
             salaryMax: number | null;
             salaryCurrency: string | null;
@@ -349,16 +349,16 @@ export declare const companyService: {
         updatedAt: Date;
         name: string;
         slug: string;
+        description: string | null;
+        country: string | null;
+        city: string | null;
         logoUrl: string | null;
         bannerUrl: string | null;
         website: string | null;
         linkedinUrl: string | null;
-        description: string | null;
         industry: string | null;
         size: CompanySize | null;
         founded: number | null;
-        country: string | null;
-        city: string | null;
         isVerified: boolean;
         isActive: boolean;
     }[]>;
@@ -372,16 +372,16 @@ export declare const companyService: {
     } & {
         id: string;
         userId: string;
+        companyId: string;
         isOwner: boolean;
         joinedAt: Date;
-        companyId: string;
     }>;
     removeCompanyMemberFromDb: (companyId: string, userId: string) => Promise<{
         id: string;
         userId: string;
+        companyId: string;
         isOwner: boolean;
         joinedAt: Date;
-        companyId: string;
     }>;
     getCompanyMembersFromDb: (companyId: string) => Promise<({
         user: {
@@ -393,9 +393,9 @@ export declare const companyService: {
     } & {
         id: string;
         userId: string;
+        companyId: string;
         isOwner: boolean;
         joinedAt: Date;
-        companyId: string;
     })[]>;
 };
 export {};

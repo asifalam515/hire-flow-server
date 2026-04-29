@@ -112,3 +112,12 @@ export const InterviewType = {
 } as const
 
 export type InterviewType = (typeof InterviewType)[keyof typeof InterviewType]
+
+
+export const QuestionType = {
+  TEXT: 'TEXT',
+  MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
+  YES_NO: 'YES_NO'
+} as const
+
+export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType]

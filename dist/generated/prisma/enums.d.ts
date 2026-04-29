@@ -24,10 +24,12 @@ export declare const ExperienceLevel: {
 export type ExperienceLevel = (typeof ExperienceLevel)[keyof typeof ExperienceLevel];
 export declare const JobStatus: {
     readonly DRAFT: "DRAFT";
+    readonly PENDING_APPROVAL: "PENDING_APPROVAL";
     readonly PUBLISHED: "PUBLISHED";
     readonly PAUSED: "PAUSED";
     readonly CLOSED: "CLOSED";
     readonly EXPIRED: "EXPIRED";
+    readonly REJECTED: "REJECTED";
 };
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
 export declare const ApplicationStage: {
@@ -74,4 +76,10 @@ export declare const InterviewType: {
     readonly PANEL: "PANEL";
 };
 export type InterviewType = (typeof InterviewType)[keyof typeof InterviewType];
+export declare const QuestionType: {
+    readonly TEXT: "TEXT";
+    readonly MULTIPLE_CHOICE: "MULTIPLE_CHOICE";
+    readonly YES_NO: "YES_NO";
+};
+export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType];
 //# sourceMappingURL=enums.d.ts.map

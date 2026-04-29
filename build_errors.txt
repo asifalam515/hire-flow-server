@@ -1,0 +1,181 @@
+
+> backend-starter@1.0.0 build
+> tsc
+
+src/app/module/Admin/admin.controller.ts(29,5): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Admin/admin.controller.ts(50,7): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Admin/admin.controller.ts(86,5): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Admin/admin.service.ts(125,5): error TS2375: Type '{ status: "PUBLISHED" | "REJECTED"; publishedAt: Date | undefined; }' is not assignable to type '(Without<JobUpdateInput, JobUncheckedUpdateInput> & JobUncheckedUpdateInput) | (Without<JobUncheckedUpdateInput, JobUpdateInput> & JobUpdateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ status: "PUBLISHED" | "REJECTED"; publishedAt: Date | undefined; }' is not assignable to type 'Without<JobUncheckedUpdateInput, JobUpdateInput> & JobUpdateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ status: "PUBLISHED" | "REJECTED"; publishedAt: Date | undefined; }' is not assignable to type 'JobUpdateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'publishedAt' are incompatible.
+        Type 'Date | undefined' is not assignable to type 'string | Date | NullableDateTimeFieldUpdateOperationsInput | null'.
+          Type 'undefined' is not assignable to type 'string | Date | NullableDateTimeFieldUpdateOperationsInput | null'.
+src/app/module/Analytics/analytics.controller.ts(6,54): error TS2379: Argument of type '{ from: string | undefined; to: string | undefined; bucket: string | undefined; }' is not assignable to parameter of type '{ from?: string; to?: string; bucket?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'from' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/app/module/Analytics/analytics.controller.ts(24,54): error TS2379: Argument of type '{ from: string | undefined; to: string | undefined; bucket: string | undefined; }' is not assignable to parameter of type '{ from?: string; to?: string; bucket?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'from' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/app/module/Analytics/analytics.service.ts(48,3): error TS2375: Type '{ from: Date | undefined; to: Date | undefined; bucket: TimeBucket; }' is not assignable to type 'DateRangeFilter' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'from' are incompatible.
+    Type 'Date | undefined' is not assignable to type 'Date'.
+      Type 'undefined' is not assignable to type 'Date'.
+src/app/module/Analytics/analytics.service.ts(355,11): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(356,48): error TS2532: Object is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(357,37): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(359,27): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(360,24): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(362,9): error TS2532: Object is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(362,22): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(363,9): error TS2532: Object is possibly 'undefined'.
+src/app/module/Analytics/analytics.service.ts(363,22): error TS18048: 'log' is possibly 'undefined'.
+src/app/module/Applications/application.controller.ts(42,5): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.controller.ts(90,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.controller.ts(119,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.controller.ts(171,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.controller.ts(198,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.controller.ts(220,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/application.service.ts(97,5): error TS2375: Type '{ candidateId: string; jobId: string; resumeUrl: string; resumeFileName: string | undefined; coverLetter: string | undefined; source: string; referralCode: string | undefined; }' is not assignable to type '(Without<ApplicationCreateInput, ApplicationUncheckedCreateInput> & ApplicationUncheckedCreateInput) | (Without<...> & ApplicationCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ candidateId: string; jobId: string; resumeUrl: string; resumeFileName: string | undefined; coverLetter: string | undefined; source: string; referralCode: string | undefined; }' is not assignable to type 'Without<ApplicationCreateInput, ApplicationUncheckedCreateInput> & ApplicationUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ candidateId: string; jobId: string; resumeUrl: string; resumeFileName: string | undefined; coverLetter: string | undefined; source: string; referralCode: string | undefined; }' is not assignable to type 'ApplicationUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'resumeFileName' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Applications/application.service.ts(170,36): error TS2551: Property 'candidate' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; candidateId: string; jobId: string; resumeUrl: string; resumeFileName: string | null; coverLetter: string | null; stage: ApplicationStage; aiMatchScore: number | null; source: string | null; referralCode: string | null; isArchived: boolean; }'. Did you mean 'candidateId'?
+src/app/module/Applications/application.service.ts(171,37): error TS2551: Property 'candidate' does not exist on type '{ id: string; createdAt: Date; updatedAt: Date; candidateId: string; jobId: string; resumeUrl: string; resumeFileName: string | null; coverLetter: string | null; stage: ApplicationStage; aiMatchScore: number | null; source: string | null; referralCode: string | null; isArchived: boolean; }'. Did you mean 'candidateId'?
+src/app/module/Applications/application.service.ts(388,5): error TS2375: Type '{ applicationId: string; changedById: string; fromStage: ApplicationStage; toStage: ApplicationStage; reason: string | undefined; }' is not assignable to type '(Without<AuditLogCreateInput, AuditLogUncheckedCreateInput> & AuditLogUncheckedCreateInput) | (Without<...> & AuditLogCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ applicationId: string; changedById: string; fromStage: ApplicationStage; toStage: ApplicationStage; reason: string | undefined; }' is not assignable to type 'Without<AuditLogCreateInput, AuditLogUncheckedCreateInput> & AuditLogUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ applicationId: string; changedById: string; fromStage: ApplicationStage; toStage: ApplicationStage; reason: string | undefined; }' is not assignable to type 'AuditLogUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'reason' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Applications/application.service.ts(470,69): error TS2379: Argument of type '{ stage: ApplicationStage; reason: string | undefined; }' is not assignable to parameter of type 'MoveApplicationStageInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'reason' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/app/module/Applications/interview.controller.ts(21,5): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Applications/interview.service.ts(66,5): error TS2375: Type '{ applicationId: string; scheduledById: string; type: InterviewType; scheduledAt: Date; durationMins: number; location: string | undefined; meetingUrl: string | undefined; notes: string | undefined; }' is not assignable to type '(Without<InterviewCreateInput, InterviewUncheckedCreateInput> & InterviewUncheckedCreateInput) | (Without<...> & InterviewCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ applicationId: string; scheduledById: string; type: InterviewType; scheduledAt: Date; durationMins: number; location: string | undefined; meetingUrl: string | undefined; notes: string | undefined; }' is not assignable to type 'Without<InterviewCreateInput, InterviewUncheckedCreateInput> & InterviewUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ applicationId: string; scheduledById: string; type: InterviewType; scheduledAt: Date; durationMins: number; location: string | undefined; meetingUrl: string | undefined; notes: string | undefined; }' is not assignable to type 'InterviewUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'location' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Applications/interview.service.ts(89,11): error TS2375: Type '{ type: InterviewType; dateTime: Date; location: string | undefined; meetingUrl: string | undefined; }' is not assignable to type '{ type?: string; dateTime?: Date; location?: string; meetingUrl?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'location' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/app/module/Applications/interview.service.ts(149,9): error TS2322: Type 'number | null' is not assignable to type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/app/module/Applications/interview.service.ts(150,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/app/module/Candidate/education.controller.ts(68,61): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/education.controller.ts(81,58): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/education.controller.ts(93,61): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/education.controller.ts(106,42): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/education.service.ts(28,5): error TS2375: Type '{ profileId: string; institution: string; degree: string; field: string; startDate: Date; endDate: Date | null; current: boolean; gpa: number | undefined; }' is not assignable to type '(Without<EducationCreateInput, EducationUncheckedCreateInput> & EducationUncheckedCreateInput) | (Without<...> & EducationCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ profileId: string; institution: string; degree: string; field: string; startDate: Date; endDate: Date | null; current: boolean; gpa: number | undefined; }' is not assignable to type 'Without<EducationCreateInput, EducationUncheckedCreateInput> & EducationUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ profileId: string; institution: string; degree: string; field: string; startDate: Date; endDate: Date | null; current: boolean; gpa: number | undefined; }' is not assignable to type 'EducationUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'gpa' are incompatible.
+        Type 'number | undefined' is not assignable to type 'number | null'.
+          Type 'undefined' is not assignable to type 'number | null'.
+src/app/module/Candidate/profile.controller.ts(5,20): error TS7016: Could not find a declaration file for module 'multer'. '/media/asif/Programming/projects/hire-flow-server/node_modules/multer/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/multer` if it exists or add a new declaration (.d.ts) file containing `declare module 'multer';`
+src/app/module/Candidate/profile.controller.ts(39,22): error TS2339: Property 'file' does not exist on type 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+src/app/module/Candidate/profile.controller.ts(39,38): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+src/app/module/Candidate/profile.service.ts(49,5): error TS2375: Type '{ userId: string; firstName: string; lastName: string; avatarUrl: string | undefined; headline: string | undefined; bio: string | undefined; location: string | undefined; country: string | undefined; ... 13 more ...; promotionalEmails: boolean | undefined; }' is not assignable to type '(Without<CandidateProfileCreateInput, CandidateProfileUncheckedCreateInput> & CandidateProfileUncheckedCreateInput) | (Without<...> & CandidateProfileCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ userId: string; firstName: string; lastName: string; avatarUrl: string | undefined; headline: string | undefined; bio: string | undefined; location: string | undefined; country: string | undefined; ... 13 more ...; promotionalEmails: boolean | undefined; }' is not assignable to type 'Without<CandidateProfileCreateInput, CandidateProfileUncheckedCreateInput> & CandidateProfileUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ userId: string; firstName: string; lastName: string; avatarUrl: string | undefined; headline: string | undefined; bio: string | undefined; location: string | undefined; country: string | undefined; ... 13 more ...; promotionalEmails: boolean | undefined; }' is not assignable to type 'CandidateProfileUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'avatarUrl' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Candidate/savedJobs.controller.ts(9,5): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Candidate/savedJobs.controller.ts(18,5): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Candidate/workExperience.controller.ts(83,74): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/workExperience.controller.ts(97,7): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/workExperience.controller.ts(113,74): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/workExperience.controller.ts(126,54): error TS2345: Argument of type 'string | string[]' is not assignable to parameter of type 'string'.
+  Type 'string[]' is not assignable to type 'string'.
+src/app/module/Candidate/workExperience.service.ts(30,5): error TS2375: Type '{ profileId: string; company: string; title: string; location: string | undefined; startDate: Date; endDate: Date | null; current: boolean; description: string | undefined; skills: string[]; }' is not assignable to type '(Without<WorkExperienceCreateInput, WorkExperienceUncheckedCreateInput> & WorkExperienceUncheckedCreateInput) | (Without<...> & WorkExperienceCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ profileId: string; company: string; title: string; location: string | undefined; startDate: Date; endDate: Date | null; current: boolean; description: string | undefined; skills: string[]; }' is not assignable to type 'Without<WorkExperienceCreateInput, WorkExperienceUncheckedCreateInput> & WorkExperienceUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ profileId: string; company: string; title: string; location: string | undefined; startDate: Date; endDate: Date | null; current: boolean; description: string | undefined; skills: string[]; }' is not assignable to type 'WorkExperienceUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'location' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Company/company.controller.ts(73,76): error TS2379: Argument of type '{ isActive: boolean | undefined; isVerified: boolean | undefined; search: string | undefined; }' is not assignable to parameter of type '{ isActive?: boolean; isVerified?: boolean; search?: string; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'isActive' are incompatible.
+    Type 'boolean | undefined' is not assignable to type 'boolean'.
+      Type 'undefined' is not assignable to type 'boolean'.
+src/app/module/Company/company.controller.ts(91,63): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(104,65): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(133,63): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(145,67): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(174,63): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(186,69): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(206,60): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(241,63): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(254,7): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(277,60): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(292,63): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(304,67): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.controller.ts(318,66): error TS2345: Argument of type 'string | string[] | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/app/module/Company/company.service.ts(59,5): error TS2375: Type '{ name: string; slug: string; logoUrl: string | undefined; bannerUrl: string | undefined; website: string | undefined; linkedinUrl: string | undefined; description: string | undefined; ... 4 more ...; city: string | undefined; }' is not assignable to type '(Without<CompanyCreateInput, CompanyUncheckedCreateInput> & CompanyUncheckedCreateInput) | (Without<...> & CompanyCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ name: string; slug: string; logoUrl: string | undefined; bannerUrl: string | undefined; website: string | undefined; linkedinUrl: string | undefined; description: string | undefined; ... 4 more ...; city: string | undefined; }' is not assignable to type 'Without<CompanyUncheckedCreateInput, CompanyCreateInput> & CompanyCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ name: string; slug: string; logoUrl: string | undefined; bannerUrl: string | undefined; website: string | undefined; linkedinUrl: string | undefined; description: string | undefined; ... 4 more ...; city: string | undefined; }' is not assignable to type 'CompanyCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'logoUrl' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Company/company.service.ts(211,41): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/app/module/Jobs/job.service.ts(117,5): error TS2375: Type '{ screeningQuestions?: { create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }; expiresAt?: Date; companyId: string; postedById: string; title: string; ... 16 more ...; status: JobStatus; }' is not assignable to type '(Without<JobCreateInput, JobUncheckedCreateInput> & JobUncheckedCreateInput) | (Without<JobUncheckedCreateInput, JobCreateInput> & JobCreateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ screeningQuestions?: { create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }; expiresAt?: Date; companyId: string; postedById: string; title: string; ... 16 more ...; status: JobStatus; }' is not assignable to type 'Without<JobCreateInput, JobUncheckedCreateInput> & JobUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Type '{ screeningQuestions?: { create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }; expiresAt?: Date; companyId: string; postedById: string; title: string; ... 16 more ...; status: JobStatus; }' is not assignable to type 'JobUncheckedCreateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'requirements' are incompatible.
+        Type 'string | undefined' is not assignable to type 'string | null'.
+          Type 'undefined' is not assignable to type 'string | null'.
+src/app/module/Jobs/job.service.ts(410,5): error TS2375: Type '{ screeningQuestions?: ScreeningQuestionInput[] | { deleteMany: {}; create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }; ... 18 more ...; slug?: string; }' is not assignable to type '(Without<JobUpdateInput, JobUncheckedUpdateInput> & JobUncheckedUpdateInput) | (Without<JobUncheckedUpdateInput, JobUpdateInput> & JobUpdateInput)' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Type '{ screeningQuestions?: ScreeningQuestionInput[] | { deleteMany: {}; create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }; ... 18 more ...; slug?: string; }' is not assignable to type 'Without<JobUncheckedUpdateInput, JobUpdateInput> & JobUpdateInput' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+    Types of property 'screeningQuestions' are incompatible.
+      Type 'ScreeningQuestionInput[] | { deleteMany: {}; create: { question: string; type: QuestionType; options: string[]; required: boolean; }[]; }' is not assignable to type 'ScreeningQuestionUpdateManyWithoutJobNestedInput'.
+        Type 'ScreeningQuestionInput[]' has no properties in common with type 'ScreeningQuestionUpdateManyWithoutJobNestedInput'.
+src/app/module/Jobs/jobExpiration.service.ts(2,38): error TS2307: Cannot find module './notification.service' or its corresponding type declarations.
+src/app/module/Jobs/jobExpiration.service.ts(48,24): error TS2339: Property 'email' does not exist on type 'never'.
+src/app/module/Jobs/jobExpiration.service.ts(50,24): error TS2339: Property 'email' does not exist on type 'never'.
+src/app/module/Jobs/jobExpiration.service.ts(51,24): error TS2339: Property 'name' does not exist on type 'never'.
+src/lib/mailer.ts(1,24): error TS7016: Could not find a declaration file for module 'nodemailer'. '/media/asif/Programming/projects/hire-flow-server/node_modules/nodemailer/lib/nodemailer.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/nodemailer` if it exists or add a new declaration (.d.ts) file containing `declare module 'nodemailer';`
+src/lib/richTextUtils.ts(84,3): error TS2322: Type 'string | boolean' is not assignable to type 'boolean'.
+  Type 'string' is not assignable to type 'boolean'.

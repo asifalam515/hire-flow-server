@@ -1,6 +1,6 @@
 import * as runtime from "@prisma/client/runtime/index-browser";
-export type * from '../models';
-export type * from './prismaNamespace';
+export type * from '../models.js';
+export type * from './prismaNamespace.js';
 export declare const Decimal: typeof runtime.Decimal;
 export declare const NullTypes: {
     DbNull: (new (secret: never) => typeof runtime.DbNull);
@@ -41,6 +41,8 @@ export declare const ModelName: {
     readonly Session: "Session";
     readonly Account: "Account";
     readonly Verification: "Verification";
+    readonly ScreeningQuestion: "ScreeningQuestion";
+    readonly ScreeningAnswer: "ScreeningAnswer";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -59,6 +61,7 @@ export declare const UserScalarFieldEnum: {
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
     readonly role: "role";
+    readonly isSuspended: "isSuspended";
 };
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
 export declare const CandidateProfileScalarFieldEnum: {
@@ -82,6 +85,9 @@ export declare const CandidateProfileScalarFieldEnum: {
     readonly expectedSalaryMax: "expectedSalaryMax";
     readonly salaryCurrency: "salaryCurrency";
     readonly openToWork: "openToWork";
+    readonly jobAlerts: "jobAlerts";
+    readonly applicationUpdates: "applicationUpdates";
+    readonly promotionalEmails: "promotionalEmails";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -268,6 +274,25 @@ export declare const VerificationScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum];
+export declare const ScreeningQuestionScalarFieldEnum: {
+    readonly id: "id";
+    readonly jobId: "jobId";
+    readonly question: "question";
+    readonly type: "type";
+    readonly options: "options";
+    readonly required: "required";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type ScreeningQuestionScalarFieldEnum = (typeof ScreeningQuestionScalarFieldEnum)[keyof typeof ScreeningQuestionScalarFieldEnum];
+export declare const ScreeningAnswerScalarFieldEnum: {
+    readonly id: "id";
+    readonly applicationId: "applicationId";
+    readonly questionId: "questionId";
+    readonly answer: "answer";
+    readonly createdAt: "createdAt";
+};
+export type ScreeningAnswerScalarFieldEnum = (typeof ScreeningAnswerScalarFieldEnum)[keyof typeof ScreeningAnswerScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

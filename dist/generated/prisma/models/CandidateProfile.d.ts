@@ -1,5 +1,5 @@
 import type * as runtime from "@prisma/client/runtime/client";
-import type * as Prisma from "../internal/prismaNamespace";
+import type * as Prisma from "../internal/prismaNamespace.js";
 /**
  * Model CandidateProfile
  *
@@ -40,6 +40,9 @@ export type CandidateProfileMinAggregateOutputType = {
     expectedSalaryMax: number | null;
     salaryCurrency: string | null;
     openToWork: boolean | null;
+    jobAlerts: boolean | null;
+    applicationUpdates: boolean | null;
+    promotionalEmails: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -63,6 +66,9 @@ export type CandidateProfileMaxAggregateOutputType = {
     expectedSalaryMax: number | null;
     salaryCurrency: string | null;
     openToWork: boolean | null;
+    jobAlerts: boolean | null;
+    applicationUpdates: boolean | null;
+    promotionalEmails: boolean | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
@@ -87,6 +93,9 @@ export type CandidateProfileCountAggregateOutputType = {
     expectedSalaryMax: number;
     salaryCurrency: number;
     openToWork: number;
+    jobAlerts: number;
+    applicationUpdates: number;
+    promotionalEmails: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
@@ -119,6 +128,9 @@ export type CandidateProfileMinAggregateInputType = {
     expectedSalaryMax?: true;
     salaryCurrency?: true;
     openToWork?: true;
+    jobAlerts?: true;
+    applicationUpdates?: true;
+    promotionalEmails?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -142,6 +154,9 @@ export type CandidateProfileMaxAggregateInputType = {
     expectedSalaryMax?: true;
     salaryCurrency?: true;
     openToWork?: true;
+    jobAlerts?: true;
+    applicationUpdates?: true;
+    promotionalEmails?: true;
     createdAt?: true;
     updatedAt?: true;
 };
@@ -166,6 +181,9 @@ export type CandidateProfileCountAggregateInputType = {
     expectedSalaryMax?: true;
     salaryCurrency?: true;
     openToWork?: true;
+    jobAlerts?: true;
+    applicationUpdates?: true;
+    promotionalEmails?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -267,6 +285,9 @@ export type CandidateProfileGroupByOutputType = {
     expectedSalaryMax: number | null;
     salaryCurrency: string | null;
     openToWork: boolean;
+    jobAlerts: boolean;
+    applicationUpdates: boolean;
+    promotionalEmails: boolean;
     createdAt: Date;
     updatedAt: Date;
     _count: CandidateProfileCountAggregateOutputType | null;
@@ -302,6 +323,9 @@ export type CandidateProfileWhereInput = {
     expectedSalaryMax?: Prisma.IntNullableFilter<"CandidateProfile"> | number | null;
     salaryCurrency?: Prisma.StringNullableFilter<"CandidateProfile"> | string | null;
     openToWork?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    jobAlerts?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    applicationUpdates?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    promotionalEmails?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
     createdAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -329,6 +353,9 @@ export type CandidateProfileOrderByWithRelationInput = {
     expectedSalaryMax?: Prisma.SortOrderInput | Prisma.SortOrder;
     salaryCurrency?: Prisma.SortOrderInput | Prisma.SortOrder;
     openToWork?: Prisma.SortOrder;
+    jobAlerts?: Prisma.SortOrder;
+    applicationUpdates?: Prisma.SortOrder;
+    promotionalEmails?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     user?: Prisma.UserOrderByWithRelationInput;
@@ -359,6 +386,9 @@ export type CandidateProfileWhereUniqueInput = Prisma.AtLeast<{
     expectedSalaryMax?: Prisma.IntNullableFilter<"CandidateProfile"> | number | null;
     salaryCurrency?: Prisma.StringNullableFilter<"CandidateProfile"> | string | null;
     openToWork?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    jobAlerts?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    applicationUpdates?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
+    promotionalEmails?: Prisma.BoolFilter<"CandidateProfile"> | boolean;
     createdAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"CandidateProfile"> | Date | string;
     user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -386,6 +416,9 @@ export type CandidateProfileOrderByWithAggregationInput = {
     expectedSalaryMax?: Prisma.SortOrderInput | Prisma.SortOrder;
     salaryCurrency?: Prisma.SortOrderInput | Prisma.SortOrder;
     openToWork?: Prisma.SortOrder;
+    jobAlerts?: Prisma.SortOrder;
+    applicationUpdates?: Prisma.SortOrder;
+    promotionalEmails?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.CandidateProfileCountOrderByAggregateInput;
@@ -418,6 +451,9 @@ export type CandidateProfileScalarWhereWithAggregatesInput = {
     expectedSalaryMax?: Prisma.IntNullableWithAggregatesFilter<"CandidateProfile"> | number | null;
     salaryCurrency?: Prisma.StringNullableWithAggregatesFilter<"CandidateProfile"> | string | null;
     openToWork?: Prisma.BoolWithAggregatesFilter<"CandidateProfile"> | boolean;
+    jobAlerts?: Prisma.BoolWithAggregatesFilter<"CandidateProfile"> | boolean;
+    applicationUpdates?: Prisma.BoolWithAggregatesFilter<"CandidateProfile"> | boolean;
+    promotionalEmails?: Prisma.BoolWithAggregatesFilter<"CandidateProfile"> | boolean;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"CandidateProfile"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CandidateProfile"> | Date | string;
 };
@@ -441,6 +477,9 @@ export type CandidateProfileCreateInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutProfileInput;
@@ -468,6 +507,9 @@ export type CandidateProfileUncheckedCreateInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     experiences?: Prisma.WorkExperienceUncheckedCreateNestedManyWithoutProfileInput;
@@ -493,6 +535,9 @@ export type CandidateProfileUpdateInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput;
@@ -520,6 +565,9 @@ export type CandidateProfileUncheckedUpdateInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     experiences?: Prisma.WorkExperienceUncheckedUpdateManyWithoutProfileNestedInput;
@@ -546,6 +594,9 @@ export type CandidateProfileCreateManyInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -569,6 +620,9 @@ export type CandidateProfileUpdateManyMutationInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -593,6 +647,9 @@ export type CandidateProfileUncheckedUpdateManyInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -628,6 +685,9 @@ export type CandidateProfileCountOrderByAggregateInput = {
     expectedSalaryMax?: Prisma.SortOrder;
     salaryCurrency?: Prisma.SortOrder;
     openToWork?: Prisma.SortOrder;
+    jobAlerts?: Prisma.SortOrder;
+    applicationUpdates?: Prisma.SortOrder;
+    promotionalEmails?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -655,6 +715,9 @@ export type CandidateProfileMaxOrderByAggregateInput = {
     expectedSalaryMax?: Prisma.SortOrder;
     salaryCurrency?: Prisma.SortOrder;
     openToWork?: Prisma.SortOrder;
+    jobAlerts?: Prisma.SortOrder;
+    applicationUpdates?: Prisma.SortOrder;
+    promotionalEmails?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -678,6 +741,9 @@ export type CandidateProfileMinOrderByAggregateInput = {
     expectedSalaryMax?: Prisma.SortOrder;
     salaryCurrency?: Prisma.SortOrder;
     openToWork?: Prisma.SortOrder;
+    jobAlerts?: Prisma.SortOrder;
+    applicationUpdates?: Prisma.SortOrder;
+    promotionalEmails?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -775,6 +841,9 @@ export type CandidateProfileCreateWithoutUserInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     experiences?: Prisma.WorkExperienceCreateNestedManyWithoutProfileInput;
@@ -800,6 +869,9 @@ export type CandidateProfileUncheckedCreateWithoutUserInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     experiences?: Prisma.WorkExperienceUncheckedCreateNestedManyWithoutProfileInput;
@@ -838,6 +910,9 @@ export type CandidateProfileUpdateWithoutUserInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     experiences?: Prisma.WorkExperienceUpdateManyWithoutProfileNestedInput;
@@ -863,6 +938,9 @@ export type CandidateProfileUncheckedUpdateWithoutUserInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     experiences?: Prisma.WorkExperienceUncheckedUpdateManyWithoutProfileNestedInput;
@@ -888,6 +966,9 @@ export type CandidateProfileCreateWithoutExperiencesInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutProfileInput;
@@ -914,6 +995,9 @@ export type CandidateProfileUncheckedCreateWithoutExperiencesInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     educations?: Prisma.EducationUncheckedCreateNestedManyWithoutProfileInput;
@@ -951,6 +1035,9 @@ export type CandidateProfileUpdateWithoutExperiencesInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput;
@@ -977,6 +1064,9 @@ export type CandidateProfileUncheckedUpdateWithoutExperiencesInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     educations?: Prisma.EducationUncheckedUpdateManyWithoutProfileNestedInput;
@@ -1001,6 +1091,9 @@ export type CandidateProfileCreateWithoutEducationsInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     user: Prisma.UserCreateNestedOneWithoutProfileInput;
@@ -1027,6 +1120,9 @@ export type CandidateProfileUncheckedCreateWithoutEducationsInput = {
     expectedSalaryMax?: number | null;
     salaryCurrency?: string | null;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     experiences?: Prisma.WorkExperienceUncheckedCreateNestedManyWithoutProfileInput;
@@ -1064,6 +1160,9 @@ export type CandidateProfileUpdateWithoutEducationsInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput;
@@ -1090,6 +1189,9 @@ export type CandidateProfileUncheckedUpdateWithoutEducationsInput = {
     expectedSalaryMax?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
     salaryCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     openToWork?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    jobAlerts?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    applicationUpdates?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    promotionalEmails?: Prisma.BoolFieldUpdateOperationsInput | boolean;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     experiences?: Prisma.WorkExperienceUncheckedUpdateManyWithoutProfileNestedInput;
@@ -1147,6 +1249,9 @@ export type CandidateProfileSelect<ExtArgs extends runtime.Types.Extensions.Inte
     expectedSalaryMax?: boolean;
     salaryCurrency?: boolean;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1175,6 +1280,9 @@ export type CandidateProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
     expectedSalaryMax?: boolean;
     salaryCurrency?: boolean;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1200,6 +1308,9 @@ export type CandidateProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
     expectedSalaryMax?: boolean;
     salaryCurrency?: boolean;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1225,10 +1336,13 @@ export type CandidateProfileSelectScalar = {
     expectedSalaryMax?: boolean;
     salaryCurrency?: boolean;
     openToWork?: boolean;
+    jobAlerts?: boolean;
+    applicationUpdates?: boolean;
+    promotionalEmails?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type CandidateProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "avatarUrl" | "headline" | "bio" | "location" | "country" | "phone" | "linkedinUrl" | "githubUrl" | "portfolioUrl" | "resumeUrl" | "resumeFileName" | "skills" | "expectedSalaryMin" | "expectedSalaryMax" | "salaryCurrency" | "openToWork" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateProfile"]>;
+export type CandidateProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "avatarUrl" | "headline" | "bio" | "location" | "country" | "phone" | "linkedinUrl" | "githubUrl" | "portfolioUrl" | "resumeUrl" | "resumeFileName" | "skills" | "expectedSalaryMin" | "expectedSalaryMax" | "salaryCurrency" | "openToWork" | "jobAlerts" | "applicationUpdates" | "promotionalEmails" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateProfile"]>;
 export type CandidateProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     user?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     experiences?: boolean | Prisma.CandidateProfile$experiencesArgs<ExtArgs>;
@@ -1269,6 +1383,9 @@ export type $CandidateProfilePayload<ExtArgs extends runtime.Types.Extensions.In
         expectedSalaryMax: number | null;
         salaryCurrency: string | null;
         openToWork: boolean;
+        jobAlerts: boolean;
+        applicationUpdates: boolean;
+        promotionalEmails: boolean;
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["candidateProfile"]>;
@@ -1648,6 +1765,9 @@ export interface CandidateProfileFieldRefs {
     readonly expectedSalaryMax: Prisma.FieldRef<"CandidateProfile", 'Int'>;
     readonly salaryCurrency: Prisma.FieldRef<"CandidateProfile", 'String'>;
     readonly openToWork: Prisma.FieldRef<"CandidateProfile", 'Boolean'>;
+    readonly jobAlerts: Prisma.FieldRef<"CandidateProfile", 'Boolean'>;
+    readonly applicationUpdates: Prisma.FieldRef<"CandidateProfile", 'Boolean'>;
+    readonly promotionalEmails: Prisma.FieldRef<"CandidateProfile", 'Boolean'>;
     readonly createdAt: Prisma.FieldRef<"CandidateProfile", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"CandidateProfile", 'DateTime'>;
 }

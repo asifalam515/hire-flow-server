@@ -159,6 +159,21 @@ export const addCompanyMember = asyncHandler(async (req, res) => {
         message: "Member added successfully",
     });
 });
+// POST /companies/:id/join - Join company (self)
+export const joinCompany = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    // Only authenticated users can join; caller identity is used
+    const userId = req.user?.id;
+    if (!userId) {
+        throw new AppError("Authentication required", 401);
+    }
+    const member = await companyService.addCompanyMemberInDb(id, userId, false);
+    res.status(201).json({
+        success: true,
+        data: member,
+        message: "Joined company successfully",
+    });
+});
 // DELETE /companies/:id/members/:userId - Remove member from company
 export const removeCompanyMember = asyncHandler(async (req, res) => {
     const { id, userId } = req.params;
@@ -196,5 +211,6 @@ export const companyController = {
     addCompanyMember,
     removeCompanyMember,
     getCompanyMembers,
+    joinCompany,
 };
 //# sourceMappingURL=company.controller.js.map
