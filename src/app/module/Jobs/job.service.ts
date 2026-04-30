@@ -240,6 +240,7 @@ const fetchJobsFromDb = async (
         OR: [{ salaryMax: { gte: filters.salaryMin } }, { salaryMax: null }],
       });
     }
+
     if (filters?.salaryMax !== undefined) {
       where.AND.push({
         OR: [{ salaryMin: { lte: filters.salaryMax } }, { salaryMin: null }],
