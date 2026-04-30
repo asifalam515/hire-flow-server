@@ -124,7 +124,7 @@ const moderateJobInDb = async (jobId: string, status: JobStatus) => {
     where: { id: jobId },
     data: {
       status,
-      publishedAt: status === "PUBLISHED" ? new Date() : undefined,
+      ...(status === "PUBLISHED" && { publishedAt: new Date() }),
     },
   });
 
@@ -165,6 +165,121 @@ const getPlatformAnalyticsFromDb = async () => {
   };
 };
 
+const getPendingCompaniesFromDb = async (page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+
+  const [companies, total] = await Promise.all([
+    prisma.company.findMany({
+      where: { isVerified: false },
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.company.count({ where: { isVerified: false } }),
+  ]);
+
+  return {
+    data: companies,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
+
+const verifyCompanyInDb = async (companyId: string, isVerified: boolean) => {
+  const company = await prisma.company.findUnique({ where: { id: companyId } });
+  if (!company) {
+    throw new AppError("Company not found", 404);
+  }
+
+  const updatedCompany = await prisma.company.update({
+    where: { id: companyId },
+    data: { isVerified },
+  });
+
+  return updatedCompany;
+};
+
+const globalAdminSearchFromDb = async (query: string, page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+  // Searching across Users, Companies, and Jobs
+  const [users, companies, jobs] = await Promise.all([
+    prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      skip,
+      take: limit,
+      select: { id: true, name: true, email: true, role: true, createdAt: true },
+    }),
+    prisma.company.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: "insensitive" } },
+          { industry: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      skip,
+      take: limit,
+      select: { id: true, name: true, slug: true, industry: true, isVerified: true },
+    }),
+    prisma.job.findMany({
+      where: {
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { location: { contains: query, mode: "insensitive" } },
+        ],
+      },
+      skip,
+      take: limit,
+      select: { id: true, title: true, status: true, type: true, createdAt: true },
+    }),
+  ]);
+
+  return {
+    users,
+    companies,
+    jobs,
+    pagination: {
+      page,
+      limit,
+    },
+  };
+};
+
+const getAuditLogsFromDb = async (page: number = 1, limit: number = 10) => {
+  const skip = (page - 1) * limit;
+
+  const [logs, total] = await Promise.all([
+    prisma.auditLog.findMany({
+      skip,
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      include: {
+        changedBy: { select: { name: true, email: true } },
+        application: { select: { id: true, stage: true, candidateId: true } },
+      },
+    }),
+    prisma.auditLog.count(),
+  ]);
+
+  return {
+    data: logs,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
+
 export const adminService = {
   getUsersFromDb,
   toggleUserSuspensionInDb,
@@ -172,4 +287,8 @@ export const adminService = {
   getPendingJobsFromDb,
   moderateJobInDb,
   getPlatformAnalyticsFromDb,
+  getPendingCompaniesFromDb,
+  verifyCompanyInDb,
+  globalAdminSearchFromDb,
+  getAuditLogsFromDb,
 };

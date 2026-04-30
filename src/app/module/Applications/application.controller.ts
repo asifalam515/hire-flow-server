@@ -5,7 +5,7 @@ import type { Request, Response } from "express";
 import { applicationService } from "./application.service";
 
 export const applyToJob = asyncHandler(async (req: Request, res: Response) => {
-  const jobId = req.params.id;
+  const jobId = req.params.id as string;
   const {
     resumeUrl,
     resumeFileName,
@@ -13,6 +13,7 @@ export const applyToJob = asyncHandler(async (req: Request, res: Response) => {
     source,
     referralCode,
     useSavedResume,
+    answers,
   } = req.body;
 
   if (!jobId) {
@@ -43,10 +44,11 @@ export const applyToJob = asyncHandler(async (req: Request, res: Response) => {
     req.user?.id as string,
     {
       resumeUrl: finalResumeUrl,
-      resumeFileName: finalResumeFileName,
-      coverLetter,
-      source,
-      referralCode,
+      ...(finalResumeFileName && { resumeFileName: finalResumeFileName }),
+      ...(coverLetter && { coverLetter }),
+      ...(source && { source }),
+      ...(referralCode && { referralCode }),
+      ...(answers && { answers }),
     },
   );
 
@@ -78,7 +80,7 @@ export const getMyApplications = asyncHandler(
 
 export const getApplicantsForJob = asyncHandler(
   async (req: Request, res: Response) => {
-    const jobId = req.params.id;
+    const jobId = req.params.id as string;
     const page = Number.parseInt(req.query.page as string, 10) || 1;
     const limit = Number.parseInt(req.query.limit as string, 10) || 10;
 
@@ -104,7 +106,7 @@ export const getApplicantsForJob = asyncHandler(
 
 export const moveApplicantStage = asyncHandler(
   async (req: Request, res: Response) => {
-    const applicationId = req.params.id;
+    const applicationId = req.params.id as string;
     const { stage, reason } = req.body;
 
     if (!applicationId) {
@@ -161,7 +163,7 @@ export const bulkMoveApplicantStages = asyncHandler(
 
 export const exportApplicantsToCSV = asyncHandler(
   async (req: Request, res: Response) => {
-    const jobId = req.params.id;
+    const jobId = req.params.id as string;
 
     if (!jobId) {
       throw new AppError("Job id is required", 400);
@@ -183,7 +185,7 @@ export const exportApplicantsToCSV = asyncHandler(
 
 export const addApplicationNote = asyncHandler(
   async (req: Request, res: Response) => {
-    const applicationId = req.params.id;
+    const applicationId = req.params.id as string;
     const { content } = req.body;
 
     if (!applicationId) {
@@ -210,7 +212,7 @@ export const addApplicationNote = asyncHandler(
 
 export const getApplicationNotes = asyncHandler(
   async (req: Request, res: Response) => {
-    const applicationId = req.params.id;
+    const applicationId = req.params.id as string;
 
     if (!applicationId) {
       throw new AppError("Application id is required", 400);
@@ -228,6 +230,59 @@ export const getApplicationNotes = asyncHandler(
   },
 );
 
+export const getApplicationTimeline = asyncHandler(async (req: Request, res: Response) => {
+  const applicationId = req.params.id as string;
+  if (!applicationId) throw new AppError("Application id is required", 400);
+
+  const timeline = await applicationService.getApplicationTimelineFromDb(applicationId, req.user?.id as string);
+
+  res.status(200).json({
+    success: true,
+    data: timeline,
+  });
+});
+
+export const withdrawApplication = asyncHandler(async (req: Request, res: Response) => {
+  const applicationId = req.params.id as string;
+  if (!applicationId) throw new AppError("Application id is required", 400);
+
+  const updated = await applicationService.withdrawApplicationFromDb(applicationId, req.user?.id as string);
+
+  res.status(200).json({
+    success: true,
+    message: "Application withdrawn successfully",
+    data: updated,
+  });
+});
+
+export const getKanbanBoard = asyncHandler(async (req: Request, res: Response) => {
+  const jobId = req.params.id as string;
+  if (!jobId) throw new AppError("Job id is required", 400);
+
+  const kanban = await applicationService.getKanbanBoardFromDb(jobId, req.user?.id as string);
+
+  res.status(200).json({
+    success: true,
+    data: kanban,
+  });
+});
+
+export const updateApplicationLabels = asyncHandler(async (req: Request, res: Response) => {
+  const applicationId = req.params.id as string;
+  const { labels } = req.body;
+
+  if (!applicationId) throw new AppError("Application id is required", 400);
+  if (!Array.isArray(labels)) throw new AppError("labels array is required", 400);
+
+  const updated = await applicationService.updateApplicationLabelsInDb(applicationId, req.user?.id as string, labels);
+
+  res.status(200).json({
+    success: true,
+    message: "Labels updated successfully",
+    data: updated,
+  });
+});
+
 export const applicationController = {
   applyToJob,
   getMyApplications,
@@ -237,4 +292,8 @@ export const applicationController = {
   exportApplicantsToCSV,
   addApplicationNote,
   getApplicationNotes,
+  getApplicationTimeline,
+  withdrawApplication,
+  getKanbanBoard,
+  updateApplicationLabels,
 };

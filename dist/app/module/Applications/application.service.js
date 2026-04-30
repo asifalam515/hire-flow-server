@@ -64,10 +64,18 @@ const submitApplicationToDb = async (jobId, candidateId, payload) => {
             candidateId,
             jobId,
             resumeUrl: payload.resumeUrl,
-            resumeFileName: payload.resumeFileName,
-            coverLetter: sanitizedCoverLetter,
+            ...(payload.resumeFileName && { resumeFileName: payload.resumeFileName }),
+            ...(sanitizedCoverLetter && { coverLetter: sanitizedCoverLetter }),
             source: payload.source ?? "DIRECT",
-            referralCode: payload.referralCode,
+            ...(payload.referralCode && { referralCode: payload.referralCode }),
+            ...(payload.answers && {
+                screeningAnswers: {
+                    create: payload.answers.map(a => ({
+                        questionId: a.questionId,
+                        answer: a.answer
+                    }))
+                }
+            })
         },
         include: {
             job: {
@@ -79,10 +87,16 @@ const submitApplicationToDb = async (jobId, candidateId, payload) => {
                         select: {
                             id: true,
                             name: true,
-                            slug: true,
                             logoUrl: true,
                         },
                     },
+                },
+            },
+            candidate: {
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
                 },
             },
         },
@@ -313,7 +327,7 @@ const moveApplicantStageInDb = async (applicationId, recruiterId, payload) => {
             changedById: recruiterId,
             fromStage: existing.stage,
             toStage: payload.stage,
-            reason: payload.reason,
+            ...(payload.reason && { reason: payload.reason }),
         },
     });
     // Send notification email to candidate
@@ -378,7 +392,7 @@ export const bulkMoveApplicantStagesInDb = async (applicationIds, recruiterId, s
         try {
             const updated = await moveApplicantStageInDb(id, recruiterId, {
                 stage,
-                reason,
+                ...(reason && { reason }),
             });
             results.push({ id, status: "success", data: updated });
         }
@@ -469,6 +483,116 @@ export const getApplicationNotesFromDb = async (applicationId, recruiterId) => {
     });
     return notes;
 };
+export const getApplicationTimelineFromDb = async (applicationId, userId) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+        select: {
+            candidateId: true,
+            job: { select: { postedById: true } },
+        },
+    });
+    if (!application) {
+        throw new AppError("Application not found", 404);
+    }
+    const admin = await isUserAdmin(userId);
+    if (!admin && application.job.postedById !== userId && application.candidateId !== userId) {
+        throw new AppError("You do not have permission to view this application timeline", 403);
+    }
+    const logs = await prisma.auditLog.findMany({
+        where: { applicationId },
+        include: { changedBy: { select: { name: true, image: true, role: true } } },
+    });
+    const notes = await prisma.applicationNote.findMany({
+        where: { applicationId },
+        include: { author: { select: { name: true, image: true, role: true } } },
+    });
+    const timeline = [
+        ...logs.map(log => ({ type: "STAGE_CHANGE", data: log, timestamp: log.createdAt })),
+        ...notes.map(note => ({ type: "NOTE", data: note, timestamp: note.createdAt }))
+    ];
+    timeline.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return timeline;
+};
+export const withdrawApplicationFromDb = async (applicationId, candidateId) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+    });
+    if (!application) {
+        throw new AppError("Application not found", 404);
+    }
+    if (application.candidateId !== candidateId) {
+        throw new AppError("You do not have permission to withdraw this application", 403);
+    }
+    if (application.stage === "WITHDRAWN" || application.stage === "HIRED" || application.stage === "REJECTED") {
+        throw new AppError(`Cannot withdraw application in ${application.stage} stage`, 400);
+    }
+    const updated = await prisma.application.update({
+        where: { id: applicationId },
+        data: { stage: "WITHDRAWN" },
+    });
+    await prisma.auditLog.create({
+        data: {
+            applicationId,
+            changedById: candidateId,
+            fromStage: application.stage,
+            toStage: "WITHDRAWN",
+            reason: "Candidate voluntarily withdrew application",
+        },
+    });
+    return updated;
+};
+export const getKanbanBoardFromDb = async (jobId, recruiterId) => {
+    const job = await prisma.job.findUnique({
+        where: { id: jobId },
+        select: { postedById: true },
+    });
+    if (!job) {
+        throw new AppError("Job not found", 404);
+    }
+    const admin = await isUserAdmin(recruiterId);
+    if (!admin && job.postedById !== recruiterId) {
+        throw new AppError("You do not have permission to view applicants for this job", 403);
+    }
+    const applications = await prisma.application.findMany({
+        where: { jobId, isArchived: false },
+        include: {
+            candidate: { select: { id: true, name: true, image: true, headline: true } },
+        },
+        orderBy: { updatedAt: "desc" },
+    });
+    const kanban = {
+        APPLIED: [],
+        SCREENING: [],
+        ASSESSMENT: [],
+        INTERVIEW: [],
+        OFFER: [],
+        HIRED: [],
+        REJECTED: [],
+        WITHDRAWN: [],
+    };
+    for (const app of applications) {
+        kanban[app.stage].push(app);
+    }
+    return kanban;
+};
+export const updateApplicationLabelsInDb = async (applicationId, recruiterId, labels) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+        select: { job: { select: { postedById: true } } },
+    });
+    if (!application) {
+        throw new AppError("Application not found", 404);
+    }
+    const admin = await isUserAdmin(recruiterId);
+    if (!admin && application.job.postedById !== recruiterId) {
+        throw new AppError("You do not have permission to update labels for this application", 403);
+    }
+    const updated = await prisma.application.update({
+        where: { id: applicationId },
+        data: { labels },
+    });
+    return updated;
+};
 export const applicationService = {
     submitApplicationToDb,
     getMyApplicationsFromDb,
@@ -478,5 +602,9 @@ export const applicationService = {
     exportApplicantsToCSVFromDb,
     addApplicationNoteToDb,
     getApplicationNotesFromDb,
+    getApplicationTimelineFromDb,
+    withdrawApplicationFromDb,
+    getKanbanBoardFromDb,
+    updateApplicationLabelsInDb,
 };
 //# sourceMappingURL=application.service.js.map

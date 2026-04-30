@@ -35,8 +35,8 @@ export declare const profileService: {
         linkedinUrl: string | null;
         resumeUrl: string | null;
         resumeFileName: string | null;
-        avatarUrl: string | null;
         headline: string | null;
+        avatarUrl: string | null;
         bio: string | null;
         phone: string | null;
         githubUrl: string | null;
@@ -62,8 +62,8 @@ export declare const profileService: {
         linkedinUrl: string | null;
         resumeUrl: string | null;
         resumeFileName: string | null;
-        avatarUrl: string | null;
         headline: string | null;
+        avatarUrl: string | null;
         bio: string | null;
         phone: string | null;
         githubUrl: string | null;

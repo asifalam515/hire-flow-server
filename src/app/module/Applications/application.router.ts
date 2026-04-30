@@ -64,4 +64,31 @@ router.get(
   applicationController.getApplicationNotes,
 );
 
+router.get(
+  "/job/:id/kanban",
+  authenticate,
+  requireRecruiter,
+  applicationController.getKanbanBoard,
+);
+
+router.get(
+  "/:id/timeline",
+  authenticate,
+  applicationController.getApplicationTimeline,
+);
+
+router.patch(
+  "/:id/withdraw",
+  authenticate,
+  authorize(["CANDIDATE"]),
+  applicationController.withdrawApplication,
+);
+
+router.patch(
+  "/:id/labels",
+  authenticate,
+  requireRecruiter,
+  applicationController.updateApplicationLabels,
+);
+
 export const applicationRouter = router;

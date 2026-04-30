@@ -69,9 +69,9 @@ export const scheduleInterview = async (
       type: data.type,
       scheduledAt: new Date(data.scheduledAt),
       durationMins: data.durationMins || 60,
-      location: data.location,
-      meetingUrl: data.meetingUrl,
-      notes: data.notes,
+      ...(data.location && { location: data.location }),
+      ...(data.meetingUrl && { meetingUrl: data.meetingUrl }),
+      ...(data.notes && { notes: data.notes }),
     },
   });
 
@@ -89,8 +89,8 @@ export const scheduleInterview = async (
           interviewDetails: {
             type: data.type,
             dateTime: data.scheduledAt,
-            location: data.location,
-            meetingUrl: data.meetingUrl,
+            ...(data.location && { location: data.location }),
+            ...(data.meetingUrl && { meetingUrl: data.meetingUrl }),
           },
         },
       );
@@ -146,8 +146,8 @@ export const sendOfferEmail = async (
         candidateEmail: application.candidate.email,
         jobTitle: application.job.title,
         companyName: application.job.company.name,
-        salaryOffer: salaryOffer || application.job.salaryMax,
-        salaryCurrency: application.job.salaryCurrency,
+        salaryOffer: salaryOffer || application.job.salaryMax || 0,
+        salaryCurrency: application.job.salaryCurrency || "USD",
       },
     );
   } catch (err) {

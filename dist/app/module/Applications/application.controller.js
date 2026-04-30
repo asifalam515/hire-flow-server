@@ -3,7 +3,7 @@ import { asyncHandler } from "@lib/asyncHandler";
 import { applicationService } from "./application.service";
 export const applyToJob = asyncHandler(async (req, res) => {
     const jobId = req.params.id;
-    const { resumeUrl, resumeFileName, coverLetter, source, referralCode, useSavedResume, } = req.body;
+    const { resumeUrl, resumeFileName, coverLetter, source, referralCode, useSavedResume, answers, } = req.body;
     if (!jobId) {
         throw new AppError("Job id is required", 400);
     }
@@ -23,10 +23,11 @@ export const applyToJob = asyncHandler(async (req, res) => {
     }
     const application = await applicationService.submitApplicationToDb(jobId, req.user?.id, {
         resumeUrl: finalResumeUrl,
-        resumeFileName: finalResumeFileName,
-        coverLetter,
-        source,
-        referralCode,
+        ...(finalResumeFileName && { resumeFileName: finalResumeFileName }),
+        ...(coverLetter && { coverLetter }),
+        ...(source && { source }),
+        ...(referralCode && { referralCode }),
+        ...(answers && { answers }),
     });
     res.status(201).json({
         success: true,
@@ -130,6 +131,51 @@ export const getApplicationNotes = asyncHandler(async (req, res) => {
         data: notes,
     });
 });
+export const getApplicationTimeline = asyncHandler(async (req, res) => {
+    const applicationId = req.params.id;
+    if (!applicationId)
+        throw new AppError("Application id is required", 400);
+    const timeline = await applicationService.getApplicationTimelineFromDb(applicationId, req.user?.id);
+    res.status(200).json({
+        success: true,
+        data: timeline,
+    });
+});
+export const withdrawApplication = asyncHandler(async (req, res) => {
+    const applicationId = req.params.id;
+    if (!applicationId)
+        throw new AppError("Application id is required", 400);
+    const updated = await applicationService.withdrawApplicationFromDb(applicationId, req.user?.id);
+    res.status(200).json({
+        success: true,
+        message: "Application withdrawn successfully",
+        data: updated,
+    });
+});
+export const getKanbanBoard = asyncHandler(async (req, res) => {
+    const jobId = req.params.id;
+    if (!jobId)
+        throw new AppError("Job id is required", 400);
+    const kanban = await applicationService.getKanbanBoardFromDb(jobId, req.user?.id);
+    res.status(200).json({
+        success: true,
+        data: kanban,
+    });
+});
+export const updateApplicationLabels = asyncHandler(async (req, res) => {
+    const applicationId = req.params.id;
+    const { labels } = req.body;
+    if (!applicationId)
+        throw new AppError("Application id is required", 400);
+    if (!Array.isArray(labels))
+        throw new AppError("labels array is required", 400);
+    const updated = await applicationService.updateApplicationLabelsInDb(applicationId, req.user?.id, labels);
+    res.status(200).json({
+        success: true,
+        message: "Labels updated successfully",
+        data: updated,
+    });
+});
 export const applicationController = {
     applyToJob,
     getMyApplications,
@@ -139,5 +185,9 @@ export const applicationController = {
     exportApplicantsToCSV,
     addApplicationNote,
     getApplicationNotes,
+    getApplicationTimeline,
+    withdrawApplication,
+    getKanbanBoard,
+    updateApplicationLabels,
 };
 //# sourceMappingURL=application.controller.js.map

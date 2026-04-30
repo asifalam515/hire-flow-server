@@ -5,6 +5,10 @@ interface SubmitApplicationInput {
     coverLetter?: string;
     source?: string;
     referralCode?: string;
+    answers?: {
+        questionId: string;
+        answer: string;
+    }[];
 }
 interface MoveApplicationStageInput {
     stage: ApplicationStage;
@@ -44,6 +48,7 @@ export declare const bulkMoveApplicantStagesInDb: (applicationIds: string[], rec
         source: string | null;
         referralCode: string | null;
         isArchived: boolean;
+        labels: string[];
     };
     message?: never;
 } | {
@@ -76,8 +81,116 @@ export declare const getApplicationNotesFromDb: (applicationId: string, recruite
     isPinned: boolean;
     authorId: string;
 })[]>;
+export declare const getApplicationTimelineFromDb: (applicationId: string, userId: string) => Promise<({
+    type: string;
+    data: {
+        changedBy: {
+            name: string;
+            image: string | null;
+            role: import("@/generated/prisma/enums").Role;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        applicationId: string;
+        changedById: string;
+        fromStage: ApplicationStage | null;
+        toStage: ApplicationStage;
+        reason: string | null;
+    };
+    timestamp: Date;
+} | {
+    type: string;
+    data: {
+        author: {
+            name: string;
+            image: string | null;
+            role: import("@/generated/prisma/enums").Role;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        applicationId: string;
+        content: string;
+        isPinned: boolean;
+        authorId: string;
+    };
+    timestamp: Date;
+})[]>;
+export declare const withdrawApplicationFromDb: (applicationId: string, candidateId: string) => Promise<{
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    candidateId: string;
+    jobId: string;
+    resumeUrl: string;
+    resumeFileName: string | null;
+    coverLetter: string | null;
+    stage: ApplicationStage;
+    aiMatchScore: number | null;
+    source: string | null;
+    referralCode: string | null;
+    isArchived: boolean;
+    labels: string[];
+}>;
+export declare const getKanbanBoardFromDb: (jobId: string, recruiterId: string) => Promise<Record<ApplicationStage, ({
+    candidate: {
+        id: string;
+        name: string;
+        image: string | null;
+        headline: never;
+    };
+} & {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    candidateId: string;
+    jobId: string;
+    resumeUrl: string;
+    resumeFileName: string | null;
+    coverLetter: string | null;
+    stage: ApplicationStage;
+    aiMatchScore: number | null;
+    source: string | null;
+    referralCode: string | null;
+    isArchived: boolean;
+    labels: string[];
+})[]>>;
+export declare const updateApplicationLabelsInDb: (applicationId: string, recruiterId: string, labels: string[]) => Promise<{
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    candidateId: string;
+    jobId: string;
+    resumeUrl: string;
+    resumeFileName: string | null;
+    coverLetter: string | null;
+    stage: ApplicationStage;
+    aiMatchScore: number | null;
+    source: string | null;
+    referralCode: string | null;
+    isArchived: boolean;
+    labels: string[];
+}>;
 export declare const applicationService: {
     submitApplicationToDb: (jobId: string, candidateId: string, payload: SubmitApplicationInput) => Promise<{
+        job: {
+            id: string;
+            title: string;
+            slug: string;
+            company: {
+                id: string;
+                name: string;
+                logoUrl: string | null;
+            };
+        };
+        candidate: {
+            id: string;
+            name: string;
+            image: string | null;
+        };
+    } & {
         id: string;
         createdAt: Date;
         updatedAt: Date;
@@ -91,6 +204,7 @@ export declare const applicationService: {
         source: string | null;
         referralCode: string | null;
         isArchived: boolean;
+        labels: string[];
     }>;
     getMyApplicationsFromDb: (candidateId: string, page?: number, limit?: number) => Promise<{
         data: ({
@@ -128,6 +242,7 @@ export declare const applicationService: {
             source: string | null;
             referralCode: string | null;
             isArchived: boolean;
+            labels: string[];
         })[];
         pagination: {
             total: number;
@@ -168,6 +283,7 @@ export declare const applicationService: {
             source: string | null;
             referralCode: string | null;
             isArchived: boolean;
+            labels: string[];
         })[];
         pagination: {
             total: number;
@@ -207,6 +323,7 @@ export declare const applicationService: {
         source: string | null;
         referralCode: string | null;
         isArchived: boolean;
+        labels: string[];
     }>;
     bulkMoveApplicantStagesInDb: (applicationIds: string[], recruiterId: string, stage: ApplicationStage, reason?: string) => Promise<({
         id: string;
@@ -242,6 +359,7 @@ export declare const applicationService: {
             source: string | null;
             referralCode: string | null;
             isArchived: boolean;
+            labels: string[];
         };
         message?: never;
     } | {
@@ -274,6 +392,98 @@ export declare const applicationService: {
         isPinned: boolean;
         authorId: string;
     })[]>;
+    getApplicationTimelineFromDb: (applicationId: string, userId: string) => Promise<({
+        type: string;
+        data: {
+            changedBy: {
+                name: string;
+                image: string | null;
+                role: import("@/generated/prisma/enums").Role;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            applicationId: string;
+            changedById: string;
+            fromStage: ApplicationStage | null;
+            toStage: ApplicationStage;
+            reason: string | null;
+        };
+        timestamp: Date;
+    } | {
+        type: string;
+        data: {
+            author: {
+                name: string;
+                image: string | null;
+                role: import("@/generated/prisma/enums").Role;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            applicationId: string;
+            content: string;
+            isPinned: boolean;
+            authorId: string;
+        };
+        timestamp: Date;
+    })[]>;
+    withdrawApplicationFromDb: (applicationId: string, candidateId: string) => Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        candidateId: string;
+        jobId: string;
+        resumeUrl: string;
+        resumeFileName: string | null;
+        coverLetter: string | null;
+        stage: ApplicationStage;
+        aiMatchScore: number | null;
+        source: string | null;
+        referralCode: string | null;
+        isArchived: boolean;
+        labels: string[];
+    }>;
+    getKanbanBoardFromDb: (jobId: string, recruiterId: string) => Promise<Record<ApplicationStage, ({
+        candidate: {
+            id: string;
+            name: string;
+            image: string | null;
+            headline: never;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        candidateId: string;
+        jobId: string;
+        resumeUrl: string;
+        resumeFileName: string | null;
+        coverLetter: string | null;
+        stage: ApplicationStage;
+        aiMatchScore: number | null;
+        source: string | null;
+        referralCode: string | null;
+        isArchived: boolean;
+        labels: string[];
+    })[]>>;
+    updateApplicationLabelsInDb: (applicationId: string, recruiterId: string, labels: string[]) => Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        candidateId: string;
+        jobId: string;
+        resumeUrl: string;
+        resumeFileName: string | null;
+        coverLetter: string | null;
+        stage: ApplicationStage;
+        aiMatchScore: number | null;
+        source: string | null;
+        referralCode: string | null;
+        isArchived: boolean;
+        labels: string[];
+    }>;
 };
 export {};
 //# sourceMappingURL=application.service.d.ts.map

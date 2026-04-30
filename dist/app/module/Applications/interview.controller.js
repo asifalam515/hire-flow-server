@@ -5,7 +5,7 @@ const scheduleInterview = asyncHandler(async (req, res) => {
     const recruiterId = req.user?.id;
     if (!recruiterId)
         throw new AppError("Authentication required", 401);
-    const { applicationId } = req.params;
+    const applicationId = req.params.applicationId;
     if (!applicationId)
         throw new AppError("Application ID required", 400);
     const { type, scheduledAt, durationMins, location, meetingUrl, notes } = req.body;
@@ -15,10 +15,10 @@ const scheduleInterview = asyncHandler(async (req, res) => {
     const interview = await interviewService.scheduleInterview(applicationId, recruiterId, {
         type,
         scheduledAt: new Date(scheduledAt),
-        durationMins,
-        location,
-        meetingUrl,
-        notes,
+        ...(durationMins && { durationMins }),
+        ...(location && { location }),
+        ...(meetingUrl && { meetingUrl }),
+        ...(notes && { notes }),
     });
     res.status(201).json({ success: true, data: interview });
 });

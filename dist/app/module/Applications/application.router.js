@@ -11,5 +11,9 @@ router.put("/bulk/stage", authenticate, requireRecruiter, applicationController.
 router.get("/job/:id/export", authenticate, requireRecruiter, applicationController.exportApplicantsToCSV);
 router.post("/:id/notes", authenticate, requireRecruiter, applicationController.addApplicationNote);
 router.get("/:id/notes", authenticate, requireRecruiter, applicationController.getApplicationNotes);
+router.get("/job/:id/kanban", authenticate, requireRecruiter, applicationController.getKanbanBoard);
+router.get("/:id/timeline", authenticate, applicationController.getApplicationTimeline);
+router.patch("/:id/withdraw", authenticate, authorize(["CANDIDATE"]), applicationController.withdrawApplication);
+router.patch("/:id/labels", authenticate, requireRecruiter, applicationController.updateApplicationLabels);
 export const applicationRouter = router;
 //# sourceMappingURL=application.router.js.map

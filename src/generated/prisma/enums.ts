@@ -121,3 +121,12 @@ export const QuestionType = {
 } as const
 
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType]
+
+
+export const FileType = {
+  RESUME: 'RESUME',
+  AVATAR: 'AVATAR',
+  LOGO: 'LOGO'
+} as const
+
+export type FileType = (typeof FileType)[keyof typeof FileType]

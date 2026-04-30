@@ -61,6 +61,7 @@ export type ApplicationCountAggregateOutputType = {
     source: number;
     referralCode: number;
     isArchived: number;
+    labels: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
@@ -113,6 +114,7 @@ export type ApplicationCountAggregateInputType = {
     source?: true;
     referralCode?: true;
     isArchived?: true;
+    labels?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -205,6 +207,7 @@ export type ApplicationGroupByOutputType = {
     source: string | null;
     referralCode: string | null;
     isArchived: boolean;
+    labels: string[];
     createdAt: Date;
     updatedAt: Date;
     _count: ApplicationCountAggregateOutputType | null;
@@ -231,6 +234,7 @@ export type ApplicationWhereInput = {
     source?: Prisma.StringNullableFilter<"Application"> | string | null;
     referralCode?: Prisma.StringNullableFilter<"Application"> | string | null;
     isArchived?: Prisma.BoolFilter<"Application"> | boolean;
+    labels?: Prisma.StringNullableListFilter<"Application">;
     createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
     candidate?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -252,6 +256,7 @@ export type ApplicationOrderByWithRelationInput = {
     source?: Prisma.SortOrderInput | Prisma.SortOrder;
     referralCode?: Prisma.SortOrderInput | Prisma.SortOrder;
     isArchived?: Prisma.SortOrder;
+    labels?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     candidate?: Prisma.UserOrderByWithRelationInput;
@@ -277,6 +282,7 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
     source?: Prisma.StringNullableFilter<"Application"> | string | null;
     referralCode?: Prisma.StringNullableFilter<"Application"> | string | null;
     isArchived?: Prisma.BoolFilter<"Application"> | boolean;
+    labels?: Prisma.StringNullableListFilter<"Application">;
     createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
     candidate?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>;
@@ -298,6 +304,7 @@ export type ApplicationOrderByWithAggregationInput = {
     source?: Prisma.SortOrderInput | Prisma.SortOrder;
     referralCode?: Prisma.SortOrderInput | Prisma.SortOrder;
     isArchived?: Prisma.SortOrder;
+    labels?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.ApplicationCountOrderByAggregateInput;
@@ -321,6 +328,7 @@ export type ApplicationScalarWhereWithAggregatesInput = {
     source?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null;
     referralCode?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null;
     isArchived?: Prisma.BoolWithAggregatesFilter<"Application"> | boolean;
+    labels?: Prisma.StringNullableListFilter<"Application">;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string;
 };
@@ -334,6 +342,7 @@ export type ApplicationCreateInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -355,6 +364,7 @@ export type ApplicationUncheckedCreateInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -372,6 +382,7 @@ export type ApplicationUpdateInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -393,6 +404,7 @@ export type ApplicationUncheckedUpdateInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -412,6 +424,7 @@ export type ApplicationCreateManyInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -425,6 +438,7 @@ export type ApplicationUpdateManyMutationInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -440,6 +454,7 @@ export type ApplicationUncheckedUpdateManyInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -467,6 +482,7 @@ export type ApplicationCountOrderByAggregateInput = {
     source?: Prisma.SortOrder;
     referralCode?: Prisma.SortOrder;
     isArchived?: Prisma.SortOrder;
+    labels?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -586,8 +602,15 @@ export type ApplicationUncheckedUpdateManyWithoutJobNestedInput = {
     updateMany?: Prisma.ApplicationUpdateManyWithWhereWithoutJobInput | Prisma.ApplicationUpdateManyWithWhereWithoutJobInput[];
     deleteMany?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[];
 };
+export type ApplicationCreatelabelsInput = {
+    set: string[];
+};
 export type EnumApplicationStageFieldUpdateOperationsInput = {
     set?: $Enums.ApplicationStage;
+};
+export type ApplicationUpdatelabelsInput = {
+    set?: string[];
+    push?: string | string[];
 };
 export type ApplicationCreateNestedOneWithoutNotesInput = {
     create?: Prisma.XOR<Prisma.ApplicationCreateWithoutNotesInput, Prisma.ApplicationUncheckedCreateWithoutNotesInput>;
@@ -647,6 +670,7 @@ export type ApplicationCreateWithoutCandidateInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     job: Prisma.JobCreateNestedOneWithoutApplicationsInput;
@@ -666,6 +690,7 @@ export type ApplicationUncheckedCreateWithoutCandidateInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -709,6 +734,7 @@ export type ApplicationScalarWhereInput = {
     source?: Prisma.StringNullableFilter<"Application"> | string | null;
     referralCode?: Prisma.StringNullableFilter<"Application"> | string | null;
     isArchived?: Prisma.BoolFilter<"Application"> | boolean;
+    labels?: Prisma.StringNullableListFilter<"Application">;
     createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"Application"> | Date | string;
 };
@@ -722,6 +748,7 @@ export type ApplicationCreateWithoutJobInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -741,6 +768,7 @@ export type ApplicationUncheckedCreateWithoutJobInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -779,6 +807,7 @@ export type ApplicationCreateWithoutNotesInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -799,6 +828,7 @@ export type ApplicationUncheckedCreateWithoutNotesInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutApplicationInput;
@@ -828,6 +858,7 @@ export type ApplicationUpdateWithoutNotesInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -848,6 +879,7 @@ export type ApplicationUncheckedUpdateWithoutNotesInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -864,6 +896,7 @@ export type ApplicationCreateWithoutAuditLogsInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -884,6 +917,7 @@ export type ApplicationUncheckedCreateWithoutAuditLogsInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -913,6 +947,7 @@ export type ApplicationUpdateWithoutAuditLogsInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -933,6 +968,7 @@ export type ApplicationUncheckedUpdateWithoutAuditLogsInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -949,6 +985,7 @@ export type ApplicationCreateWithoutInterviewsInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -969,6 +1006,7 @@ export type ApplicationUncheckedCreateWithoutInterviewsInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -998,6 +1036,7 @@ export type ApplicationUpdateWithoutInterviewsInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -1018,6 +1057,7 @@ export type ApplicationUncheckedUpdateWithoutInterviewsInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -1034,6 +1074,7 @@ export type ApplicationCreateWithoutScreeningAnswersInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     candidate: Prisma.UserCreateNestedOneWithoutApplicationsInput;
@@ -1054,6 +1095,7 @@ export type ApplicationUncheckedCreateWithoutScreeningAnswersInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
     notes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutApplicationInput;
@@ -1083,6 +1125,7 @@ export type ApplicationUpdateWithoutScreeningAnswersInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -1103,6 +1146,7 @@ export type ApplicationUncheckedUpdateWithoutScreeningAnswersInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -1120,6 +1164,7 @@ export type ApplicationCreateManyCandidateInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -1133,6 +1178,7 @@ export type ApplicationUpdateWithoutCandidateInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     job?: Prisma.JobUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -1152,6 +1198,7 @@ export type ApplicationUncheckedUpdateWithoutCandidateInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -1170,6 +1217,7 @@ export type ApplicationUncheckedUpdateManyWithoutCandidateInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1184,6 +1232,7 @@ export type ApplicationCreateManyJobInput = {
     source?: string | null;
     referralCode?: string | null;
     isArchived?: boolean;
+    labels?: Prisma.ApplicationCreatelabelsInput | string[];
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -1197,6 +1246,7 @@ export type ApplicationUpdateWithoutJobInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     candidate?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput;
@@ -1216,6 +1266,7 @@ export type ApplicationUncheckedUpdateWithoutJobInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     notes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutApplicationNestedInput;
@@ -1234,6 +1285,7 @@ export type ApplicationUncheckedUpdateManyWithoutJobInput = {
     source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     referralCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    labels?: Prisma.ApplicationUpdatelabelsInput | string[];
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -1297,6 +1349,7 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
     source?: boolean;
     referralCode?: boolean;
     isArchived?: boolean;
+    labels?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     candidate?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1319,6 +1372,7 @@ export type ApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
     source?: boolean;
     referralCode?: boolean;
     isArchived?: boolean;
+    labels?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     candidate?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1336,6 +1390,7 @@ export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
     source?: boolean;
     referralCode?: boolean;
     isArchived?: boolean;
+    labels?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     candidate?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
@@ -1353,10 +1408,11 @@ export type ApplicationSelectScalar = {
     source?: boolean;
     referralCode?: boolean;
     isArchived?: boolean;
+    labels?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "candidateId" | "jobId" | "resumeUrl" | "resumeFileName" | "coverLetter" | "stage" | "aiMatchScore" | "source" | "referralCode" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>;
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "candidateId" | "jobId" | "resumeUrl" | "resumeFileName" | "coverLetter" | "stage" | "aiMatchScore" | "source" | "referralCode" | "isArchived" | "labels" | "createdAt" | "updatedAt", ExtArgs["result"]["application"]>;
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     candidate?: boolean | Prisma.UserDefaultArgs<ExtArgs>;
     job?: boolean | Prisma.JobDefaultArgs<ExtArgs>;
@@ -1396,6 +1452,7 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
         source: string | null;
         referralCode: string | null;
         isArchived: boolean;
+        labels: string[];
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["application"]>;
@@ -1769,6 +1826,7 @@ export interface ApplicationFieldRefs {
     readonly source: Prisma.FieldRef<"Application", 'String'>;
     readonly referralCode: Prisma.FieldRef<"Application", 'String'>;
     readonly isArchived: Prisma.FieldRef<"Application", 'Boolean'>;
+    readonly labels: Prisma.FieldRef<"Application", 'String[]'>;
     readonly createdAt: Prisma.FieldRef<"Application", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"Application", 'DateTime'>;
 }

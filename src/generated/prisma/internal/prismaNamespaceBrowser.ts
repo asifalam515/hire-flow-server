@@ -67,7 +67,8 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   ScreeningQuestion: 'ScreeningQuestion',
-  ScreeningAnswer: 'ScreeningAnswer'
+  ScreeningAnswer: 'ScreeningAnswer',
+  UserFile: 'UserFile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -254,6 +255,7 @@ export const ApplicationScalarFieldEnum = {
   source: 'source',
   referralCode: 'referralCode',
   isArchived: 'isArchived',
+  labels: 'labels',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -376,6 +378,20 @@ export const ScreeningAnswerScalarFieldEnum = {
 } as const
 
 export type ScreeningAnswerScalarFieldEnum = (typeof ScreeningAnswerScalarFieldEnum)[keyof typeof ScreeningAnswerScalarFieldEnum]
+
+
+export const UserFileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  publicId: 'publicId',
+  secureUrl: 'secureUrl',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  type: 'type',
+  createdAt: 'createdAt'
+} as const
+
+export type UserFileScalarFieldEnum = (typeof UserFileScalarFieldEnum)[keyof typeof UserFileScalarFieldEnum]
 
 
 export const SortOrder = {

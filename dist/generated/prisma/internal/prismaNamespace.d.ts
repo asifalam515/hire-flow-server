@@ -1700,6 +1700,7 @@ export declare const ApplicationScalarFieldEnum: {
     readonly source: "source";
     readonly referralCode: "referralCode";
     readonly isArchived: "isArchived";
+    readonly labels: "labels";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };

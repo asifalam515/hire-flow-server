@@ -224,6 +224,7 @@ export type UserWhereInput = {
   auditLogs?: Prisma.AuditLogListRelationFilter
   scheduledInterviews?: Prisma.InterviewListRelationFilter
   postedJobs?: Prisma.JobListRelationFilter
+  userFiles?: Prisma.UserFileListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -246,6 +247,7 @@ export type UserOrderByWithRelationInput = {
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   scheduledInterviews?: Prisma.InterviewOrderByRelationAggregateInput
   postedJobs?: Prisma.JobOrderByRelationAggregateInput
+  userFiles?: Prisma.UserFileOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -271,6 +273,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   scheduledInterviews?: Prisma.InterviewListRelationFilter
   postedJobs?: Prisma.JobListRelationFilter
+  userFiles?: Prisma.UserFileListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -323,6 +326,7 @@ export type UserCreateInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -345,6 +349,7 @@ export type UserUncheckedCreateInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -367,6 +372,7 @@ export type UserUpdateInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -389,6 +395,7 @@ export type UserUncheckedUpdateInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -628,6 +635,20 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
+export type UserCreateNestedOneWithoutUserFilesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserFilesInput, Prisma.UserUncheckedCreateWithoutUserFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutUserFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserFilesInput, Prisma.UserUncheckedCreateWithoutUserFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserFilesInput
+  upsert?: Prisma.UserUpsertWithoutUserFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserFilesInput, Prisma.UserUpdateWithoutUserFilesInput>, Prisma.UserUncheckedUpdateWithoutUserFilesInput>
+}
+
 export type UserCreateWithoutProfileInput = {
   id: string
   name: string
@@ -647,6 +668,7 @@ export type UserCreateWithoutProfileInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -668,6 +690,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -705,6 +728,7 @@ export type UserUpdateWithoutProfileInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -726,6 +750,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCompanyMemberInput = {
@@ -747,6 +772,7 @@ export type UserCreateWithoutCompanyMemberInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCompanyMemberInput = {
@@ -768,6 +794,7 @@ export type UserUncheckedCreateWithoutCompanyMemberInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCompanyMemberInput = {
@@ -805,6 +832,7 @@ export type UserUpdateWithoutCompanyMemberInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCompanyMemberInput = {
@@ -826,6 +854,7 @@ export type UserUncheckedUpdateWithoutCompanyMemberInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostedJobsInput = {
@@ -847,6 +876,7 @@ export type UserCreateWithoutPostedJobsInput = {
   applicationNotes?: Prisma.ApplicationNoteCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostedJobsInput = {
@@ -868,6 +898,7 @@ export type UserUncheckedCreateWithoutPostedJobsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostedJobsInput = {
@@ -905,6 +936,7 @@ export type UserUpdateWithoutPostedJobsInput = {
   applicationNotes?: Prisma.ApplicationNoteUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostedJobsInput = {
@@ -926,6 +958,7 @@ export type UserUncheckedUpdateWithoutPostedJobsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedJobsInput = {
@@ -947,6 +980,7 @@ export type UserCreateWithoutSavedJobsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedJobsInput = {
@@ -968,6 +1002,7 @@ export type UserUncheckedCreateWithoutSavedJobsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedJobsInput = {
@@ -1005,6 +1040,7 @@ export type UserUpdateWithoutSavedJobsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedJobsInput = {
@@ -1026,6 +1062,7 @@ export type UserUncheckedUpdateWithoutSavedJobsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationsInput = {
@@ -1047,6 +1084,7 @@ export type UserCreateWithoutApplicationsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
@@ -1068,6 +1106,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -1105,6 +1144,7 @@ export type UserUpdateWithoutApplicationsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
@@ -1126,6 +1166,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApplicationNotesInput = {
@@ -1147,6 +1188,7 @@ export type UserCreateWithoutApplicationNotesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationNotesInput = {
@@ -1168,6 +1210,7 @@ export type UserUncheckedCreateWithoutApplicationNotesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationNotesInput = {
@@ -1205,6 +1248,7 @@ export type UserUpdateWithoutApplicationNotesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationNotesInput = {
@@ -1226,6 +1270,7 @@ export type UserUncheckedUpdateWithoutApplicationNotesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1247,6 +1292,7 @@ export type UserCreateWithoutAuditLogsInput = {
   applicationNotes?: Prisma.ApplicationNoteCreateNestedManyWithoutAuthorInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1268,6 +1314,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1305,6 +1352,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   applicationNotes?: Prisma.ApplicationNoteUpdateManyWithoutAuthorNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1326,6 +1374,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutScheduledInterviewsInput = {
@@ -1347,6 +1396,7 @@ export type UserCreateWithoutScheduledInterviewsInput = {
   applicationNotes?: Prisma.ApplicationNoteCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutScheduledInterviewsInput = {
@@ -1368,6 +1418,7 @@ export type UserUncheckedCreateWithoutScheduledInterviewsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutScheduledInterviewsInput = {
@@ -1405,6 +1456,7 @@ export type UserUpdateWithoutScheduledInterviewsInput = {
   applicationNotes?: Prisma.ApplicationNoteUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutScheduledInterviewsInput = {
@@ -1426,6 +1478,7 @@ export type UserUncheckedUpdateWithoutScheduledInterviewsInput = {
   applicationNotes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1447,6 +1500,7 @@ export type UserCreateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1468,6 +1522,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1505,6 +1560,7 @@ export type UserUpdateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1526,6 +1582,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -1547,6 +1604,7 @@ export type UserCreateWithoutAccountsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1568,6 +1626,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
   scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
   postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+  userFiles?: Prisma.UserFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1605,6 +1664,7 @@ export type UserUpdateWithoutAccountsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
   scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
   postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1618,6 +1678,111 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.CandidateProfileUncheckedUpdateOneWithoutUserNestedInput
+  companyMember?: Prisma.CompanyMemberUncheckedUpdateOneWithoutUserNestedInput
+  savedJobs?: Prisma.SavedJobUncheckedUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutCandidateNestedInput
+  applicationNotes?: Prisma.ApplicationNoteUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutChangedByNestedInput
+  scheduledInterviews?: Prisma.InterviewUncheckedUpdateManyWithoutScheduledByNestedInput
+  postedJobs?: Prisma.JobUncheckedUpdateManyWithoutRecruiterNestedInput
+  userFiles?: Prisma.UserFileUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserFilesInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: $Enums.Role
+  isSuspended?: boolean
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  profile?: Prisma.CandidateProfileCreateNestedOneWithoutUserInput
+  companyMember?: Prisma.CompanyMemberCreateNestedOneWithoutUserInput
+  savedJobs?: Prisma.SavedJobCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationCreateNestedManyWithoutCandidateInput
+  applicationNotes?: Prisma.ApplicationNoteCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutChangedByInput
+  scheduledInterviews?: Prisma.InterviewCreateNestedManyWithoutScheduledByInput
+  postedJobs?: Prisma.JobCreateNestedManyWithoutRecruiterInput
+}
+
+export type UserUncheckedCreateWithoutUserFilesInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  role?: $Enums.Role
+  isSuspended?: boolean
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.CandidateProfileUncheckedCreateNestedOneWithoutUserInput
+  companyMember?: Prisma.CompanyMemberUncheckedCreateNestedOneWithoutUserInput
+  savedJobs?: Prisma.SavedJobUncheckedCreateNestedManyWithoutUserInput
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutCandidateInput
+  applicationNotes?: Prisma.ApplicationNoteUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutChangedByInput
+  scheduledInterviews?: Prisma.InterviewUncheckedCreateNestedManyWithoutScheduledByInput
+  postedJobs?: Prisma.JobUncheckedCreateNestedManyWithoutRecruiterInput
+}
+
+export type UserCreateOrConnectWithoutUserFilesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserFilesInput, Prisma.UserUncheckedCreateWithoutUserFilesInput>
+}
+
+export type UserUpsertWithoutUserFilesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserFilesInput, Prisma.UserUncheckedUpdateWithoutUserFilesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserFilesInput, Prisma.UserUncheckedCreateWithoutUserFilesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserFilesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserFilesInput, Prisma.UserUncheckedUpdateWithoutUserFilesInput>
+}
+
+export type UserUpdateWithoutUserFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  profile?: Prisma.CandidateProfileUpdateOneWithoutUserNestedInput
+  companyMember?: Prisma.CompanyMemberUpdateOneWithoutUserNestedInput
+  savedJobs?: Prisma.SavedJobUpdateManyWithoutUserNestedInput
+  applications?: Prisma.ApplicationUpdateManyWithoutCandidateNestedInput
+  applicationNotes?: Prisma.ApplicationNoteUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutChangedByNestedInput
+  scheduledInterviews?: Prisma.InterviewUpdateManyWithoutScheduledByNestedInput
+  postedJobs?: Prisma.JobUpdateManyWithoutRecruiterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserFilesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   profile?: Prisma.CandidateProfileUncheckedUpdateOneWithoutUserNestedInput
   companyMember?: Prisma.CompanyMemberUncheckedUpdateOneWithoutUserNestedInput
   savedJobs?: Prisma.SavedJobUncheckedUpdateManyWithoutUserNestedInput
@@ -1642,6 +1807,7 @@ export type UserCountOutputType = {
   auditLogs: number
   scheduledInterviews: number
   postedJobs: number
+  userFiles: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1653,6 +1819,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   scheduledInterviews?: boolean | UserCountOutputTypeCountScheduledInterviewsArgs
   postedJobs?: boolean | UserCountOutputTypeCountPostedJobsArgs
+  userFiles?: boolean | UserCountOutputTypeCountUserFilesArgs
 }
 
 /**
@@ -1721,6 +1888,13 @@ export type UserCountOutputTypeCountPostedJobsArgs<ExtArgs extends runtime.Types
   where?: Prisma.JobWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountUserFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserFileWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1742,6 +1916,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   scheduledInterviews?: boolean | Prisma.User$scheduledInterviewsArgs<ExtArgs>
   postedJobs?: boolean | Prisma.User$postedJobsArgs<ExtArgs>
+  userFiles?: boolean | Prisma.User$userFilesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1793,6 +1968,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   scheduledInterviews?: boolean | Prisma.User$scheduledInterviewsArgs<ExtArgs>
   postedJobs?: boolean | Prisma.User$postedJobsArgs<ExtArgs>
+  userFiles?: boolean | Prisma.User$userFilesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1811,6 +1987,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     scheduledInterviews: Prisma.$InterviewPayload<ExtArgs>[]
     postedJobs: Prisma.$JobPayload<ExtArgs>[]
+    userFiles: Prisma.$UserFilePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2226,6 +2403,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   scheduledInterviews<T extends Prisma.User$scheduledInterviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$scheduledInterviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InterviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   postedJobs<T extends Prisma.User$postedJobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$postedJobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userFiles<T extends Prisma.User$userFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2884,6 +3062,30 @@ export type User$postedJobsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.JobScalarFieldEnum | Prisma.JobScalarFieldEnum[]
+}
+
+/**
+ * User.userFiles
+ */
+export type User$userFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserFile
+   */
+  select?: Prisma.UserFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserFile
+   */
+  omit?: Prisma.UserFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserFileInclude<ExtArgs> | null
+  where?: Prisma.UserFileWhereInput
+  orderBy?: Prisma.UserFileOrderByWithRelationInput | Prisma.UserFileOrderByWithRelationInput[]
+  cursor?: Prisma.UserFileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserFileScalarFieldEnum | Prisma.UserFileScalarFieldEnum[]
 }
 
 /**

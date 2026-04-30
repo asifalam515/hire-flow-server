@@ -202,6 +202,7 @@ export const ApplicationScalarFieldEnum = {
     source: 'source',
     referralCode: 'referralCode',
     isArchived: 'isArchived',
+    labels: 'labels',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };

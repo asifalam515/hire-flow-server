@@ -126,3 +126,8 @@ export type ScreeningQuestion = Prisma.ScreeningQuestionModel
  * 
  */
 export type ScreeningAnswer = Prisma.ScreeningAnswerModel
+/**
+ * Model UserFile
+ * 
+ */
+export type UserFile = Prisma.UserFileModel

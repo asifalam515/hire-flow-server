@@ -19,4 +19,12 @@ router.patch("/jobs/:id/moderate", adminController.moderateJob);
 // Platform Analytics
 router.get("/analytics", adminController.getPlatformAnalytics);
 
+// Company Verification
+router.get("/companies/pending", adminController.getPendingCompanies);
+router.patch("/companies/:id/verify", adminController.verifyCompany);
+
+// Search & Audit
+router.get("/search", adminController.globalAdminSearch);
+router.get("/audit-logs", adminController.getAuditLogs);
+
 export const adminRouter = router;
