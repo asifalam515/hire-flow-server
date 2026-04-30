@@ -1,3 +1,4 @@
+import { cacheGet, cacheSet } from "@/config/redis";
 import { AppError } from "@lib/appError";
 import { prisma } from "@lib/prisma";
 // Check if slug is unique
@@ -77,10 +78,42 @@ const createJobInDb = async (data, userId) => {
             },
         },
     });
+    // Invalidate jobs list cache when a new job is created
+    try {
+        await invalidateJobsCache();
+    }
+    catch (err) {
+        // ignore cache errors
+    }
     return job;
 };
 // Get all jobs with search and filters
 const getAllJobsFromDb = async (page = 1, limit = 10, filters) => {
+    const skip = (page - 1) * limit;
+    // If there's a search query, skip cache entirely
+    if (filters?.search) {
+        const result = await fetchJobsFromDb(page, limit, filters);
+        return { ...result, cached: false };
+    }
+    // Build cache key using the required pattern
+    const key = `jobs:list:page=${page}:limit=${limit}:type=${filters?.type ?? ""}:remote=${filters?.isRemote ?? ""}:level=${filters?.experienceLevel ?? ""}`;
+    const cached = await cacheGet(key);
+    if (cached) {
+        return { ...cached, cached: true };
+    }
+    const fresh = await fetchJobsFromDb(page, limit, filters);
+    try {
+        await cacheSet(key, fresh, 60);
+    }
+    catch (err) {
+        // ignore cache set errors
+        // eslint-disable-next-line no-console
+        console.error("Failed to set jobs cache", err);
+    }
+    return { ...fresh, cached: false };
+};
+// Extracted DB fetch so it can be reused when skipping cache
+const fetchJobsFromDb = async (page, limit, filters) => {
     const skip = (page - 1) * limit;
     const where = {};
     // Status filter - default to published for public view
@@ -190,11 +223,27 @@ const getJobByIdFromDb = async (id) => {
     if (!job) {
         throw new AppError("Job not found", 404);
     }
-    // Increment view count
-    await prisma.job.update({
-        where: { id },
-        data: { viewCount: { increment: 1 } },
-    });
+    // Increment view count in Redis (fire-and-forget)
+    try {
+        // Use redis.incr on key `jobs:views:{jobId}`
+        // Do not await — fire-and-forget
+        /* eslint-disable no-void */
+        void (async () => {
+            try {
+                const r = require("@/config/redis");
+                if (r && r.redis && typeof r.redis.incr === "function") {
+                    r.redis.incr(`jobs:views:${id}`);
+                }
+            }
+            catch (e) {
+                // ignore redis errors for view increment
+            }
+        })();
+        /* eslint-enable no-void */
+    }
+    catch (err) {
+        // ignore
+    }
     return job;
 };
 // Get single job by slug
@@ -297,13 +346,13 @@ const updateJobInDb = async (id, userId, data) => {
             ...(data.screeningQuestions && {
                 screeningQuestions: {
                     deleteMany: {}, // Clean up existing and replace with new
-                    create: data.screeningQuestions.map(q => ({
+                    create: data.screeningQuestions.map((q) => ({
                         question: q.question,
                         type: q.type,
                         options: q.options || [],
                         required: q.required !== undefined ? q.required : true,
-                    }))
-                }
+                    })),
+                },
             }),
         },
         include: {
@@ -318,6 +367,13 @@ const updateJobInDb = async (id, userId, data) => {
             screeningQuestions: true,
         },
     });
+    // Invalidate jobs cache when a job is updated
+    try {
+        await invalidateJobsCache();
+    }
+    catch (err) {
+        // ignore cache errors
+    }
     return updatedJob;
 };
 // Delete job
@@ -335,6 +391,13 @@ const deleteJobFromDb = async (id, userId) => {
     const deletedJob = await prisma.job.delete({
         where: { id },
     });
+    // Invalidate jobs cache when a job is deleted
+    try {
+        await invalidateJobsCache();
+    }
+    catch (err) {
+        // ignore cache errors
+    }
     return deletedJob;
 };
 // Get jobs by recruiter
@@ -385,56 +448,160 @@ const getSimilarJobsFromDb = async (id, limit = 5) => {
     const job = await prisma.job.findUnique({ where: { id } });
     if (!job)
         throw new AppError("Job not found", 404);
-    const similarJobs = await prisma.job.findMany({
-        where: {
-            id: { not: id },
-            status: "PUBLISHED",
-            OR: [
-                { type: job.type },
-                { experienceLevel: job.experienceLevel },
-                ...(job.techStack && job.techStack.length > 0 ? [{ techStack: { hasSome: job.techStack } }] : []),
-            ],
+    if (!job.techStack || job.techStack.length === 0) {
+        // Fallback if no tech stack
+        return await prisma.job.findMany({
+            where: {
+                id: { not: id },
+                status: "PUBLISHED",
+                experienceLevel: job.experienceLevel,
+            },
+            take: limit,
+            include: {
+                company: { select: { id: true, name: true, logoUrl: true } },
+            },
+            orderBy: { publishedAt: "desc" },
+        });
+    }
+    const similarJobs = await prisma.$queryRaw `
+    SELECT j.*, 
+           c.id as "companyId", c.name as "companyName", c."logoUrl" as "companyLogo",
+           (
+             SELECT count(*) 
+             FROM unnest(j."techStack") AS t1 
+             JOIN unnest(${job.techStack}::text[]) AS t2 ON t1 = t2
+           ) as "overlapCount"
+    FROM "jobs" j
+    JOIN "companies" c ON j."companyId" = c.id
+    WHERE j."techStack" && ${job.techStack}::text[]
+      AND j.status = 'PUBLISHED'
+      AND j.id != ${id}
+    ORDER BY "overlapCount" DESC, j."publishedAt" DESC
+    LIMIT ${limit}
+  `;
+    // Map to the structure expected by the frontend
+    return similarJobs.map((sj) => ({
+        ...sj,
+        company: {
+            id: sj.companyId,
+            name: sj.companyName,
+            logoUrl: sj.companyLogo,
         },
-        take: limit,
-        include: {
-            company: { select: { id: true, name: true, logoUrl: true } },
-        },
-        orderBy: { publishedAt: "desc" },
-    });
-    return similarJobs;
+        // Remove the flattened company fields from the root if desired
+        companyId: sj.companyId,
+        companyName: undefined,
+        companyLogo: undefined,
+        overlapCount: undefined,
+    }));
 };
-// Calculate match score
+// Calculate match score according to requested breakdown
 const calculateMatchScore = async (jobId, candidateId) => {
     const job = await prisma.job.findUnique({ where: { id: jobId } });
-    const profile = await prisma.candidateProfile.findUnique({ where: { userId: candidateId } });
+    const profile = await prisma.candidateProfile.findUnique({
+        where: { userId: candidateId },
+        include: { experiences: true },
+    });
     if (!job)
         throw new AppError("Job not found", 404);
     if (!profile)
         throw new AppError("Candidate profile not found", 404);
-    let score = 0;
-    let maxScore = 0;
-    // Tech stack match
-    if (job.techStack && job.techStack.length > 0) {
-        maxScore += 50;
-        const matchingSkills = job.techStack.filter(skill => profile.skills.includes(skill));
-        score += (matchingSkills.length / job.techStack.length) * 50;
+    const jobTech = job.techStack || [];
+    const candidateSkills = profile.skills || [];
+    const matchedSkills = jobTech.filter((s) => candidateSkills.includes(s));
+    const missingSkills = jobTech.filter((s) => !candidateSkills.includes(s));
+    // Tech stack score (50 pts)
+    let techScore = 0;
+    if (jobTech.length > 0) {
+        techScore = (matchedSkills.length / jobTech.length) * 50;
     }
-    // Location match
-    if (job.isRemote) {
-        maxScore += 20;
-        score += 20;
-    }
-    else if (job.location && profile.location) {
-        maxScore += 20;
-        if (profile.location.toLowerCase().includes(job.location.toLowerCase()) || job.location.toLowerCase().includes(profile.location.toLowerCase())) {
-            score += 20;
+    // Salary score (25 pts)
+    let salaryScore = 0;
+    let salaryMatch = false;
+    const jMin = job.salaryMin ?? null;
+    const jMax = job.salaryMax ?? null;
+    const cMin = profile.expectedSalaryMin ?? null;
+    const cMax = profile.expectedSalaryMax ?? null;
+    if (jMin !== null && jMax !== null && cMin !== null && cMax !== null) {
+        // full overlap
+        if (jMin <= cMax && jMax >= cMin) {
+            salaryScore = 25;
+            salaryMatch = true;
+        }
+        else {
+            salaryScore = 0;
+            salaryMatch = false;
         }
     }
-    // Experience level match (heuristic)
-    maxScore += 30;
-    // This is a naive implementation, ideally we'd compare years of experience
-    score += 15;
-    return maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+    else if ((jMin !== null || jMax !== null) &&
+        (cMin !== null || cMax !== null)) {
+        // partial info available — give partial points
+        salaryScore = 12;
+        salaryMatch = true;
+    }
+    else {
+        salaryScore = 0;
+        salaryMatch = false;
+    }
+    // Experience level score (25 pts)
+    const levelOrder = ["ENTRY", "JUNIOR", "MID", "SENIOR", "LEAD", "EXECUTIVE"];
+    const jobLevel = job.experienceLevel;
+    // We don't have an explicit experience level on profile; try to infer from work experiences length
+    let profileLevelIndex = -1;
+    if (profile.experiences && profile.experiences.length > 0) {
+        const years = profile.experiences.reduce((acc, we) => {
+            // best-effort: if both dates exist
+            if (we.startDate && we.endDate) {
+                const start = new Date(we.startDate).getFullYear();
+                const end = new Date(we.endDate).getFullYear();
+                return acc + Math.max(0, end - start);
+            }
+            return acc + 0;
+        }, 0);
+        // Heuristic mapping
+        if (years <= 1)
+            profileLevelIndex = 0; // ENTRY
+        else if (years <= 3)
+            profileLevelIndex = 1; // JUNIOR
+        else if (years <= 5)
+            profileLevelIndex = 2; // MID
+        else if (years <= 8)
+            profileLevelIndex = 3; // SENIOR
+        else
+            profileLevelIndex = 4; // LEAD+
+    }
+    let levelScore = 0;
+    let levelMatch = false;
+    if (jobLevel) {
+        const jobIdx = levelOrder.indexOf(jobLevel);
+        if (profileLevelIndex >= 0 && jobIdx >= 0) {
+            const diff = Math.abs(jobIdx - profileLevelIndex);
+            if (diff === 0) {
+                levelScore = 25;
+                levelMatch = true;
+            }
+            else if (diff === 1) {
+                levelScore = 12;
+                levelMatch = true;
+            }
+            else {
+                levelScore = 0;
+                levelMatch = false;
+            }
+        }
+        else {
+            // not enough info — give partial credit
+            levelScore = 12;
+            levelMatch = false;
+        }
+    }
+    const totalScore = Math.round(techScore + salaryScore + levelScore);
+    return {
+        score: Math.min(100, totalScore),
+        matchedSkills,
+        missingSkills,
+        salaryMatch,
+        levelMatch,
+    };
 };
 // Update job status
 const updateJobStatusInDb = async (id, userId, status) => {
@@ -448,9 +615,18 @@ const updateJobStatusInDb = async (id, userId, status) => {
         where: { id },
         data: {
             status,
-            publishedAt: status === "PUBLISHED" && !job.publishedAt ? new Date() : job.publishedAt
+            publishedAt: status === "PUBLISHED" && !job.publishedAt
+                ? new Date()
+                : job.publishedAt,
         },
     });
+    // Invalidate jobs cache when status changes (publish/unpublish)
+    try {
+        await invalidateJobsCache();
+    }
+    catch (err) {
+        // ignore cache errors
+    }
     return updatedJob;
 };
 // Save job

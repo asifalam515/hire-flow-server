@@ -1,9 +1,10 @@
+import notificationsService from "@/modules/notifications/notifications.service";
 import { AppError } from "@lib/appError";
-import { sendMail } from "@lib/mailer";
+import { sendStageChangeEmail } from "@lib/mailer";
 import { prisma } from "@lib/prisma";
 import { sanitizeHTML, validateHTMLLength } from "@lib/richTextUtils";
 import { emitToUser, getIO } from "@lib/socket";
-import { sendApplicationReceivedEmail, sendApplicationStageUpdateEmail, } from "./notification.service";
+import { sendApplicationReceivedEmail } from "./notification.service";
 const isUserAdmin = async (userId) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
@@ -70,12 +71,12 @@ const submitApplicationToDb = async (jobId, candidateId, payload) => {
             ...(payload.referralCode && { referralCode: payload.referralCode }),
             ...(payload.answers && {
                 screeningAnswers: {
-                    create: payload.answers.map(a => ({
+                    create: payload.answers.map((a) => ({
                         questionId: a.questionId,
-                        answer: a.answer
-                    }))
-                }
-            })
+                        answer: a.answer,
+                    })),
+                },
+            }),
         },
         include: {
             job: {
@@ -147,6 +148,34 @@ const submitApplicationToDb = async (jobId, candidateId, payload) => {
     }
     catch (err) {
         // ignore socket errors
+    }
+    // Create DB notifications for candidate and recruiter
+    try {
+        // Candidate notification
+        await notificationsService.createNotification(updated.candidate.id, "STAGE_UPDATED", `Application updated — ${updated.job.title}`, `Your application for ${updated.job.title} is now ${updated.stage}`, {
+            applicationId: updated.id,
+            jobId: updated.job.id,
+            stage: updated.stage,
+        });
+        // Recruiter notification (who performed the change already gets socket event)
+        await notificationsService.createNotification(recruiterId, "STAGE_UPDATED", `Applicant updated — ${updated.job.title}`, `${updated.candidate.name || "Candidate"} moved to ${updated.stage}`, {
+            applicationId: updated.id,
+            candidateId: updated.candidate.id,
+            stage: updated.stage,
+        });
+    }
+    catch (err) {
+        // ignore notification errors
+    }
+    // Create DB notification for recruiter (will emit notification:new)
+    try {
+        await notificationsService.createNotification(job.postedById, "APPLICATION_RECEIVED", `New application: ${job.title}`, `${application.candidate?.name || "Candidate"} applied for ${job.title}`, {
+            jobId: job.id,
+            applicationId: application.id,
+        });
+    }
+    catch (err) {
+        // ignore notification errors
     }
     return application;
 };
@@ -330,27 +359,11 @@ const moveApplicantStageInDb = async (applicationId, recruiterId, payload) => {
             ...(payload.reason && { reason: payload.reason }),
         },
     });
-    // Send notification email to candidate
-    try {
-        const subject = `Application update: ${updated.job.title} — ${updated.stage}`;
-        const html = `<p>Hi ${updated.candidate.name},</p>
-      <p>Your application for <strong>${updated.job.title}</strong> is now in <strong>${updated.stage}</strong> stage.</p>
-      <p>Regards,<br/>${updated.job.company.name}</p>`;
-        if (updated.candidate.email) {
-            await sendMail(updated.candidate.email, subject, html);
-        }
-    }
-    catch (err) {
-        // swallow mail errors but log
-        // eslint-disable-next-line no-console
-        console.error("Failed to send application stage email", err);
-    }
-    // Send stage-specific notification emails
+    // Send templated stage-change email (company-level template fallback)
     try {
         if (updated.candidate.email) {
-            await sendApplicationStageUpdateEmail(updated.candidate.email, updated.candidate.name || "Candidate", {
+            await sendStageChangeEmail(updated.job.company.id, updated.candidate.email, {
                 candidateName: updated.candidate.name || "Candidate",
-                candidateEmail: updated.candidate.email,
                 jobTitle: updated.job.title,
                 companyName: updated.job.company.name,
                 stage: payload.stage,
@@ -495,7 +508,9 @@ export const getApplicationTimelineFromDb = async (applicationId, userId) => {
         throw new AppError("Application not found", 404);
     }
     const admin = await isUserAdmin(userId);
-    if (!admin && application.job.postedById !== userId && application.candidateId !== userId) {
+    if (!admin &&
+        application.job.postedById !== userId &&
+        application.candidateId !== userId) {
         throw new AppError("You do not have permission to view this application timeline", 403);
     }
     const logs = await prisma.auditLog.findMany({
@@ -507,8 +522,16 @@ export const getApplicationTimelineFromDb = async (applicationId, userId) => {
         include: { author: { select: { name: true, image: true, role: true } } },
     });
     const timeline = [
-        ...logs.map(log => ({ type: "STAGE_CHANGE", data: log, timestamp: log.createdAt })),
-        ...notes.map(note => ({ type: "NOTE", data: note, timestamp: note.createdAt }))
+        ...logs.map((log) => ({
+            type: "STAGE_CHANGE",
+            data: log,
+            timestamp: log.createdAt,
+        })),
+        ...notes.map((note) => ({
+            type: "NOTE",
+            data: note,
+            timestamp: note.createdAt,
+        })),
     ];
     timeline.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
     return timeline;
@@ -523,7 +546,9 @@ export const withdrawApplicationFromDb = async (applicationId, candidateId) => {
     if (application.candidateId !== candidateId) {
         throw new AppError("You do not have permission to withdraw this application", 403);
     }
-    if (application.stage === "WITHDRAWN" || application.stage === "HIRED" || application.stage === "REJECTED") {
+    if (application.stage === "WITHDRAWN" ||
+        application.stage === "HIRED" ||
+        application.stage === "REJECTED") {
         throw new AppError(`Cannot withdraw application in ${application.stage} stage`, 400);
     }
     const updated = await prisma.application.update({
@@ -556,7 +581,9 @@ export const getKanbanBoardFromDb = async (jobId, recruiterId) => {
     const applications = await prisma.application.findMany({
         where: { jobId, isArchived: false },
         include: {
-            candidate: { select: { id: true, name: true, image: true, headline: true } },
+            candidate: {
+                select: { id: true, name: true, image: true, headline: true },
+            },
         },
         orderBy: { updatedAt: "desc" },
     });
@@ -593,6 +620,50 @@ export const updateApplicationLabelsInDb = async (applicationId, recruiterId, la
     });
     return updated;
 };
+// Add a single label (push)
+export const addLabelToApplicationInDb = async (applicationId, label, recruiterId) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+        select: { job: { select: { postedById: true } }, labels: true },
+    });
+    if (!application)
+        throw new AppError("Application not found", 404);
+    const admin = await isUserAdmin(recruiterId);
+    if (!admin && application.job.postedById !== recruiterId) {
+        throw new AppError("You do not have permission to update labels for this application", 403);
+    }
+    // Prevent duplicates
+    const existing = application.labels || [];
+    if (existing.includes(label)) {
+        return await prisma.application.findUnique({
+            where: { id: applicationId },
+        });
+    }
+    const updated = await prisma.application.update({
+        where: { id: applicationId },
+        data: { labels: { push: label } },
+    });
+    return updated;
+};
+// Remove a single label
+export const removeLabelFromApplicationInDb = async (applicationId, label, recruiterId) => {
+    const application = await prisma.application.findUnique({
+        where: { id: applicationId },
+        select: { job: { select: { postedById: true } }, labels: true },
+    });
+    if (!application)
+        throw new AppError("Application not found", 404);
+    const admin = await isUserAdmin(recruiterId);
+    if (!admin && application.job.postedById !== recruiterId) {
+        throw new AppError("You do not have permission to update labels for this application", 403);
+    }
+    const updatedLabels = (application.labels || []).filter((l) => l !== label);
+    const updated = await prisma.application.update({
+        where: { id: applicationId },
+        data: { labels: updatedLabels },
+    });
+    return updated;
+};
 export const applicationService = {
     submitApplicationToDb,
     getMyApplicationsFromDb,
@@ -606,5 +677,7 @@ export const applicationService = {
     withdrawApplicationFromDb,
     getKanbanBoardFromDb,
     updateApplicationLabelsInDb,
+    addLabelToApplicationInDb,
+    removeLabelFromApplicationInDb,
 };
 //# sourceMappingURL=application.service.js.map

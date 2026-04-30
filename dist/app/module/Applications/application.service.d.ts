@@ -173,6 +173,38 @@ export declare const updateApplicationLabelsInDb: (applicationId: string, recrui
     isArchived: boolean;
     labels: string[];
 }>;
+export declare const addLabelToApplicationInDb: (applicationId: string, label: string, recruiterId: string) => Promise<{
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    candidateId: string;
+    jobId: string;
+    resumeUrl: string;
+    resumeFileName: string | null;
+    coverLetter: string | null;
+    stage: ApplicationStage;
+    aiMatchScore: number | null;
+    source: string | null;
+    referralCode: string | null;
+    isArchived: boolean;
+    labels: string[];
+} | null>;
+export declare const removeLabelFromApplicationInDb: (applicationId: string, label: string, recruiterId: string) => Promise<{
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    candidateId: string;
+    jobId: string;
+    resumeUrl: string;
+    resumeFileName: string | null;
+    coverLetter: string | null;
+    stage: ApplicationStage;
+    aiMatchScore: number | null;
+    source: string | null;
+    referralCode: string | null;
+    isArchived: boolean;
+    labels: string[];
+}>;
 export declare const applicationService: {
     submitApplicationToDb: (jobId: string, candidateId: string, payload: SubmitApplicationInput) => Promise<{
         job: {
@@ -469,6 +501,38 @@ export declare const applicationService: {
         labels: string[];
     })[]>>;
     updateApplicationLabelsInDb: (applicationId: string, recruiterId: string, labels: string[]) => Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        candidateId: string;
+        jobId: string;
+        resumeUrl: string;
+        resumeFileName: string | null;
+        coverLetter: string | null;
+        stage: ApplicationStage;
+        aiMatchScore: number | null;
+        source: string | null;
+        referralCode: string | null;
+        isArchived: boolean;
+        labels: string[];
+    }>;
+    addLabelToApplicationInDb: (applicationId: string, label: string, recruiterId: string) => Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        candidateId: string;
+        jobId: string;
+        resumeUrl: string;
+        resumeFileName: string | null;
+        coverLetter: string | null;
+        stage: ApplicationStage;
+        aiMatchScore: number | null;
+        source: string | null;
+        referralCode: string | null;
+        isArchived: boolean;
+        labels: string[];
+    } | null>;
+    removeLabelFromApplicationInDb: (applicationId: string, label: string, recruiterId: string) => Promise<{
         id: string;
         createdAt: Date;
         updatedAt: Date;

@@ -248,6 +248,17 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
         omit: OmitOpts;
     }>;
     /**
+     * `prisma.emailTemplate`: Exposes CRUD operations for the **EmailTemplate** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more EmailTemplates
+      * const emailTemplates = await prisma.emailTemplate.findMany()
+      * ```
+      */
+    get emailTemplate(): Prisma.EmailTemplateDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
      * `prisma.session`: Exposes CRUD operations for the **Session** model.
       * Example usage:
       * ```ts
@@ -300,6 +311,61 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
       * ```
       */
     get screeningAnswer(): Prisma.ScreeningAnswerDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.userFile`: Exposes CRUD operations for the **UserFile** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more UserFiles
+      * const userFiles = await prisma.userFile.findMany()
+      * ```
+      */
+    get userFile(): Prisma.UserFileDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.skill`: Exposes CRUD operations for the **Skill** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more Skills
+      * const skills = await prisma.skill.findMany()
+      * ```
+      */
+    get skill(): Prisma.SkillDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.searchTerm`: Exposes CRUD operations for the **SearchTerm** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more SearchTerms
+      * const searchTerms = await prisma.searchTerm.findMany()
+      * ```
+      */
+    get searchTerm(): Prisma.SearchTermDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.companyInvite`: Exposes CRUD operations for the **CompanyInvite** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more CompanyInvites
+      * const companyInvites = await prisma.companyInvite.findMany()
+      * ```
+      */
+    get companyInvite(): Prisma.CompanyInviteDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    /**
+     * `prisma.adminLog`: Exposes CRUD operations for the **AdminLog** model.
+      * Example usage:
+      * ```ts
+      * // Fetch zero or more AdminLogs
+      * const adminLogs = await prisma.adminLog.findMany()
+      * ```
+      */
+    get adminLog(): Prisma.AdminLogDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

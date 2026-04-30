@@ -396,6 +396,7 @@ export const ModelName = {
   ApplicationNote: 'ApplicationNote',
   AuditLog: 'AuditLog',
   Interview: 'Interview',
+  EmailTemplate: 'EmailTemplate',
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
@@ -404,7 +405,8 @@ export const ModelName = {
   UserFile: 'UserFile',
   Skill: 'Skill',
   SearchTerm: 'SearchTerm',
-  CompanyInvite: 'CompanyInvite'
+  CompanyInvite: 'CompanyInvite',
+  AdminLog: 'AdminLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -420,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "candidateProfile" | "workExperience" | "education" | "company" | "companyMember" | "job" | "savedJob" | "application" | "applicationNote" | "auditLog" | "interview" | "session" | "account" | "verification" | "screeningQuestion" | "screeningAnswer" | "userFile" | "skill" | "searchTerm" | "companyInvite"
+    modelProps: "user" | "candidateProfile" | "workExperience" | "education" | "company" | "companyMember" | "job" | "savedJob" | "application" | "applicationNote" | "auditLog" | "interview" | "emailTemplate" | "session" | "account" | "verification" | "screeningQuestion" | "screeningAnswer" | "userFile" | "skill" | "searchTerm" | "companyInvite" | "adminLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1312,6 +1314,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmailTemplate: {
+      payload: Prisma.$EmailTemplatePayload<ExtArgs>
+      fields: Prisma.EmailTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.EmailTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.EmailTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.EmailTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.EmailTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.EmailTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        update: {
+          args: Prisma.EmailTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.EmailTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailTemplate>
+        }
+        groupBy: {
+          args: Prisma.EmailTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
     Session: {
       payload: Prisma.$SessionPayload<ExtArgs>
       fields: Prisma.SessionFieldRefs
@@ -1978,6 +2054,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminLog: {
+      payload: Prisma.$AdminLogPayload<ExtArgs>
+      fields: Prisma.AdminLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        findMany: {
+          args: Prisma.AdminLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>[]
+        }
+        create: {
+          args: Prisma.AdminLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        createMany: {
+          args: Prisma.AdminLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        update: {
+          args: Prisma.AdminLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminLog>
+        }
+        groupBy: {
+          args: Prisma.AdminLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2240,6 +2390,21 @@ export const InterviewScalarFieldEnum = {
 export type InterviewScalarFieldEnum = (typeof InterviewScalarFieldEnum)[keyof typeof InterviewScalarFieldEnum]
 
 
+export const EmailTemplateScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  name: 'name',
+  subject: 'subject',
+  body: 'body',
+  stage: 'stage',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum]
+
+
 export const SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
@@ -2358,12 +2523,33 @@ export const CompanyInviteScalarFieldEnum = {
 export type CompanyInviteScalarFieldEnum = (typeof CompanyInviteScalarFieldEnum)[keyof typeof CompanyInviteScalarFieldEnum]
 
 
+export const AdminLogScalarFieldEnum = {
+  id: 'id',
+  actorId: 'actorId',
+  action: 'action',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminLogScalarFieldEnum = (typeof AdminLogScalarFieldEnum)[keyof typeof AdminLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -2380,6 +2566,15 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
 
@@ -2576,6 +2771,20 @@ export type EnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 export type ListEnumFileTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FileType[]'>
     
 
+
+/**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2683,6 +2892,7 @@ export type GlobalOmitConfig = {
   applicationNote?: Prisma.ApplicationNoteOmit
   auditLog?: Prisma.AuditLogOmit
   interview?: Prisma.InterviewOmit
+  emailTemplate?: Prisma.EmailTemplateOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
@@ -2692,6 +2902,7 @@ export type GlobalOmitConfig = {
   skill?: Prisma.SkillOmit
   searchTerm?: Prisma.SearchTermOmit
   companyInvite?: Prisma.CompanyInviteOmit
+  adminLog?: Prisma.AdminLogOmit
 }
 
 /* Types for Logging */

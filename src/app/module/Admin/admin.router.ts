@@ -15,6 +15,7 @@ router.patch("/users/:id/role", adminController.assignUserRole);
 // Job Moderation
 router.get("/jobs/pending", adminController.getPendingJobs);
 router.patch("/jobs/:id/moderate", adminController.moderateJob);
+router.patch("/jobs/:id/force-close", adminController.forceCloseJob);
 
 // Platform Analytics
 router.get("/analytics", adminController.getPlatformAnalytics);
@@ -22,6 +23,9 @@ router.get("/analytics", adminController.getPlatformAnalytics);
 // Company Verification
 router.get("/companies/pending", adminController.getPendingCompanies);
 router.patch("/companies/:id/verify", adminController.verifyCompany);
+
+// Admin audit trail
+router.get("/audit-trail", adminController.getAdminAuditTrail);
 
 // Search & Audit
 router.get("/search", adminController.globalAdminSearch);

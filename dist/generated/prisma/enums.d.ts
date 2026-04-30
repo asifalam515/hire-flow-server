@@ -82,4 +82,10 @@ export declare const QuestionType: {
     readonly YES_NO: "YES_NO";
 };
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType];
+export declare const FileType: {
+    readonly RESUME: "RESUME";
+    readonly AVATAR: "AVATAR";
+    readonly LOGO: "LOGO";
+};
+export type FileType = (typeof FileType)[keyof typeof FileType];
 //# sourceMappingURL=enums.d.ts.map

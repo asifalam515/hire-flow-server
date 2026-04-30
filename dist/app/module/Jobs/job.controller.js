@@ -1,5 +1,6 @@
 import { AppError } from "@lib/appError";
 import { asyncHandler } from "@lib/asyncHandler";
+import { searchService } from "../Search/search.service";
 import { jobService } from "./job.service";
 // POST /jobs - Create new job (RECRUITER)
 export const createJob = asyncHandler(async (req, res) => {
@@ -87,11 +88,26 @@ export const searchAndFilterJobs = asyncHandler(async (req, res) => {
         filters.salaryMin = salaryMin;
     if (salaryMax !== undefined)
         filters.salaryMax = salaryMax;
-    if (search)
+    if (search) {
         filters.search = search;
+        // Fire and forget search tracking
+        searchService.trackSearch(search).catch((err) => {
+            console.error("Failed to track search term:", err);
+        });
+    }
     if (techStack)
         filters.techStack = techStack;
     const result = await jobService.getAllJobsFromDb(page, limit, filters);
+    // Cache headers: if search present, do not store; else set public max-age when cached
+    if (filters.search) {
+        res.setHeader("Cache-Control", "no-store");
+    }
+    else if (result.cached) {
+        res.setHeader("Cache-Control", "public, max-age=60");
+    }
+    else {
+        res.setHeader("Cache-Control", "no-store");
+    }
     res.status(200).json({
         success: true,
         data: result.data,
@@ -194,10 +210,10 @@ export const getSimilarJobs = asyncHandler(async (req, res) => {
 // GET /jobs/:id/match-score - Calculate match score
 export const getMatchScore = asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const score = await jobService.calculateMatchScore(id, req.user?.id);
+    const result = await jobService.calculateMatchScore(id, req.user?.id);
     res.status(200).json({
         success: true,
-        data: { score },
+        data: result,
     });
 });
 // PATCH /jobs/:id/status - Update job status

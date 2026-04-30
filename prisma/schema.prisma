@@ -122,6 +122,7 @@ model User {
   applications        Application[]
   applicationNotes    ApplicationNote[]
   auditLogs           AuditLog[]
+  adminLogs           AdminLog[]
   scheduledInterviews Interview[]
   postedJobs          Job[]
   userFiles           UserFile[]
@@ -220,9 +221,10 @@ model Company {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  members CompanyMember[]
-  jobs    Job[]
-  invites CompanyInvite[]
+  members         CompanyMember[]
+  jobs            Job[]
+  invites         CompanyInvite[]
+  emailTemplates  EmailTemplate[]
 
   @@index([slug])
   @@map("companies")
@@ -399,22 +401,6 @@ model Interview {
   @@map("interviews")
 }
 
-model CompanyInvite {
-  id        String   @id @default(cuid())
-  companyId String
-  email     String
-  token     String   @unique
-  role      String   @default("MEMBER")
-  expiresAt DateTime
-  acceptedAt DateTime?
-  createdAt DateTime @default(now())
-
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-
-  @@index([companyId])
-  @@map("company_invites")
-}
-
 model EmailTemplate {
   id        String          @id @default(cuid())
   companyId String
@@ -563,4 +549,20 @@ model CompanyInvite {
   @@index([companyId])
   @@index([email])
   @@map("company_invites")
+}
+
+model AdminLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  action     String
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  actor User @relation(fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("admin_logs")
 }

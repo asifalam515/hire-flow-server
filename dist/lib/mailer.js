@@ -1,3 +1,4 @@
+import { emailTemplatesService } from "@/app/module/Company/emailTemplates.service";
 import nodemailer from "nodemailer";
 const host = process.env.SMTP_HOST;
 const port = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined;
@@ -28,6 +29,10 @@ export const sendMail = async (to, subject, html, text) => {
         text: text ?? undefined,
         html,
     });
+};
+export const sendStageChangeEmail = async (companyId, to, variables) => {
+    const resolved = await emailTemplatesService.resolveTemplate(companyId, variables.stage, variables);
+    await sendMail(to, resolved.subject, resolved.body);
 };
 export default sendMail;
 //# sourceMappingURL=mailer.js.map

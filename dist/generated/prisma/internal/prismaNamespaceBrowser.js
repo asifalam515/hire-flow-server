@@ -51,11 +51,17 @@ export const ModelName = {
     ApplicationNote: 'ApplicationNote',
     AuditLog: 'AuditLog',
     Interview: 'Interview',
+    EmailTemplate: 'EmailTemplate',
     Session: 'Session',
     Account: 'Account',
     Verification: 'Verification',
     ScreeningQuestion: 'ScreeningQuestion',
-    ScreeningAnswer: 'ScreeningAnswer'
+    ScreeningAnswer: 'ScreeningAnswer',
+    UserFile: 'UserFile',
+    Skill: 'Skill',
+    SearchTerm: 'SearchTerm',
+    CompanyInvite: 'CompanyInvite',
+    AdminLog: 'AdminLog'
 };
 /*
  * Enums
@@ -241,6 +247,17 @@ export const InterviewScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
+export const EmailTemplateScalarFieldEnum = {
+    id: 'id',
+    companyId: 'companyId',
+    name: 'name',
+    subject: 'subject',
+    body: 'body',
+    stage: 'stage',
+    isDefault: 'isDefault',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+};
 export const SessionScalarFieldEnum = {
     id: 'id',
     expiresAt: 'expiresAt',
@@ -291,9 +308,54 @@ export const ScreeningAnswerScalarFieldEnum = {
     answer: 'answer',
     createdAt: 'createdAt'
 };
+export const UserFileScalarFieldEnum = {
+    id: 'id',
+    userId: 'userId',
+    publicId: 'publicId',
+    secureUrl: 'secureUrl',
+    fileName: 'fileName',
+    fileSize: 'fileSize',
+    type: 'type',
+    createdAt: 'createdAt'
+};
+export const SkillScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    slug: 'slug',
+    usageCount: 'usageCount'
+};
+export const SearchTermScalarFieldEnum = {
+    id: 'id',
+    term: 'term',
+    count: 'count',
+    weekKey: 'weekKey'
+};
+export const CompanyInviteScalarFieldEnum = {
+    id: 'id',
+    companyId: 'companyId',
+    email: 'email',
+    token: 'token',
+    role: 'role',
+    expiresAt: 'expiresAt',
+    acceptedAt: 'acceptedAt',
+    createdAt: 'createdAt'
+};
+export const AdminLogScalarFieldEnum = {
+    id: 'id',
+    actorId: 'actorId',
+    action: 'action',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    metadata: 'metadata',
+    createdAt: 'createdAt'
+};
 export const SortOrder = {
     asc: 'asc',
     desc: 'desc'
+};
+export const NullableJsonNullValueInput = {
+    DbNull: DbNull,
+    JsonNull: JsonNull
 };
 export const QueryMode = {
     default: 'default',
@@ -302,5 +364,10 @@ export const QueryMode = {
 export const NullsOrder = {
     first: 'first',
     last: 'last'
+};
+export const JsonNullValueFilter = {
+    DbNull: DbNull,
+    JsonNull: JsonNull,
+    AnyNull: AnyNull
 };
 //# sourceMappingURL=prismaNamespaceBrowser.js.map

@@ -82,6 +82,11 @@ export type AuditLog = Prisma.AuditLogModel;
  */
 export type Interview = Prisma.InterviewModel;
 /**
+ * Model EmailTemplate
+ *
+ */
+export type EmailTemplate = Prisma.EmailTemplateModel;
+/**
  * Model Session
  *
  */
@@ -106,4 +111,29 @@ export type ScreeningQuestion = Prisma.ScreeningQuestionModel;
  *
  */
 export type ScreeningAnswer = Prisma.ScreeningAnswerModel;
+/**
+ * Model UserFile
+ *
+ */
+export type UserFile = Prisma.UserFileModel;
+/**
+ * Model Skill
+ *
+ */
+export type Skill = Prisma.SkillModel;
+/**
+ * Model SearchTerm
+ *
+ */
+export type SearchTerm = Prisma.SearchTermModel;
+/**
+ * Model CompanyInvite
+ *
+ */
+export type CompanyInvite = Prisma.CompanyInviteModel;
+/**
+ * Model AdminLog
+ *
+ */
+export type AdminLog = Prisma.AdminLogModel;
 //# sourceMappingURL=client.d.ts.map

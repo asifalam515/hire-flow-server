@@ -65,53 +65,9 @@ interface JobFilters {
 }
 export declare const jobService: {
     getAllJobsFromDb: (page?: number, limit?: number, filters?: JobFilters) => Promise<{
-        data: ({
-            _count: {
-                applications: number;
-                savedBy: number;
-            };
-            company: {
-                id: string;
-                name: string;
-                slug: string;
-                logoUrl: string | null;
-                isVerified: boolean;
-            };
-        } & {
-            id: string;
-            createdAt: Date;
-            updatedAt: Date;
-            expiresAt: Date | null;
-            type: JobType;
-            companyId: string;
-            postedById: string;
-            title: string;
-            slug: string;
-            description: string;
-            requirements: string | null;
-            responsibilities: string | null;
-            benefits: string | null;
-            experienceLevel: ExperienceLevel;
-            location: string | null;
-            isRemote: boolean;
-            country: string | null;
-            city: string | null;
-            salaryMin: number | null;
-            salaryMax: number | null;
-            salaryCurrency: string | null;
-            salaryPeriod: string | null;
-            techStack: string[];
-            status: JobStatus;
-            applicationCount: number;
-            viewCount: number;
-            publishedAt: Date | null;
-        })[];
-        pagination: {
-            total: number;
-            page: number;
-            limit: number;
-            totalPages: number;
-        };
+        cached: boolean;
+        data: any;
+        pagination: any;
     }>;
     getJobByIdFromDb: (id: string) => Promise<{
         _count: {
@@ -408,42 +364,14 @@ export declare const jobService: {
         viewCount: number;
         publishedAt: Date | null;
     }>;
-    getSimilarJobsFromDb: (id: string, limit?: number) => Promise<({
-        company: {
-            id: string;
-            name: string;
-            logoUrl: string | null;
-        };
-    } & {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        expiresAt: Date | null;
-        type: JobType;
-        companyId: string;
-        postedById: string;
-        title: string;
-        slug: string;
-        description: string;
-        requirements: string | null;
-        responsibilities: string | null;
-        benefits: string | null;
-        experienceLevel: ExperienceLevel;
-        location: string | null;
-        isRemote: boolean;
-        country: string | null;
-        city: string | null;
-        salaryMin: number | null;
-        salaryMax: number | null;
-        salaryCurrency: string | null;
-        salaryPeriod: string | null;
-        techStack: string[];
-        status: JobStatus;
-        applicationCount: number;
-        viewCount: number;
-        publishedAt: Date | null;
-    })[]>;
-    calculateMatchScore: (jobId: string, candidateId: string) => Promise<number>;
+    getSimilarJobsFromDb: (id: string, limit?: number) => Promise<any[]>;
+    calculateMatchScore: (jobId: string, candidateId: string) => Promise<{
+        score: number;
+        matchedSkills: string[];
+        missingSkills: string[];
+        salaryMatch: boolean;
+        levelMatch: boolean;
+    }>;
     updateJobStatusInDb: (id: string, userId: string, status: JobStatus) => Promise<{
         id: string;
         createdAt: Date;

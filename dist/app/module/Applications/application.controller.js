@@ -176,6 +176,30 @@ export const updateApplicationLabels = asyncHandler(async (req, res) => {
         data: updated,
     });
 });
+export const addApplicationLabel = asyncHandler(async (req, res) => {
+    const applicationId = req.params.id;
+    const { label } = req.body;
+    if (!applicationId)
+        throw new AppError("Application id is required", 400);
+    if (!label)
+        throw new AppError("label is required", 400);
+    const updated = await applicationService.addLabelToApplicationInDb(applicationId, label, req.user?.id);
+    res
+        .status(200)
+        .json({ success: true, message: "Label added", data: updated });
+});
+export const removeApplicationLabel = asyncHandler(async (req, res) => {
+    const applicationId = req.params.id;
+    const label = req.params.label;
+    if (!applicationId)
+        throw new AppError("Application id is required", 400);
+    if (!label)
+        throw new AppError("label is required", 400);
+    const updated = await applicationService.removeLabelFromApplicationInDb(applicationId, label, req.user?.id);
+    res
+        .status(200)
+        .json({ success: true, message: "Label removed", data: updated });
+});
 export const applicationController = {
     applyToJob,
     getMyApplications,
@@ -189,5 +213,7 @@ export const applicationController = {
     withdrawApplication,
     getKanbanBoard,
     updateApplicationLabels,
+    addApplicationLabel,
+    removeApplicationLabel,
 };
 //# sourceMappingURL=application.controller.js.map

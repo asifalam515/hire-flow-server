@@ -48,4 +48,37 @@ export const invalidateJobsCache = async () => {
   }
 };
 
+// Export a redis-like client named `redis` that uses ioredis if available,
+// otherwise falls back to the in-memory NodeCache implementation above.
+let redisClient: any = null;
+try {
+  // Try to require ioredis dynamically
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const IORedis = require("ioredis");
+  const client = new IORedis(process.env.REDIS_URL || undefined);
+  redisClient = client;
+} catch (err) {
+  // Fallback wrapper around NodeCache to provide minimal redis API used by code
+  redisClient = {
+    async incr(key: string) {
+      const cur = cache.get<number>(key) ?? 0;
+      const next = Number(cur) + 1;
+      cache.set(key, next);
+      return next;
+    },
+    async get(key: string) {
+      const v = cache.get<any>(key);
+      return v === undefined || v === null ? null : String(v);
+    },
+    async keys(pattern: string) {
+      return keys(pattern);
+    },
+    async del(...ks: string[]) {
+      return del(...ks);
+    },
+  };
+}
+
+export const redis = redisClient;
+
 export default cache;

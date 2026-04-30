@@ -1,3 +1,4 @@
+import notificationsService from "@/modules/notifications/notifications.service";
 import { prisma } from "@lib/prisma";
 import { sendJobExpiringEmail } from "./notification.service";
 /**
@@ -44,6 +45,13 @@ export const sendJobExpiringNotifications = async (daysUntilExpiry = 3) => {
         }
         catch (err) {
             console.error(`Failed to send job expiring email for job ${job.id}`, err);
+        }
+        // Create DB notification for the recruiter
+        try {
+            await notificationsService.createNotification(job.postedBy.id, "JOB_EXPIRING_SOON", `Job expiring soon — ${job.title}`, `Your job posting ${job.title} at ${job.company.name} is expiring on ${job.expiresAt?.toISOString()}`, { jobId: job.id, expiresAt: job.expiresAt });
+        }
+        catch (err) {
+            // ignore notification errors
         }
     }
     return expiringJobs.length;

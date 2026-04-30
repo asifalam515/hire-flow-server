@@ -143,3 +143,17 @@ io.on("connection", (socket: any) => {
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+// Schedule view count flusher every 5 minutes
+try {
+  cron.schedule("*/5 * * * *", async () => {
+    try {
+      await flushViewCounts();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("Error running flushViewCounts cron:", err);
+    }
+  });
+} catch (err) {
+  // ignore cron scheduling errors
+}

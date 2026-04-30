@@ -102,6 +102,11 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type Interview = Prisma.InterviewModel
 /**
+ * Model EmailTemplate
+ * 
+ */
+export type EmailTemplate = Prisma.EmailTemplateModel
+/**
  * Model Session
  * 
  */
@@ -146,3 +151,8 @@ export type SearchTerm = Prisma.SearchTermModel
  * 
  */
 export type CompanyInvite = Prisma.CompanyInviteModel
+/**
+ * Model AdminLog
+ * 
+ */
+export type AdminLog = Prisma.AdminLogModel

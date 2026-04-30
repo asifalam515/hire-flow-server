@@ -1,4 +1,5 @@
 import type { ApplicationStage } from "@/generated/prisma/enums";
+import notificationsService from "@/modules/notifications/notifications.service";
 import { AppError } from "@lib/appError";
 import { sendStageChangeEmail } from "@lib/mailer";
 import { prisma } from "@lib/prisma";
@@ -186,6 +187,53 @@ const submitApplicationToDb = async (
     }
   } catch (err) {
     // ignore socket errors
+  }
+
+  // Create DB notifications for candidate and recruiter
+  try {
+    // Candidate notification
+    await notificationsService.createNotification(
+      updated.candidate.id,
+      "STAGE_UPDATED",
+      `Application updated — ${updated.job.title}`,
+      `Your application for ${updated.job.title} is now ${updated.stage}`,
+      {
+        applicationId: updated.id,
+        jobId: updated.job.id,
+        stage: updated.stage,
+      },
+    );
+
+    // Recruiter notification (who performed the change already gets socket event)
+    await notificationsService.createNotification(
+      recruiterId,
+      "STAGE_UPDATED",
+      `Applicant updated — ${updated.job.title}`,
+      `${updated.candidate.name || "Candidate"} moved to ${updated.stage}`,
+      {
+        applicationId: updated.id,
+        candidateId: updated.candidate.id,
+        stage: updated.stage,
+      },
+    );
+  } catch (err) {
+    // ignore notification errors
+  }
+
+  // Create DB notification for recruiter (will emit notification:new)
+  try {
+    await notificationsService.createNotification(
+      job.postedById,
+      "APPLICATION_RECEIVED",
+      `New application: ${job.title}`,
+      `${application.candidate?.name || "Candidate"} applied for ${job.title}`,
+      {
+        jobId: job.id,
+        applicationId: application.id,
+      },
+    );
+  } catch (err) {
+    // ignore notification errors
   }
 
   return application;

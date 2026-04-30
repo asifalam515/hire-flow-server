@@ -326,11 +326,25 @@ const getJobByIdFromDb = async (id: string) => {
     throw new AppError("Job not found", 404);
   }
 
-  // Increment view count
-  await prisma.job.update({
-    where: { id },
-    data: { viewCount: { increment: 1 } },
-  });
+  // Increment view count in Redis (fire-and-forget)
+  try {
+    // Use redis.incr on key `jobs:views:{jobId}`
+    // Do not await — fire-and-forget
+    /* eslint-disable no-void */
+    void (async () => {
+      try {
+        const r = require("@/config/redis");
+        if (r && r.redis && typeof r.redis.incr === "function") {
+          r.redis.incr(`jobs:views:${id}`);
+        }
+      } catch (e) {
+        // ignore redis errors for view increment
+      }
+    })();
+    /* eslint-enable no-void */
+  } catch (err) {
+    // ignore
+  }
 
   return job;
 };

@@ -15,5 +15,7 @@ router.get("/job/:id/kanban", authenticate, requireRecruiter, applicationControl
 router.get("/:id/timeline", authenticate, applicationController.getApplicationTimeline);
 router.patch("/:id/withdraw", authenticate, authorize(["CANDIDATE"]), applicationController.withdrawApplication);
 router.patch("/:id/labels", authenticate, requireRecruiter, applicationController.updateApplicationLabels);
+router.post("/:id/labels", authenticate, requireRecruiter, applicationController.addApplicationLabel);
+router.delete("/:id/labels/:label", authenticate, requireRecruiter, applicationController.removeApplicationLabel);
 export const applicationRouter = router;
 //# sourceMappingURL=application.router.js.map

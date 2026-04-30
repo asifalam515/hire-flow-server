@@ -38,11 +38,17 @@ export declare const ModelName: {
     readonly ApplicationNote: "ApplicationNote";
     readonly AuditLog: "AuditLog";
     readonly Interview: "Interview";
+    readonly EmailTemplate: "EmailTemplate";
     readonly Session: "Session";
     readonly Account: "Account";
     readonly Verification: "Verification";
     readonly ScreeningQuestion: "ScreeningQuestion";
     readonly ScreeningAnswer: "ScreeningAnswer";
+    readonly UserFile: "UserFile";
+    readonly Skill: "Skill";
+    readonly SearchTerm: "SearchTerm";
+    readonly CompanyInvite: "CompanyInvite";
+    readonly AdminLog: "AdminLog";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -239,6 +245,18 @@ export declare const InterviewScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type InterviewScalarFieldEnum = (typeof InterviewScalarFieldEnum)[keyof typeof InterviewScalarFieldEnum];
+export declare const EmailTemplateScalarFieldEnum: {
+    readonly id: "id";
+    readonly companyId: "companyId";
+    readonly name: "name";
+    readonly subject: "subject";
+    readonly body: "body";
+    readonly stage: "stage";
+    readonly isDefault: "isDefault";
+    readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
+};
+export type EmailTemplateScalarFieldEnum = (typeof EmailTemplateScalarFieldEnum)[keyof typeof EmailTemplateScalarFieldEnum];
 export declare const SessionScalarFieldEnum: {
     readonly id: "id";
     readonly expiresAt: "expiresAt";
@@ -294,11 +312,62 @@ export declare const ScreeningAnswerScalarFieldEnum: {
     readonly createdAt: "createdAt";
 };
 export type ScreeningAnswerScalarFieldEnum = (typeof ScreeningAnswerScalarFieldEnum)[keyof typeof ScreeningAnswerScalarFieldEnum];
+export declare const UserFileScalarFieldEnum: {
+    readonly id: "id";
+    readonly userId: "userId";
+    readonly publicId: "publicId";
+    readonly secureUrl: "secureUrl";
+    readonly fileName: "fileName";
+    readonly fileSize: "fileSize";
+    readonly type: "type";
+    readonly createdAt: "createdAt";
+};
+export type UserFileScalarFieldEnum = (typeof UserFileScalarFieldEnum)[keyof typeof UserFileScalarFieldEnum];
+export declare const SkillScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly slug: "slug";
+    readonly usageCount: "usageCount";
+};
+export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum];
+export declare const SearchTermScalarFieldEnum: {
+    readonly id: "id";
+    readonly term: "term";
+    readonly count: "count";
+    readonly weekKey: "weekKey";
+};
+export type SearchTermScalarFieldEnum = (typeof SearchTermScalarFieldEnum)[keyof typeof SearchTermScalarFieldEnum];
+export declare const CompanyInviteScalarFieldEnum: {
+    readonly id: "id";
+    readonly companyId: "companyId";
+    readonly email: "email";
+    readonly token: "token";
+    readonly role: "role";
+    readonly expiresAt: "expiresAt";
+    readonly acceptedAt: "acceptedAt";
+    readonly createdAt: "createdAt";
+};
+export type CompanyInviteScalarFieldEnum = (typeof CompanyInviteScalarFieldEnum)[keyof typeof CompanyInviteScalarFieldEnum];
+export declare const AdminLogScalarFieldEnum: {
+    readonly id: "id";
+    readonly actorId: "actorId";
+    readonly action: "action";
+    readonly entityType: "entityType";
+    readonly entityId: "entityId";
+    readonly metadata: "metadata";
+    readonly createdAt: "createdAt";
+};
+export type AdminLogScalarFieldEnum = (typeof AdminLogScalarFieldEnum)[keyof typeof AdminLogScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
 };
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder];
+export declare const NullableJsonNullValueInput: {
+    readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
+    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
+};
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput];
 export declare const QueryMode: {
     readonly default: "default";
     readonly insensitive: "insensitive";
@@ -309,4 +378,10 @@ export declare const NullsOrder: {
     readonly last: "last";
 };
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder];
+export declare const JsonNullValueFilter: {
+    readonly DbNull: import("@prisma/client-runtime-utils").DbNullClass;
+    readonly JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
+    readonly AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
+};
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter];
 //# sourceMappingURL=prismaNamespaceBrowser.d.ts.map

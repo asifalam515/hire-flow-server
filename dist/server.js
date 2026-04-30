@@ -12,6 +12,9 @@ import { savedJobsRouter } from "./app/module/Candidate/savedJobs.router";
 import { workExperienceRouter } from "./app/module/Candidate/workExperience.router";
 import { companyRouter } from "./app/module/Company/company.router";
 import { jobRouter } from "./app/module/Jobs/Job.router";
+import { searchRouter } from "./app/module/Search/search.router";
+import { tagsRouter } from "./app/module/Tags/tags.router";
+import { uploadsRouter } from "./app/module/Uploads/uploads.router";
 import { auth } from "./lib/auth";
 import { errorHandler } from "./middleware/errorHandler";
 const app = express();
@@ -38,6 +41,9 @@ app.use("/api/v1/candidate/profile", profileRouter);
 app.use("/api/v1/candidate/work-experience", workExperienceRouter);
 app.use("/api/v1/candidate/education", educationRouter);
 app.use("/api/v1/saved-jobs", savedJobsRouter);
+app.use("/api/v1/uploads", uploadsRouter);
+app.use("/api/v1/tags", tagsRouter);
+app.use("/api/v1/search", searchRouter);
 // Basic route
 app.get("/", (req, res) => {
     res.send("Hello, TypeScript + Express!");
@@ -108,4 +114,19 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+// Schedule view count flusher every 5 minutes
+try {
+    cron.schedule("*/5 * * * *", async () => {
+        try {
+            await flushViewCounts();
+        }
+        catch (err) {
+            // eslint-disable-next-line no-console
+            console.error("Error running flushViewCounts cron:", err);
+        }
+    });
+}
+catch (err) {
+    // ignore cron scheduling errors
+}
 //# sourceMappingURL=server.js.map

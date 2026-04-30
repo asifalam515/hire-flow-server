@@ -81,4 +81,9 @@ export const QuestionType = {
     MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
     YES_NO: 'YES_NO'
 };
+export const FileType = {
+    RESUME: 'RESUME',
+    AVATAR: 'AVATAR',
+    LOGO: 'LOGO'
+};
 //# sourceMappingURL=enums.js.map

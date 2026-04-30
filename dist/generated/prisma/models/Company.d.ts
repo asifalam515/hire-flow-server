@@ -267,6 +267,8 @@ export type CompanyWhereInput = {
     updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string;
     members?: Prisma.CompanyMemberListRelationFilter;
     jobs?: Prisma.JobListRelationFilter;
+    invites?: Prisma.CompanyInviteListRelationFilter;
+    emailTemplates?: Prisma.EmailTemplateListRelationFilter;
 };
 export type CompanyOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -288,6 +290,8 @@ export type CompanyOrderByWithRelationInput = {
     updatedAt?: Prisma.SortOrder;
     members?: Prisma.CompanyMemberOrderByRelationAggregateInput;
     jobs?: Prisma.JobOrderByRelationAggregateInput;
+    invites?: Prisma.CompanyInviteOrderByRelationAggregateInput;
+    emailTemplates?: Prisma.EmailTemplateOrderByRelationAggregateInput;
 };
 export type CompanyWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -312,6 +316,8 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
     updatedAt?: Prisma.DateTimeFilter<"Company"> | Date | string;
     members?: Prisma.CompanyMemberListRelationFilter;
     jobs?: Prisma.JobListRelationFilter;
+    invites?: Prisma.CompanyInviteListRelationFilter;
+    emailTemplates?: Prisma.EmailTemplateListRelationFilter;
 }, "id" | "slug">;
 export type CompanyOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -379,6 +385,8 @@ export type CompanyCreateInput = {
     updatedAt?: Date | string;
     members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput;
     jobs?: Prisma.JobCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyUncheckedCreateInput = {
     id?: string;
@@ -400,6 +408,8 @@ export type CompanyUncheckedCreateInput = {
     updatedAt?: Date | string;
     members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput;
     jobs?: Prisma.JobUncheckedCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteUncheckedCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -421,6 +431,8 @@ export type CompanyUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput;
     jobs?: Prisma.JobUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutCompanyNestedInput;
 };
 export type CompanyUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -442,6 +454,8 @@ export type CompanyUncheckedUpdateInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput;
     jobs?: Prisma.JobUncheckedUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUncheckedUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCompanyNestedInput;
 };
 export type CompanyCreateManyInput = {
     id?: string;
@@ -594,6 +608,30 @@ export type CompanyUpdateOneRequiredWithoutJobsNestedInput = {
     connect?: Prisma.CompanyWhereUniqueInput;
     update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutJobsInput, Prisma.CompanyUpdateWithoutJobsInput>, Prisma.CompanyUncheckedUpdateWithoutJobsInput>;
 };
+export type CompanyCreateNestedOneWithoutEmailTemplatesInput = {
+    create?: Prisma.XOR<Prisma.CompanyCreateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedCreateWithoutEmailTemplatesInput>;
+    connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutEmailTemplatesInput;
+    connect?: Prisma.CompanyWhereUniqueInput;
+};
+export type CompanyUpdateOneRequiredWithoutEmailTemplatesNestedInput = {
+    create?: Prisma.XOR<Prisma.CompanyCreateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedCreateWithoutEmailTemplatesInput>;
+    connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutEmailTemplatesInput;
+    upsert?: Prisma.CompanyUpsertWithoutEmailTemplatesInput;
+    connect?: Prisma.CompanyWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutEmailTemplatesInput, Prisma.CompanyUpdateWithoutEmailTemplatesInput>, Prisma.CompanyUncheckedUpdateWithoutEmailTemplatesInput>;
+};
+export type CompanyCreateNestedOneWithoutInvitesInput = {
+    create?: Prisma.XOR<Prisma.CompanyCreateWithoutInvitesInput, Prisma.CompanyUncheckedCreateWithoutInvitesInput>;
+    connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutInvitesInput;
+    connect?: Prisma.CompanyWhereUniqueInput;
+};
+export type CompanyUpdateOneRequiredWithoutInvitesNestedInput = {
+    create?: Prisma.XOR<Prisma.CompanyCreateWithoutInvitesInput, Prisma.CompanyUncheckedCreateWithoutInvitesInput>;
+    connectOrCreate?: Prisma.CompanyCreateOrConnectWithoutInvitesInput;
+    upsert?: Prisma.CompanyUpsertWithoutInvitesInput;
+    connect?: Prisma.CompanyWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.CompanyUpdateToOneWithWhereWithoutInvitesInput, Prisma.CompanyUpdateWithoutInvitesInput>, Prisma.CompanyUncheckedUpdateWithoutInvitesInput>;
+};
 export type CompanyCreateWithoutMembersInput = {
     id?: string;
     name: string;
@@ -613,6 +651,8 @@ export type CompanyCreateWithoutMembersInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     jobs?: Prisma.JobCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyUncheckedCreateWithoutMembersInput = {
     id?: string;
@@ -633,6 +673,8 @@ export type CompanyUncheckedCreateWithoutMembersInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     jobs?: Prisma.JobUncheckedCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteUncheckedCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyCreateOrConnectWithoutMembersInput = {
     where: Prisma.CompanyWhereUniqueInput;
@@ -666,6 +708,8 @@ export type CompanyUpdateWithoutMembersInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     jobs?: Prisma.JobUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutCompanyNestedInput;
 };
 export type CompanyUncheckedUpdateWithoutMembersInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -686,6 +730,8 @@ export type CompanyUncheckedUpdateWithoutMembersInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     jobs?: Prisma.JobUncheckedUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUncheckedUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCompanyNestedInput;
 };
 export type CompanyCreateWithoutJobsInput = {
     id?: string;
@@ -706,6 +752,8 @@ export type CompanyCreateWithoutJobsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyUncheckedCreateWithoutJobsInput = {
     id?: string;
@@ -726,6 +774,8 @@ export type CompanyUncheckedCreateWithoutJobsInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteUncheckedCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCompanyInput;
 };
 export type CompanyCreateOrConnectWithoutJobsInput = {
     where: Prisma.CompanyWhereUniqueInput;
@@ -759,6 +809,8 @@ export type CompanyUpdateWithoutJobsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutCompanyNestedInput;
 };
 export type CompanyUncheckedUpdateWithoutJobsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -779,6 +831,210 @@ export type CompanyUncheckedUpdateWithoutJobsInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUncheckedUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCompanyNestedInput;
+};
+export type CompanyCreateWithoutEmailTemplatesInput = {
+    id?: string;
+    name: string;
+    slug: string;
+    logoUrl?: string | null;
+    bannerUrl?: string | null;
+    website?: string | null;
+    linkedinUrl?: string | null;
+    description?: string | null;
+    industry?: string | null;
+    size?: $Enums.CompanySize | null;
+    founded?: number | null;
+    country?: string | null;
+    city?: string | null;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput;
+    jobs?: Prisma.JobCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteCreateNestedManyWithoutCompanyInput;
+};
+export type CompanyUncheckedCreateWithoutEmailTemplatesInput = {
+    id?: string;
+    name: string;
+    slug: string;
+    logoUrl?: string | null;
+    bannerUrl?: string | null;
+    website?: string | null;
+    linkedinUrl?: string | null;
+    description?: string | null;
+    industry?: string | null;
+    size?: $Enums.CompanySize | null;
+    founded?: number | null;
+    country?: string | null;
+    city?: string | null;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput;
+    jobs?: Prisma.JobUncheckedCreateNestedManyWithoutCompanyInput;
+    invites?: Prisma.CompanyInviteUncheckedCreateNestedManyWithoutCompanyInput;
+};
+export type CompanyCreateOrConnectWithoutEmailTemplatesInput = {
+    where: Prisma.CompanyWhereUniqueInput;
+    create: Prisma.XOR<Prisma.CompanyCreateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedCreateWithoutEmailTemplatesInput>;
+};
+export type CompanyUpsertWithoutEmailTemplatesInput = {
+    update: Prisma.XOR<Prisma.CompanyUpdateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedUpdateWithoutEmailTemplatesInput>;
+    create: Prisma.XOR<Prisma.CompanyCreateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedCreateWithoutEmailTemplatesInput>;
+    where?: Prisma.CompanyWhereInput;
+};
+export type CompanyUpdateToOneWithWhereWithoutEmailTemplatesInput = {
+    where?: Prisma.CompanyWhereInput;
+    data: Prisma.XOR<Prisma.CompanyUpdateWithoutEmailTemplatesInput, Prisma.CompanyUncheckedUpdateWithoutEmailTemplatesInput>;
+};
+export type CompanyUpdateWithoutEmailTemplatesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    size?: Prisma.NullableEnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize | null;
+    founded?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput;
+    jobs?: Prisma.JobUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUpdateManyWithoutCompanyNestedInput;
+};
+export type CompanyUncheckedUpdateWithoutEmailTemplatesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    size?: Prisma.NullableEnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize | null;
+    founded?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput;
+    jobs?: Prisma.JobUncheckedUpdateManyWithoutCompanyNestedInput;
+    invites?: Prisma.CompanyInviteUncheckedUpdateManyWithoutCompanyNestedInput;
+};
+export type CompanyCreateWithoutInvitesInput = {
+    id?: string;
+    name: string;
+    slug: string;
+    logoUrl?: string | null;
+    bannerUrl?: string | null;
+    website?: string | null;
+    linkedinUrl?: string | null;
+    description?: string | null;
+    industry?: string | null;
+    size?: $Enums.CompanySize | null;
+    founded?: number | null;
+    country?: string | null;
+    city?: string | null;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    members?: Prisma.CompanyMemberCreateNestedManyWithoutCompanyInput;
+    jobs?: Prisma.JobCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateCreateNestedManyWithoutCompanyInput;
+};
+export type CompanyUncheckedCreateWithoutInvitesInput = {
+    id?: string;
+    name: string;
+    slug: string;
+    logoUrl?: string | null;
+    bannerUrl?: string | null;
+    website?: string | null;
+    linkedinUrl?: string | null;
+    description?: string | null;
+    industry?: string | null;
+    size?: $Enums.CompanySize | null;
+    founded?: number | null;
+    country?: string | null;
+    city?: string | null;
+    isVerified?: boolean;
+    isActive?: boolean;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    members?: Prisma.CompanyMemberUncheckedCreateNestedManyWithoutCompanyInput;
+    jobs?: Prisma.JobUncheckedCreateNestedManyWithoutCompanyInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedCreateNestedManyWithoutCompanyInput;
+};
+export type CompanyCreateOrConnectWithoutInvitesInput = {
+    where: Prisma.CompanyWhereUniqueInput;
+    create: Prisma.XOR<Prisma.CompanyCreateWithoutInvitesInput, Prisma.CompanyUncheckedCreateWithoutInvitesInput>;
+};
+export type CompanyUpsertWithoutInvitesInput = {
+    update: Prisma.XOR<Prisma.CompanyUpdateWithoutInvitesInput, Prisma.CompanyUncheckedUpdateWithoutInvitesInput>;
+    create: Prisma.XOR<Prisma.CompanyCreateWithoutInvitesInput, Prisma.CompanyUncheckedCreateWithoutInvitesInput>;
+    where?: Prisma.CompanyWhereInput;
+};
+export type CompanyUpdateToOneWithWhereWithoutInvitesInput = {
+    where?: Prisma.CompanyWhereInput;
+    data: Prisma.XOR<Prisma.CompanyUpdateWithoutInvitesInput, Prisma.CompanyUncheckedUpdateWithoutInvitesInput>;
+};
+export type CompanyUpdateWithoutInvitesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    size?: Prisma.NullableEnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize | null;
+    founded?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    members?: Prisma.CompanyMemberUpdateManyWithoutCompanyNestedInput;
+    jobs?: Prisma.JobUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUpdateManyWithoutCompanyNestedInput;
+};
+export type CompanyUncheckedUpdateWithoutInvitesInput = {
+    id?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    logoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    bannerUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    linkedinUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    size?: Prisma.NullableEnumCompanySizeFieldUpdateOperationsInput | $Enums.CompanySize | null;
+    founded?: Prisma.NullableIntFieldUpdateOperationsInput | number | null;
+    country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    members?: Prisma.CompanyMemberUncheckedUpdateManyWithoutCompanyNestedInput;
+    jobs?: Prisma.JobUncheckedUpdateManyWithoutCompanyNestedInput;
+    emailTemplates?: Prisma.EmailTemplateUncheckedUpdateManyWithoutCompanyNestedInput;
 };
 /**
  * Count Type CompanyCountOutputType
@@ -786,10 +1042,14 @@ export type CompanyUncheckedUpdateWithoutJobsInput = {
 export type CompanyCountOutputType = {
     members: number;
     jobs: number;
+    invites: number;
+    emailTemplates: number;
 };
 export type CompanyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     members?: boolean | CompanyCountOutputTypeCountMembersArgs;
     jobs?: boolean | CompanyCountOutputTypeCountJobsArgs;
+    invites?: boolean | CompanyCountOutputTypeCountInvitesArgs;
+    emailTemplates?: boolean | CompanyCountOutputTypeCountEmailTemplatesArgs;
 };
 /**
  * CompanyCountOutputType without action
@@ -812,6 +1072,18 @@ export type CompanyCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types
 export type CompanyCountOutputTypeCountJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.JobWhereInput;
 };
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountInvitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.CompanyInviteWhereInput;
+};
+/**
+ * CompanyCountOutputType without action
+ */
+export type CompanyCountOutputTypeCountEmailTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.EmailTemplateWhereInput;
+};
 export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
@@ -832,6 +1104,8 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     updatedAt?: boolean;
     members?: boolean | Prisma.Company$membersArgs<ExtArgs>;
     jobs?: boolean | Prisma.Company$jobsArgs<ExtArgs>;
+    invites?: boolean | Prisma.Company$invitesArgs<ExtArgs>;
+    emailTemplates?: boolean | Prisma.Company$emailTemplatesArgs<ExtArgs>;
     _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["company"]>;
 export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -895,6 +1169,8 @@ export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     members?: boolean | Prisma.Company$membersArgs<ExtArgs>;
     jobs?: boolean | Prisma.Company$jobsArgs<ExtArgs>;
+    invites?: boolean | Prisma.Company$invitesArgs<ExtArgs>;
+    emailTemplates?: boolean | Prisma.Company$emailTemplatesArgs<ExtArgs>;
     _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type CompanyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -904,6 +1180,8 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     objects: {
         members: Prisma.$CompanyMemberPayload<ExtArgs>[];
         jobs: Prisma.$JobPayload<ExtArgs>[];
+        invites: Prisma.$CompanyInvitePayload<ExtArgs>[];
+        emailTemplates: Prisma.$EmailTemplatePayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -1254,6 +1532,8 @@ export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends runtime.
     readonly [Symbol.toStringTag]: "PrismaPromise";
     members<T extends Prisma.Company$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     jobs<T extends Prisma.Company$jobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    invites<T extends Prisma.Company$invitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompanyInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    emailTemplates<T extends Prisma.Company$emailTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Company$emailTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1716,6 +1996,52 @@ export type Company$jobsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
     take?: number;
     skip?: number;
     distinct?: Prisma.JobScalarFieldEnum | Prisma.JobScalarFieldEnum[];
+};
+/**
+ * Company.invites
+ */
+export type Company$invitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompanyInvite
+     */
+    select?: Prisma.CompanyInviteSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the CompanyInvite
+     */
+    omit?: Prisma.CompanyInviteOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.CompanyInviteInclude<ExtArgs> | null;
+    where?: Prisma.CompanyInviteWhereInput;
+    orderBy?: Prisma.CompanyInviteOrderByWithRelationInput | Prisma.CompanyInviteOrderByWithRelationInput[];
+    cursor?: Prisma.CompanyInviteWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.CompanyInviteScalarFieldEnum | Prisma.CompanyInviteScalarFieldEnum[];
+};
+/**
+ * Company.emailTemplates
+ */
+export type Company$emailTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailTemplate
+     */
+    select?: Prisma.EmailTemplateSelect<ExtArgs> | null;
+    /**
+     * Omit specific fields from the EmailTemplate
+     */
+    omit?: Prisma.EmailTemplateOmit<ExtArgs> | null;
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Prisma.EmailTemplateInclude<ExtArgs> | null;
+    where?: Prisma.EmailTemplateWhereInput;
+    orderBy?: Prisma.EmailTemplateOrderByWithRelationInput | Prisma.EmailTemplateOrderByWithRelationInput[];
+    cursor?: Prisma.EmailTemplateWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.EmailTemplateScalarFieldEnum | Prisma.EmailTemplateScalarFieldEnum[];
 };
 /**
  * Company without action

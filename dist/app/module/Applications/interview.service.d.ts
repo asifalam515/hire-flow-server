@@ -16,8 +16,8 @@ export declare const scheduleInterview: (applicationId: string, recruiterId: str
     updatedAt: Date;
     type: InterviewType;
     location: string | null;
-    notes: string | null;
     applicationId: string;
+    notes: string | null;
     meetingUrl: string | null;
     scheduledAt: Date;
     durationMins: number;
@@ -38,8 +38,8 @@ export declare const interviewService: {
         updatedAt: Date;
         type: InterviewType;
         location: string | null;
-        notes: string | null;
         applicationId: string;
+        notes: string | null;
         meetingUrl: string | null;
         scheduledAt: Date;
         durationMins: number;

@@ -42,6 +42,8 @@ const toggleUserSuspensionInDb = async (
     throw new AppError("User not found", 404);
   }
 
+  const previousStatus = user.isSuspended;
+
   const updatedUser = await prisma.user.update({
     where: { id: userId },
     data: { isSuspended },
@@ -54,7 +56,7 @@ const toggleUserSuspensionInDb = async (
     },
   });
 
-  return updatedUser;
+  return { updatedUser, previousStatus };
 };
 
 const assignUserRoleInDb = async (userId: string, role: Role) => {
@@ -147,11 +149,14 @@ const getPlatformAnalyticsFromDb = async () => {
     select: { createdAt: true },
   });
 
-  const signupsPerDay = users.reduce((acc, user) => {
-    const date = user.createdAt.toISOString().slice(0, 10);
-    acc[date] = (acc[date] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const signupsPerDay = users.reduce(
+    (acc, user) => {
+      const date = user.createdAt.toISOString().slice(0, 10);
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   const signupsChart = Object.entries(signupsPerDay)
     .map(([date, count]) => ({ date, count }))
@@ -165,7 +170,10 @@ const getPlatformAnalyticsFromDb = async () => {
   };
 };
 
-const getPendingCompaniesFromDb = async (page: number = 1, limit: number = 10) => {
+const getPendingCompaniesFromDb = async (
+  page: number = 1,
+  limit: number = 10,
+) => {
   const skip = (page - 1) * limit;
 
   const [companies, total] = await Promise.all([
@@ -203,7 +211,26 @@ const verifyCompanyInDb = async (companyId: string, isVerified: boolean) => {
   return updatedCompany;
 };
 
-const globalAdminSearchFromDb = async (query: string, page: number = 1, limit: number = 10) => {
+const forceCloseJobInDb = async (jobId: string, reason?: string) => {
+  const job = await prisma.job.findUnique({ where: { id: jobId } });
+  if (!job) {
+    throw new AppError("Job not found", 404);
+  }
+
+  const updatedJob = await prisma.job.update({
+    where: { id: jobId },
+    data: { status: "CLOSED" },
+  });
+
+  // Optionally store reason somewhere else (not persisted here)
+  return updatedJob;
+};
+
+const globalAdminSearchFromDb = async (
+  query: string,
+  page: number = 1,
+  limit: number = 10,
+) => {
   const skip = (page - 1) * limit;
   // Searching across Users, Companies, and Jobs
   const [users, companies, jobs] = await Promise.all([
@@ -216,7 +243,13 @@ const globalAdminSearchFromDb = async (query: string, page: number = 1, limit: n
       },
       skip,
       take: limit,
-      select: { id: true, name: true, email: true, role: true, createdAt: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
     }),
     prisma.company.findMany({
       where: {
@@ -227,7 +260,13 @@ const globalAdminSearchFromDb = async (query: string, page: number = 1, limit: n
       },
       skip,
       take: limit,
-      select: { id: true, name: true, slug: true, industry: true, isVerified: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        industry: true,
+        isVerified: true,
+      },
     }),
     prisma.job.findMany({
       where: {
@@ -238,7 +277,13 @@ const globalAdminSearchFromDb = async (query: string, page: number = 1, limit: n
       },
       skip,
       take: limit,
-      select: { id: true, title: true, status: true, type: true, createdAt: true },
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        type: true,
+        createdAt: true,
+      },
     }),
   ]);
 
@@ -280,6 +325,51 @@ const getAuditLogsFromDb = async (page: number = 1, limit: number = 10) => {
   };
 };
 
+const getAdminAuditTrailFromDb = async (
+  filters: {
+    actorId?: string;
+    entityType?: string;
+    action?: string;
+    from?: string;
+    to?: string;
+  } = {},
+  page: number = 1,
+  limit: number = 20,
+) => {
+  const skip = (page - 1) * limit;
+  const where: any = {};
+
+  if (filters.actorId) where.actorId = filters.actorId;
+  if (filters.entityType) where.entityType = filters.entityType;
+  if (filters.action) where.action = filters.action;
+  if (filters.from || filters.to) {
+    where.createdAt = {};
+    if (filters.from) where.createdAt.gte = new Date(filters.from);
+    if (filters.to) where.createdAt.lte = new Date(filters.to);
+  }
+
+  const [data, total] = await Promise.all([
+    prisma.adminLog.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+      include: { actor: { select: { id: true, email: true, name: true } } },
+    }),
+    prisma.adminLog.count({ where }),
+  ]);
+
+  return {
+    data,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
+
 export const adminService = {
   getUsersFromDb,
   toggleUserSuspensionInDb,
@@ -291,4 +381,6 @@ export const adminService = {
   verifyCompanyInDb,
   globalAdminSearchFromDb,
   getAuditLogsFromDb,
+  getAdminAuditTrailFromDb,
+  forceCloseJobInDb,
 };
