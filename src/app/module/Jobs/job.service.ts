@@ -516,24 +516,53 @@ const getSimilarJobsFromDb = async (id: string, limit: number = 5) => {
   const job = await prisma.job.findUnique({ where: { id } });
   if (!job) throw new AppError("Job not found", 404);
 
-  const similarJobs = await prisma.job.findMany({
-    where: {
-      id: { not: id },
-      status: "PUBLISHED",
-      OR: [
-        { type: job.type },
-        { experienceLevel: job.experienceLevel },
-        ...(job.techStack && job.techStack.length > 0 ? [{ techStack: { hasSome: job.techStack } }] : []),
-      ],
-    },
-    take: limit,
-    include: {
-      company: { select: { id: true, name: true, logoUrl: true } },
-    },
-    orderBy: { publishedAt: "desc" },
-  });
+  if (!job.techStack || job.techStack.length === 0) {
+    // Fallback if no tech stack
+    return await prisma.job.findMany({
+      where: {
+        id: { not: id },
+        status: "PUBLISHED",
+        experienceLevel: job.experienceLevel,
+      },
+      take: limit,
+      include: {
+        company: { select: { id: true, name: true, logoUrl: true } },
+      },
+      orderBy: { publishedAt: "desc" },
+    });
+  }
 
-  return similarJobs;
+  const similarJobs = await prisma.$queryRaw<any[]>`
+    SELECT j.*, 
+           c.id as "companyId", c.name as "companyName", c."logoUrl" as "companyLogo",
+           (
+             SELECT count(*) 
+             FROM unnest(j."techStack") AS t1 
+             JOIN unnest(${job.techStack}::text[]) AS t2 ON t1 = t2
+           ) as "overlapCount"
+    FROM "jobs" j
+    JOIN "companies" c ON j."companyId" = c.id
+    WHERE j."techStack" && ${job.techStack}::text[]
+      AND j.status = 'PUBLISHED'
+      AND j.id != ${id}
+    ORDER BY "overlapCount" DESC, j."publishedAt" DESC
+    LIMIT ${limit}
+  `;
+
+  // Map to the structure expected by the frontend
+  return similarJobs.map(sj => ({
+    ...sj,
+    company: {
+      id: sj.companyId,
+      name: sj.companyName,
+      logoUrl: sj.companyLogo,
+    },
+    // Remove the flattened company fields from the root if desired
+    companyId: sj.companyId,
+    companyName: undefined,
+    companyLogo: undefined,
+    overlapCount: undefined,
+  }));
 };
 
 // Calculate match score

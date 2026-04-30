@@ -1,6 +1,7 @@
 import { AppError } from "@lib/appError";
 import { asyncHandler } from "@lib/asyncHandler";
 import type { Request, Response } from "express";
+import { searchService } from "../Search/search.service";
 import { jobService } from "./job.service";
 
 // POST /jobs - Create new job (RECRUITER)
@@ -117,7 +118,13 @@ export const searchAndFilterJobs = asyncHandler(
     if (location) filters.location = location;
     if (salaryMin !== undefined) filters.salaryMin = salaryMin;
     if (salaryMax !== undefined) filters.salaryMax = salaryMax;
-    if (search) filters.search = search;
+    if (search) {
+      filters.search = search;
+      // Fire and forget search tracking
+      searchService.trackSearch(search).catch((err) => {
+        console.error("Failed to track search term:", err);
+      });
+    }
     if (techStack) filters.techStack = techStack;
 
     const result = await jobService.getAllJobsFromDb(page, limit, filters);

@@ -13,6 +13,8 @@ import { savedJobsRouter } from "./app/module/Candidate/savedJobs.router";
 import { workExperienceRouter } from "./app/module/Candidate/workExperience.router";
 import { companyRouter } from "./app/module/Company/company.router";
 import { jobRouter } from "./app/module/Jobs/Job.router";
+import { searchRouter } from "./app/module/Search/search.router";
+import { tagsRouter } from "./app/module/Tags/tags.router";
 import { uploadsRouter } from "./app/module/Uploads/uploads.router";
 import { auth } from "./lib/auth";
 import { errorHandler } from "./middleware/errorHandler";
@@ -48,6 +50,8 @@ app.use("/api/v1/candidate/work-experience", workExperienceRouter);
 app.use("/api/v1/candidate/education", educationRouter);
 app.use("/api/v1/saved-jobs", savedJobsRouter);
 app.use("/api/v1/uploads", uploadsRouter);
+app.use("/api/v1/tags", tagsRouter);
+app.use("/api/v1/search", searchRouter);
 
 // Basic route
 app.get("/", (req: Request, res: Response) => {

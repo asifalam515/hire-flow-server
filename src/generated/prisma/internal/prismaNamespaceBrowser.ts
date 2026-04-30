@@ -68,7 +68,10 @@ export const ModelName = {
   Verification: 'Verification',
   ScreeningQuestion: 'ScreeningQuestion',
   ScreeningAnswer: 'ScreeningAnswer',
-  UserFile: 'UserFile'
+  UserFile: 'UserFile',
+  Skill: 'Skill',
+  SearchTerm: 'SearchTerm',
+  CompanyInvite: 'CompanyInvite'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -392,6 +395,40 @@ export const UserFileScalarFieldEnum = {
 } as const
 
 export type UserFileScalarFieldEnum = (typeof UserFileScalarFieldEnum)[keyof typeof UserFileScalarFieldEnum]
+
+
+export const SkillScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  usageCount: 'usageCount'
+} as const
+
+export type SkillScalarFieldEnum = (typeof SkillScalarFieldEnum)[keyof typeof SkillScalarFieldEnum]
+
+
+export const SearchTermScalarFieldEnum = {
+  id: 'id',
+  term: 'term',
+  count: 'count',
+  weekKey: 'weekKey'
+} as const
+
+export type SearchTermScalarFieldEnum = (typeof SearchTermScalarFieldEnum)[keyof typeof SearchTermScalarFieldEnum]
+
+
+export const CompanyInviteScalarFieldEnum = {
+  id: 'id',
+  companyId: 'companyId',
+  email: 'email',
+  token: 'token',
+  role: 'role',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type CompanyInviteScalarFieldEnum = (typeof CompanyInviteScalarFieldEnum)[keyof typeof CompanyInviteScalarFieldEnum]
 
 
 export const SortOrder = {

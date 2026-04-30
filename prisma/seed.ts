@@ -194,6 +194,36 @@ const companiesData = [
   },
 ];
 
+const seedSkills = async () => {
+  const commonSkills = [
+    "TypeScript", "JavaScript", "React", "Next.js", "Node.js", "Express", "NestJS", 
+    "PostgreSQL", "MySQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "GCP", 
+    "GraphQL", "REST", "Prisma", "Sequelize", "Python", "Django", "FastAPI",
+    "Java", "Spring Boot", "C#", ".NET", "Ruby", "Ruby on Rails", "PHP", "Laravel",
+    "Go", "Rust", "C++", "C", "Swift", "Kotlin", "React Native", "Flutter",
+    "Vue.js", "Angular", "Svelte", "HTML", "CSS", "Tailwind CSS", "SASS", "LESS",
+    "Git", "GitHub", "GitLab", "Bitbucket", "CI/CD", "Jenkins", "Travis CI"
+  ];
+
+  console.log("\n🌱 Seeding common skills...");
+  
+  const skillData = commonSkills.map(skillName => {
+    const slug = skillName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    return {
+      name: skillName,
+      slug,
+      usageCount: Math.floor(Math.random() * 100),
+    };
+  });
+
+  await prisma.skill.createMany({
+    data: skillData,
+    skipDuplicates: true,
+  });
+
+  console.log("✅ Skills seeded.");
+};
+
 async function main() {
   try {
     console.log("🌱 Starting database seed...");
@@ -258,6 +288,8 @@ async function main() {
 
       console.log(`👤 Created recruiter ${recruiter.email} for ${c.slug}`);
     }
+
+    await seedSkills();
 
     console.log("\n🎉 Database seeded successfully!");
     console.log(`📊 Total companies created: ${companiesData.length}`);

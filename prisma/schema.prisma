@@ -222,6 +222,7 @@ model Company {
 
   members CompanyMember[]
   jobs    Job[]
+  invites CompanyInvite[]
 
   @@index([slug])
   @@map("companies")
@@ -398,6 +399,39 @@ model Interview {
   @@map("interviews")
 }
 
+model CompanyInvite {
+  id        String   @id @default(cuid())
+  companyId String
+  email     String
+  token     String   @unique
+  role      String   @default("MEMBER")
+  expiresAt DateTime
+  acceptedAt DateTime?
+  createdAt DateTime @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("company_invites")
+}
+
+model EmailTemplate {
+  id        String          @id @default(cuid())
+  companyId String
+  name      String
+  subject   String
+  body      String
+  stage     ApplicationStage?
+  isDefault Boolean         @default(false)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@map("email_templates")
+}
+
 model Session {
   id        String   @id
   expiresAt DateTime
@@ -493,4 +527,40 @@ model UserFile {
 
   @@index([userId])
   @@map("user_files")
+}
+
+model Skill {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  slug       String   @unique
+  usageCount Int      @default(0)
+
+  @@map("skills")
+}
+
+model SearchTerm {
+  id        String  @id @default(cuid())
+  term      String
+  count     Int     @default(1)
+  weekKey   String? // "YYYY-WW" for weekly tracking, null for global
+
+  @@unique([term, weekKey])
+  @@map("search_terms")
+}
+
+model CompanyInvite {
+  id         String    @id @default(cuid())
+  companyId  String
+  email      String
+  token      String    @unique
+  role       String    @default("MEMBER")
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([email])
+  @@map("company_invites")
 }

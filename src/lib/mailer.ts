@@ -1,3 +1,4 @@
+import { emailTemplatesService } from "@/app/module/Company/emailTemplates.service";
 import nodemailer from "nodemailer";
 
 const host = process.env.SMTP_HOST;
@@ -37,6 +38,24 @@ export const sendMail = async (
     text: text ?? undefined,
     html,
   });
+};
+
+export const sendStageChangeEmail = async (
+  companyId: string,
+  to: string,
+  variables: {
+    candidateName?: string;
+    jobTitle?: string;
+    companyName?: string;
+    stage?: string;
+  },
+) => {
+  const resolved = await emailTemplatesService.resolveTemplate(
+    companyId,
+    variables.stage,
+    variables as any,
+  );
+  await sendMail(to, resolved.subject, resolved.body as string);
 };
 
 export default sendMail;

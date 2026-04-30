@@ -131,3 +131,18 @@ export type ScreeningAnswer = Prisma.ScreeningAnswerModel
  * 
  */
 export type UserFile = Prisma.UserFileModel
+/**
+ * Model Skill
+ * 
+ */
+export type Skill = Prisma.SkillModel
+/**
+ * Model SearchTerm
+ * 
+ */
+export type SearchTerm = Prisma.SearchTermModel
+/**
+ * Model CompanyInvite
+ * 
+ */
+export type CompanyInvite = Prisma.CompanyInviteModel
