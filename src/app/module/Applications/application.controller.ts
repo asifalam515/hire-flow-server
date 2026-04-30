@@ -230,58 +230,120 @@ export const getApplicationNotes = asyncHandler(
   },
 );
 
-export const getApplicationTimeline = asyncHandler(async (req: Request, res: Response) => {
-  const applicationId = req.params.id as string;
-  if (!applicationId) throw new AppError("Application id is required", 400);
+export const getApplicationTimeline = asyncHandler(
+  async (req: Request, res: Response) => {
+    const applicationId = req.params.id as string;
+    if (!applicationId) throw new AppError("Application id is required", 400);
 
-  const timeline = await applicationService.getApplicationTimelineFromDb(applicationId, req.user?.id as string);
+    const timeline = await applicationService.getApplicationTimelineFromDb(
+      applicationId,
+      req.user?.id as string,
+    );
 
-  res.status(200).json({
-    success: true,
-    data: timeline,
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: timeline,
+    });
+  },
+);
 
-export const withdrawApplication = asyncHandler(async (req: Request, res: Response) => {
-  const applicationId = req.params.id as string;
-  if (!applicationId) throw new AppError("Application id is required", 400);
+export const withdrawApplication = asyncHandler(
+  async (req: Request, res: Response) => {
+    const applicationId = req.params.id as string;
+    if (!applicationId) throw new AppError("Application id is required", 400);
 
-  const updated = await applicationService.withdrawApplicationFromDb(applicationId, req.user?.id as string);
+    const updated = await applicationService.withdrawApplicationFromDb(
+      applicationId,
+      req.user?.id as string,
+    );
 
-  res.status(200).json({
-    success: true,
-    message: "Application withdrawn successfully",
-    data: updated,
-  });
-});
+    res.status(200).json({
+      success: true,
+      message: "Application withdrawn successfully",
+      data: updated,
+    });
+  },
+);
 
-export const getKanbanBoard = asyncHandler(async (req: Request, res: Response) => {
-  const jobId = req.params.id as string;
-  if (!jobId) throw new AppError("Job id is required", 400);
+export const getKanbanBoard = asyncHandler(
+  async (req: Request, res: Response) => {
+    const jobId = req.params.id as string;
+    if (!jobId) throw new AppError("Job id is required", 400);
 
-  const kanban = await applicationService.getKanbanBoardFromDb(jobId, req.user?.id as string);
+    const kanban = await applicationService.getKanbanBoardFromDb(
+      jobId,
+      req.user?.id as string,
+    );
 
-  res.status(200).json({
-    success: true,
-    data: kanban,
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: kanban,
+    });
+  },
+);
 
-export const updateApplicationLabels = asyncHandler(async (req: Request, res: Response) => {
-  const applicationId = req.params.id as string;
-  const { labels } = req.body;
+export const updateApplicationLabels = asyncHandler(
+  async (req: Request, res: Response) => {
+    const applicationId = req.params.id as string;
+    const { labels } = req.body;
 
-  if (!applicationId) throw new AppError("Application id is required", 400);
-  if (!Array.isArray(labels)) throw new AppError("labels array is required", 400);
+    if (!applicationId) throw new AppError("Application id is required", 400);
+    if (!Array.isArray(labels))
+      throw new AppError("labels array is required", 400);
 
-  const updated = await applicationService.updateApplicationLabelsInDb(applicationId, req.user?.id as string, labels);
+    const updated = await applicationService.updateApplicationLabelsInDb(
+      applicationId,
+      req.user?.id as string,
+      labels,
+    );
 
-  res.status(200).json({
-    success: true,
-    message: "Labels updated successfully",
-    data: updated,
-  });
-});
+    res.status(200).json({
+      success: true,
+      message: "Labels updated successfully",
+      data: updated,
+    });
+  },
+);
+
+export const addApplicationLabel = asyncHandler(
+  async (req: Request, res: Response) => {
+    const applicationId = req.params.id as string;
+    const { label } = req.body;
+
+    if (!applicationId) throw new AppError("Application id is required", 400);
+    if (!label) throw new AppError("label is required", 400);
+
+    const updated = await applicationService.addLabelToApplicationInDb(
+      applicationId,
+      label,
+      req.user?.id as string,
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Label added", data: updated });
+  },
+);
+
+export const removeApplicationLabel = asyncHandler(
+  async (req: Request, res: Response) => {
+    const applicationId = req.params.id as string;
+    const label = req.params.label as string;
+
+    if (!applicationId) throw new AppError("Application id is required", 400);
+    if (!label) throw new AppError("label is required", 400);
+
+    const updated = await applicationService.removeLabelFromApplicationInDb(
+      applicationId,
+      label,
+      req.user?.id as string,
+    );
+
+    res
+      .status(200)
+      .json({ success: true, message: "Label removed", data: updated });
+  },
+);
 
 export const applicationController = {
   applyToJob,
@@ -296,4 +358,6 @@ export const applicationController = {
   withdrawApplication,
   getKanbanBoard,
   updateApplicationLabels,
+  addApplicationLabel,
+  removeApplicationLabel,
 };

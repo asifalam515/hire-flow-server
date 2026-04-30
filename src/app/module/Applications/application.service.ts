@@ -776,6 +776,74 @@ export const updateApplicationLabelsInDb = async (
   return updated;
 };
 
+// Add a single label (push)
+export const addLabelToApplicationInDb = async (
+  applicationId: string,
+  label: string,
+  recruiterId: string,
+) => {
+  const application = await prisma.application.findUnique({
+    where: { id: applicationId },
+    select: { job: { select: { postedById: true } }, labels: true },
+  });
+
+  if (!application) throw new AppError("Application not found", 404);
+
+  const admin = await isUserAdmin(recruiterId);
+  if (!admin && application.job.postedById !== recruiterId) {
+    throw new AppError(
+      "You do not have permission to update labels for this application",
+      403,
+    );
+  }
+
+  // Prevent duplicates
+  const existing = application.labels || [];
+  if (existing.includes(label)) {
+    return await prisma.application.findUnique({
+      where: { id: applicationId },
+    });
+  }
+
+  const updated = await prisma.application.update({
+    where: { id: applicationId },
+    data: { labels: { push: label } },
+  });
+
+  return updated;
+};
+
+// Remove a single label
+export const removeLabelFromApplicationInDb = async (
+  applicationId: string,
+  label: string,
+  recruiterId: string,
+) => {
+  const application = await prisma.application.findUnique({
+    where: { id: applicationId },
+    select: { job: { select: { postedById: true } }, labels: true },
+  });
+
+  if (!application) throw new AppError("Application not found", 404);
+
+  const admin = await isUserAdmin(recruiterId);
+  if (!admin && application.job.postedById !== recruiterId) {
+    throw new AppError(
+      "You do not have permission to update labels for this application",
+      403,
+    );
+  }
+
+  const updatedLabels = (application.labels || []).filter((l) => l !== label);
+
+  const updated = await prisma.application.update({
+    where: { id: applicationId },
+    data: { labels: updatedLabels },
+  });
+
+  return updated;
+};
+
 export const applicationService = {
   submitApplicationToDb,
   getMyApplicationsFromDb,
@@ -789,4 +857,6 @@ export const applicationService = {
   withdrawApplicationFromDb,
   getKanbanBoardFromDb,
   updateApplicationLabelsInDb,
+  addLabelToApplicationInDb,
+  removeLabelFromApplicationInDb,
 };

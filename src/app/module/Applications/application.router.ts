@@ -91,4 +91,18 @@ router.patch(
   applicationController.updateApplicationLabels,
 );
 
+router.post(
+  "/:id/labels",
+  authenticate,
+  requireRecruiter,
+  applicationController.addApplicationLabel,
+);
+
+router.delete(
+  "/:id/labels/:label",
+  authenticate,
+  requireRecruiter,
+  applicationController.removeApplicationLabel,
+);
+
 export const applicationRouter = router;

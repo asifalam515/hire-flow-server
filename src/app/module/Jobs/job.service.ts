@@ -412,13 +412,13 @@ const updateJobInDb = async (
       ...(data.screeningQuestions && {
         screeningQuestions: {
           deleteMany: {}, // Clean up existing and replace with new
-          create: data.screeningQuestions.map(q => ({
+          create: data.screeningQuestions.map((q) => ({
             question: q.question,
             type: q.type,
             options: q.options || [],
             required: q.required !== undefined ? q.required : true,
-          }))
-        }
+          })),
+        },
       }),
     },
     include: {
@@ -510,7 +510,6 @@ const isUserAdmin = async (userId: string): Promise<boolean> => {
   return user?.role === "ADMIN";
 };
 
-
 // Get similar jobs
 const getSimilarJobsFromDb = async (id: string, limit: number = 5) => {
   const job = await prisma.job.findUnique({ where: { id } });
@@ -550,7 +549,7 @@ const getSimilarJobsFromDb = async (id: string, limit: number = 5) => {
   `;
 
   // Map to the structure expected by the frontend
-  return similarJobs.map(sj => ({
+  return similarJobs.map((sj) => ({
     ...sj,
     company: {
       id: sj.companyId,
@@ -565,57 +564,143 @@ const getSimilarJobsFromDb = async (id: string, limit: number = 5) => {
   }));
 };
 
-// Calculate match score
+// Calculate match score according to requested breakdown
 const calculateMatchScore = async (jobId: string, candidateId: string) => {
   const job = await prisma.job.findUnique({ where: { id: jobId } });
-  const profile = await prisma.candidateProfile.findUnique({ where: { userId: candidateId } });
+  const profile = await prisma.candidateProfile.findUnique({
+    where: { userId: candidateId },
+    include: { experiences: true },
+  });
 
   if (!job) throw new AppError("Job not found", 404);
   if (!profile) throw new AppError("Candidate profile not found", 404);
 
-  let score = 0;
-  let maxScore = 0;
+  const jobTech = job.techStack || [];
+  const candidateSkills = profile.skills || [];
 
-  // Tech stack match
-  if (job.techStack && job.techStack.length > 0) {
-    maxScore += 50;
-    const matchingSkills = job.techStack.filter(skill => profile.skills.includes(skill));
-    score += (matchingSkills.length / job.techStack.length) * 50;
+  const matchedSkills = jobTech.filter((s) => candidateSkills.includes(s));
+  const missingSkills = jobTech.filter((s) => !candidateSkills.includes(s));
+
+  // Tech stack score (50 pts)
+  let techScore = 0;
+  if (jobTech.length > 0) {
+    techScore = (matchedSkills.length / jobTech.length) * 50;
   }
 
-  // Location match
-  if (job.isRemote) {
-    maxScore += 20;
-    score += 20;
-  } else if (job.location && profile.location) {
-    maxScore += 20;
-    if (profile.location.toLowerCase().includes(job.location.toLowerCase()) || job.location.toLowerCase().includes(profile.location.toLowerCase())) {
-      score += 20;
+  // Salary score (25 pts)
+  let salaryScore = 0;
+  let salaryMatch = false;
+  const jMin = job.salaryMin ?? null;
+  const jMax = job.salaryMax ?? null;
+  const cMin = profile.expectedSalaryMin ?? null;
+  const cMax = profile.expectedSalaryMax ?? null;
+
+  if (jMin !== null && jMax !== null && cMin !== null && cMax !== null) {
+    // full overlap
+    if (jMin <= cMax && jMax >= cMin) {
+      salaryScore = 25;
+      salaryMatch = true;
+    } else {
+      salaryScore = 0;
+      salaryMatch = false;
+    }
+  } else if (
+    (jMin !== null || jMax !== null) &&
+    (cMin !== null || cMax !== null)
+  ) {
+    // partial info available — give partial points
+    salaryScore = 12;
+    salaryMatch = true;
+  } else {
+    salaryScore = 0;
+    salaryMatch = false;
+  }
+
+  // Experience level score (25 pts)
+  const levelOrder = ["ENTRY", "JUNIOR", "MID", "SENIOR", "LEAD", "EXECUTIVE"];
+  const jobLevel = job.experienceLevel as string | null;
+  // We don't have an explicit experience level on profile; try to infer from work experiences length
+  let profileLevelIndex = -1;
+  if (profile.experiences && profile.experiences.length > 0) {
+    const years = profile.experiences.reduce((acc, we) => {
+      // best-effort: if both dates exist
+      if (we.startDate && we.endDate) {
+        const start = new Date(we.startDate).getFullYear();
+        const end = new Date(we.endDate).getFullYear();
+        return acc + Math.max(0, end - start);
+      }
+      return acc + 0;
+    }, 0);
+    // Heuristic mapping
+    if (years <= 1)
+      profileLevelIndex = 0; // ENTRY
+    else if (years <= 3)
+      profileLevelIndex = 1; // JUNIOR
+    else if (years <= 5)
+      profileLevelIndex = 2; // MID
+    else if (years <= 8)
+      profileLevelIndex = 3; // SENIOR
+    else profileLevelIndex = 4; // LEAD+
+  }
+
+  let levelScore = 0;
+  let levelMatch = false;
+  if (jobLevel) {
+    const jobIdx = levelOrder.indexOf(jobLevel);
+    if (profileLevelIndex >= 0 && jobIdx >= 0) {
+      const diff = Math.abs(jobIdx - profileLevelIndex);
+      if (diff === 0) {
+        levelScore = 25;
+        levelMatch = true;
+      } else if (diff === 1) {
+        levelScore = 12;
+        levelMatch = true;
+      } else {
+        levelScore = 0;
+        levelMatch = false;
+      }
+    } else {
+      // not enough info — give partial credit
+      levelScore = 12;
+      levelMatch = false;
     }
   }
 
-  // Experience level match (heuristic)
-  maxScore += 30;
-  // This is a naive implementation, ideally we'd compare years of experience
-  score += 15; 
+  const totalScore = Math.round(techScore + salaryScore + levelScore);
 
-  return maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
+  return {
+    score: Math.min(100, totalScore),
+    matchedSkills,
+    missingSkills,
+    salaryMatch,
+    levelMatch,
+  };
 };
 
 // Update job status
-const updateJobStatusInDb = async (id: string, userId: string, status: JobStatus) => {
+const updateJobStatusInDb = async (
+  id: string,
+  userId: string,
+  status: JobStatus,
+) => {
   const job = await prisma.job.findUnique({ where: { id } });
   if (!job) throw new AppError("Job not found", 404);
-  
+
   if (job.postedById !== userId && !(await isUserAdmin(userId))) {
-    throw new AppError("You do not have permission to update this job status", 403);
+    throw new AppError(
+      "You do not have permission to update this job status",
+      403,
+    );
   }
 
   const updatedJob = await prisma.job.update({
     where: { id },
-    data: { 
+    data: {
       status,
-      publishedAt: status === "PUBLISHED" && !job.publishedAt ? new Date() : job.publishedAt
+      publishedAt:
+        status === "PUBLISHED" && !job.publishedAt
+          ? new Date()
+          : job.publishedAt,
     },
   });
 

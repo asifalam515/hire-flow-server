@@ -277,46 +277,59 @@ export const deleteJob = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // GET /jobs/:id/similar - Get similar jobs
-export const getSimilarJobs = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
-  const limit = parseInt(req.query.limit as string) || 5;
+export const getSimilarJobs = asyncHandler(
+  async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const limit = parseInt(req.query.limit as string) || 5;
 
-  const similarJobs = await jobService.getSimilarJobsFromDb(id, limit);
+    const similarJobs = await jobService.getSimilarJobsFromDb(id, limit);
 
-  res.status(200).json({
-    success: true,
-    data: similarJobs,
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: similarJobs,
+    });
+  },
+);
 
 // GET /jobs/:id/match-score - Calculate match score
-export const getMatchScore = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
-  const score = await jobService.calculateMatchScore(id, req.user?.id as string);
+export const getMatchScore = asyncHandler(
+  async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const result = await jobService.calculateMatchScore(
+      id,
+      req.user?.id as string,
+    );
 
-  res.status(200).json({
-    success: true,
-    data: { score },
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  },
+);
 
 // PATCH /jobs/:id/status - Update job status
-export const updateJobStatus = asyncHandler(async (req: Request, res: Response) => {
-  const id = req.params.id as string;
-  const { status } = req.body;
+export const updateJobStatus = asyncHandler(
+  async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const { status } = req.body;
 
-  if (!status) {
-    throw new AppError("Status is required", 400);
-  }
+    if (!status) {
+      throw new AppError("Status is required", 400);
+    }
 
-  const updatedJob = await jobService.updateJobStatusInDb(id, req.user?.id as string, status);
+    const updatedJob = await jobService.updateJobStatusInDb(
+      id,
+      req.user?.id as string,
+      status,
+    );
 
-  res.status(200).json({
-    success: true,
-    data: updatedJob,
-    message: "Job status updated successfully",
-  });
-});
+    res.status(200).json({
+      success: true,
+      data: updatedJob,
+      message: "Job status updated successfully",
+    });
+  },
+);
 
 // POST /jobs/:id/save - Save job
 export const saveJob = asyncHandler(async (req: Request, res: Response) => {
@@ -335,7 +348,10 @@ export const saveJob = asyncHandler(async (req: Request, res: Response) => {
 export const unsaveJob = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id as string;
 
-  const deletedJob = await jobService.unsaveJobFromDb(id, req.user?.id as string);
+  const deletedJob = await jobService.unsaveJobFromDb(
+    id,
+    req.user?.id as string,
+  );
 
   res.status(200).json({
     success: true,
