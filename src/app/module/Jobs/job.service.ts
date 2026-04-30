@@ -1,3 +1,4 @@
+import { cacheGet, cacheSet } from "@/config/redis";
 import type {
   ExperienceLevel,
   JobStatus,
@@ -159,6 +160,13 @@ const createJobInDb = async (data: CreateJobInput, userId: string) => {
     },
   });
 
+  // Invalidate jobs list cache when a new job is created
+  try {
+    await invalidateJobsCache();
+  } catch (err) {
+    // ignore cache errors
+  }
+
   return job;
 };
 
@@ -166,6 +174,42 @@ const createJobInDb = async (data: CreateJobInput, userId: string) => {
 const getAllJobsFromDb = async (
   page: number = 1,
   limit: number = 10,
+  filters?: JobFilters,
+) => {
+  const skip = (page - 1) * limit;
+
+  // If there's a search query, skip cache entirely
+  if (filters?.search) {
+    const result = await fetchJobsFromDb(page, limit, filters);
+    return { ...result, cached: false };
+  }
+
+  // Build cache key using the required pattern
+  const key = `jobs:list:page=${page}:limit=${limit}:type=${filters?.type ?? ""}:remote=${
+    filters?.isRemote ?? ""
+  }:level=${filters?.experienceLevel ?? ""}`;
+
+  const cached = await cacheGet<{ data: any; pagination: any }>(key);
+  if (cached) {
+    return { ...cached, cached: true };
+  }
+
+  const fresh = await fetchJobsFromDb(page, limit, filters);
+  try {
+    await cacheSet(key, fresh, 60);
+  } catch (err) {
+    // ignore cache set errors
+    // eslint-disable-next-line no-console
+    console.error("Failed to set jobs cache", err);
+  }
+
+  return { ...fresh, cached: false };
+};
+
+// Extracted DB fetch so it can be reused when skipping cache
+const fetchJobsFromDb = async (
+  page: number,
+  limit: number,
   filters?: JobFilters,
 ) => {
   const skip = (page - 1) * limit;
@@ -434,6 +478,13 @@ const updateJobInDb = async (
     },
   });
 
+  // Invalidate jobs cache when a job is updated
+  try {
+    await invalidateJobsCache();
+  } catch (err) {
+    // ignore cache errors
+  }
+
   return updatedJob;
 };
 
@@ -455,6 +506,13 @@ const deleteJobFromDb = async (id: string, userId: string) => {
   const deletedJob = await prisma.job.delete({
     where: { id },
   });
+
+  // Invalidate jobs cache when a job is deleted
+  try {
+    await invalidateJobsCache();
+  } catch (err) {
+    // ignore cache errors
+  }
 
   return deletedJob;
 };
@@ -703,6 +761,13 @@ const updateJobStatusInDb = async (
           : job.publishedAt,
     },
   });
+
+  // Invalidate jobs cache when status changes (publish/unpublish)
+  try {
+    await invalidateJobsCache();
+  } catch (err) {
+    // ignore cache errors
+  }
 
   return updatedJob;
 };

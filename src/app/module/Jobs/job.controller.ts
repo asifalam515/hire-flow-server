@@ -129,6 +129,15 @@ export const searchAndFilterJobs = asyncHandler(
 
     const result = await jobService.getAllJobsFromDb(page, limit, filters);
 
+    // Cache headers: if search present, do not store; else set public max-age when cached
+    if (filters.search) {
+      res.setHeader("Cache-Control", "no-store");
+    } else if ((result as any).cached) {
+      res.setHeader("Cache-Control", "public, max-age=60");
+    } else {
+      res.setHeader("Cache-Control", "no-store");
+    }
+
     res.status(200).json({
       success: true,
       data: result.data,
