@@ -4,6 +4,13 @@ import type { Request, Response } from "express";
 import { searchService } from "../Search/search.service";
 import { jobService } from "./job.service";
 
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 // POST /jobs - Create new job (RECRUITER)
 export const createJob = asyncHandler(async (req: Request, res: Response) => {
   const {
@@ -30,25 +37,26 @@ export const createJob = asyncHandler(async (req: Request, res: Response) => {
     screeningQuestions,
   } = req.body;
 
-  if (
-    !companyId ||
-    !title ||
-    !slug ||
-    !description ||
-    !type ||
-    !experienceLevel
-  ) {
+  const generatedSlug = slug
+    ? String(slug).trim()
+    : slugify(String(title || ""));
+
+  if (!companyId || !title || !description || !type || !experienceLevel) {
     throw new AppError(
-      "companyId, title, slug, description, type, and experienceLevel are required",
+      "companyId, title, description, type, and experienceLevel are required",
       400,
     );
+  }
+
+  if (!generatedSlug) {
+    throw new AppError("Could not generate a valid slug from title", 400);
   }
 
   const job = await jobService.createJobInDb(
     {
       companyId,
       title,
-      slug,
+      slug: generatedSlug,
       description,
       requirements,
       responsibilities,

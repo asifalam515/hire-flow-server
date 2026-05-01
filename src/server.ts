@@ -3,6 +3,7 @@ import cors from "cors";
 import type { Application, Request, Response } from "express";
 import express from "express";
 import http from "http";
+import cron from "node-cron";
 import { Server as IOServer } from "socket.io";
 import { adminRouter } from "./app/module/Admin/admin.router";
 import { analyticsRouter } from "./app/module/Analytics/analytics.router";
@@ -18,6 +19,7 @@ import { tagsRouter } from "./app/module/Tags/tags.router";
 import { uploadsRouter } from "./app/module/Uploads/uploads.router";
 import { auth } from "./lib/auth";
 import { errorHandler } from "./middleware/errorHandler";
+import flushViewCounts from "./queues/viewCountFlusher";
 
 const app: Application = express();
 const port = 5000; // The port your express server will be running on.
@@ -140,6 +142,9 @@ io.on("connection", (socket: any) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.send("Server works");
+});
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
@@ -157,3 +162,6 @@ try {
 } catch (err) {
   // ignore cron scheduling errors
 }
+
+// Export app for Vercel serverless deployment
+export default app;

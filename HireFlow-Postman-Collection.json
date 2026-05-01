@@ -1,0 +1,1873 @@
+{
+  "info": {
+    "name": "HireFlow - Complete API Collection",
+    "description": "Full API collection for HireFlow job platform with authentication, jobs, applications, companies, admin features, and notifications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/sign-up",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "sign-up"]
+            }
+          }
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/sign-in",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "sign-in"]
+            }
+          }
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/sign-out",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "sign-out"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "item": [
+        {
+          "name": "Get All Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["companies"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Company by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/slug/acme-corp",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "slug", "acme-corp"]
+            }
+          }
+        },
+        {
+          "name": "Get Company by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Acme Corporation\",\n  \"slug\": \"acme-corp\",\n  \"website\": \"https://acme.com\",\n  \"description\": \"Leading tech company\",\n  \"industry\": \"Technology\",\n  \"size\": \"LARGE\",\n  \"founded\": 2010,\n  \"country\": \"USA\",\n  \"city\": \"San Francisco\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated company description\",\n  \"website\": \"https://newwebsite.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Get Company Members",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here/members",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here", "members"]
+            }
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Search & Filter Jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs?q=developer&type=FULL_TIME&location=San Francisco&page=1&limit=20&remote=true",
+              "host": ["{{base_url}}"],
+              "path": ["jobs"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "developer"
+                },
+                {
+                  "key": "type",
+                  "value": "FULL_TIME"
+                },
+                {
+                  "key": "location",
+                  "value": "San Francisco"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "remote",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Get Job by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/slug/senior-developer-role",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "slug", "senior-developer-role"]
+            }
+          }
+        },
+        {
+          "name": "Get Jobs by Company",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/company/company-id-here?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "company", "company-id-here"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Similar Jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here/similar",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here", "similar"]
+            }
+          }
+        },
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyId\": \"company-id-here\",\n  \"title\": \"Senior Backend Developer\",\n  \"description\": \"<p>We're looking for an experienced backend developer...</p>\",\n  \"requirements\": \"<ul><li>5+ years experience</li><li>Node.js/TypeScript</li></ul>\",\n  \"responsibilities\": \"<ul><li>Build scalable APIs</li></ul>\",\n  \"benefits\": \"<ul><li>Competitive salary</li></ul>\",\n  \"type\": \"FULL_TIME\",\n  \"experienceLevel\": \"SENIOR\",\n  \"location\": \"San Francisco, CA\",\n  \"isRemote\": true,\n  \"country\": \"USA\",\n  \"city\": \"San Francisco\",\n  \"salaryMin\": 150000,\n  \"salaryMax\": 200000,\n  \"salaryCurrency\": \"USD\",\n  \"salaryPeriod\": \"YEAR\",\n  \"techStack\": [\"TypeScript\", \"Node.js\", \"PostgreSQL\", \"Docker\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["jobs"]
+            }
+          }
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Job Title\",\n  \"salaryMax\": 220000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Update Job Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here/status",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here", "status"]
+            }
+          }
+        },
+        {
+          "name": "Publish Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here/publish",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here", "publish"]
+            }
+          }
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Get Job Match Score",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-id-here/match-score",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-id-here", "match-score"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Submit Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": \"job-id-here\",\n  \"resumeUrl\": \"https://cloudinary.com/resume.pdf\",\n  \"resumeFileName\": \"John_Doe_Resume.pdf\",\n  \"coverLetter\": \"<p>I am very interested in this position...</p>\",\n  \"source\": \"DIRECT\",\n  \"answers\": [\n    {\n      \"questionId\": \"q1\",\n      \"answer\": \"My answer to the question\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/applications",
+              "host": ["{{base_url}}"],
+              "path": ["applications"]
+            }
+          }
+        },
+        {
+          "name": "Get My Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/applications?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["applications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Application by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/applications/application-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "application-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Get Applicants for Job",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/applications/job/job-id-here?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "job", "job-id-here"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Move Application Stage",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stage\": \"SCREENING\",\n  \"reason\": \"Passed initial review\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/applications/application-id-here/stage",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "application-id-here", "stage"]
+            }
+          }
+        },
+        {
+          "name": "Add Application Label",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Follow up\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/applications/application-id-here/labels",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "application-id-here", "labels"]
+            }
+          }
+        },
+        {
+          "name": "Remove Application Label",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"label\": \"Follow up\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/applications/application-id-here/labels",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "application-id-here", "labels"]
+            }
+          }
+        },
+        {
+          "name": "Bulk Move Applications",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationIds\": [\"app-id-1\", \"app-id-2\"],\n  \"stage\": \"INTERVIEW\",\n  \"reason\": \"Qualified for interviews\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/applications/bulk-move",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "bulk-move"]
+            }
+          }
+        },
+        {
+          "name": "Export Applications to CSV",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/applications/job/job-id-here/export",
+              "host": ["{{base_url}}"],
+              "path": ["applications", "job", "job-id-here", "export"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Candidate Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Create/Update Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"headline\": \"Full Stack Developer | React · Node.js\",\n  \"bio\": \"Passionate about building web applications\",\n  \"location\": \"San Francisco, CA\",\n  \"country\": \"USA\",\n  \"phone\": \"+1234567890\",\n  \"linkedinUrl\": \"https://linkedin.com/in/johndoe\",\n  \"githubUrl\": \"https://github.com/johndoe\",\n  \"portfolioUrl\": \"https://johndoe.dev\",\n  \"skills\": [\"TypeScript\", \"React\", \"Node.js\", \"PostgreSQL\"],\n  \"expectedSalaryMin\": 100000,\n  \"expectedSalaryMax\": 150000,\n  \"salaryCurrency\": \"USD\",\n  \"openToWork\": true,\n  \"jobAlerts\": true,\n  \"applicationUpdates\": true,\n  \"promotionalEmails\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Upload Avatar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/avatar.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/avatar",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "avatar"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Work Experience",
+      "item": [
+        {
+          "name": "Add Work Experience",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"company\": \"Tech Company Inc\",\n  \"title\": \"Senior Backend Developer\",\n  \"location\": \"San Francisco, CA\",\n  \"startDate\": \"2020-01-15\",\n  \"endDate\": null,\n  \"current\": true,\n  \"description\": \"Developed and maintained microservices\",\n  \"skills\": [\"TypeScript\", \"Node.js\", \"Docker\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/work-experience",
+              "host": ["{{base_url}}"],
+              "path": ["work-experience"]
+            }
+          }
+        },
+        {
+          "name": "Get Work Experience",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/work-experience",
+              "host": ["{{base_url}}"],
+              "path": ["work-experience"]
+            }
+          }
+        },
+        {
+          "name": "Update Work Experience",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lead Backend Developer\",\n  \"current\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/work-experience/experience-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["work-experience", "experience-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Delete Work Experience",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/work-experience/experience-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["work-experience", "experience-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Education",
+      "item": [
+        {
+          "name": "Add Education",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"institution\": \"University of California\",\n  \"degree\": \"Bachelor of Science\",\n  \"field\": \"Computer Science\",\n  \"startDate\": \"2016-09-01\",\n  \"endDate\": \"2020-05-15\",\n  \"current\": false,\n  \"gpa\": 3.8\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/education",
+              "host": ["{{base_url}}"],
+              "path": ["education"]
+            }
+          }
+        },
+        {
+          "name": "Get Education",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/education",
+              "host": ["{{base_url}}"],
+              "path": ["education"]
+            }
+          }
+        },
+        {
+          "name": "Update Education",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gpa\": 3.9\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/education/education-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["education", "education-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Delete Education",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/education/education-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["education", "education-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Saved Jobs",
+      "item": [
+        {
+          "name": "Save Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": \"job-id-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/saved-jobs",
+              "host": ["{{base_url}}"],
+              "path": ["saved-jobs"]
+            }
+          }
+        },
+        {
+          "name": "Get Saved Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/saved-jobs?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["saved-jobs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Remove Saved Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/saved-jobs/job-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["saved-jobs", "job-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications?unreadOnly=false&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"],
+              "query": [
+                {
+                  "key": "unreadOnly",
+                  "value": "false"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/unread-count",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "read-all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Suspend User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isSuspended\": true,\n  \"reason\": \"Violation of terms of service\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users/user-id-here/suspend",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", "user-id-here", "suspend"]
+            }
+          }
+        },
+        {
+          "name": "Assign User Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"RECRUITER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/users/user-id-here/role",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users", "user-id-here", "role"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/jobs/pending?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "jobs", "pending"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Moderate Job",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/jobs/job-id-here/moderate",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "jobs", "job-id-here", "moderate"]
+            }
+          }
+        },
+        {
+          "name": "Force Close Job",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Position filled\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/jobs/job-id-here/force-close",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "jobs", "job-id-here", "force-close"]
+            }
+          }
+        },
+        {
+          "name": "Get Platform Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "analytics"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/companies/pending?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "companies", "pending"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Company",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isVerified\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/companies/company-id-here/verify",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "companies", "company-id-here", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Audit Trail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/audit-trail?actorId=&entityType=USER&action=USER_SUSPENDED&from=2026-04-01&to=2026-04-30&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "audit-trail"],
+              "query": [
+                {
+                  "key": "actorId",
+                  "value": ""
+                },
+                {
+                  "key": "entityType",
+                  "value": "USER"
+                },
+                {
+                  "key": "action",
+                  "value": "USER_SUSPENDED"
+                },
+                {
+                  "key": "from",
+                  "value": "2026-04-01"
+                },
+                {
+                  "key": "to",
+                  "value": "2026-04-30"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Global Admin Search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/search?q=developer&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "developer"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/audit-logs?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "audit-logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "File Uploads",
+      "item": [
+        {
+          "name": "Get Resume Signed URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileName\": \"Resume.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/uploads/resume/signed-url",
+              "host": ["{{base_url}}"],
+              "path": ["uploads", "resume", "signed-url"]
+            }
+          }
+        },
+        {
+          "name": "Get Avatar Signed URL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileName\": \"avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/uploads/avatar/signed-url",
+              "host": ["{{base_url}}"],
+              "path": ["uploads", "avatar", "signed-url"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Resume Upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"publicId\": \"abc123/resume\",\n  \"secureUrl\": \"https://res.cloudinary.com/...\",\n  \"fileName\": \"Resume.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/uploads/resume/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["uploads", "resume", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Avatar Upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"publicId\": \"abc123/avatar\",\n  \"secureUrl\": \"https://res.cloudinary.com/...\",\n  \"fileName\": \"avatar.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/uploads/avatar/confirm",
+              "host": ["{{base_url}}"],
+              "path": ["uploads", "avatar", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Delete File",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/uploads/abc123-public-id",
+              "host": ["{{base_url}}"],
+              "path": ["uploads", "abc123-public-id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Get Search Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/search/suggestions?q=dev&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["search", "suggestions"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "dev"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Trending Searches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/search/trending?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["search", "trending"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tags",
+      "item": [
+        {
+          "name": "Get Popular Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tags/skills/popular?limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["tags", "skills", "popular"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tags/skills?q=java&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["tags", "skills"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "java"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Job Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/analytics/jobs/job-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "jobs", "job-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Get Company Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/analytics/companies/company-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "companies", "company-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Team & Invites",
+      "item": [
+        {
+          "name": "Invite Team Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"companyId\": \"company-id-here\",\n  \"email\": \"newmember@example.com\",\n  \"role\": \"MEMBER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/invites",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "invites"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Invites",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/invites?companyId=company-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "invites"],
+              "query": [
+                {
+                  "key": "companyId",
+                  "value": "company-id-here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Accept Invite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"invite-token-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/join",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "join"]
+            }
+          }
+        },
+        {
+          "name": "Update Invite Role",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/invites/invite-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "invites", "invite-id-here"]
+            }
+          }
+        },
+        {
+          "name": "Delete Invite",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/invites/invite-id-here",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "invites", "invite-id-here"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email Templates",
+      "item": [
+        {
+          "name": "Get Email Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here/email-templates",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here", "email-templates"]
+            }
+          }
+        },
+        {
+          "name": "Create Email Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Screening Round Invite\",\n  \"subject\": \"You've Advanced to Screening: {{jobTitle}}\",\n  \"body\": \"<p>Hi {{candidateName}},</p><p>Congratulations! You've been selected to move forward to the screening round for the {{jobTitle}} position at {{companyName}}.</p><p>Best regards,<br>{{companyName}}</p>\",\n  \"stage\": \"SCREENING\",\n  \"isDefault\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here/email-templates",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "company-id-here", "email-templates"]
+            }
+          }
+        },
+        {
+          "name": "Update Email Template",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"Updated Subject\",\n  \"body\": \"<p>Updated template body</p>\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here/email-templates/template-id-here",
+              "host": ["{{base_url}}"],
+              "path": [
+                "companies",
+                "company-id-here",
+                "email-templates",
+                "template-id-here"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Email Template",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/company-id-here/email-templates/template-id-here",
+              "host": ["{{base_url}}"],
+              "path": [
+                "companies",
+                "company-id-here",
+                "email-templates",
+                "template-id-here"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    }
+  ]
+}
