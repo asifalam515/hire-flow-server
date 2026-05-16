@@ -22,7 +22,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import flushViewCounts from "./queues/viewCountFlusher";
 
 const app: Application = express();
-const port = 5000; // The port your express server will be running on.
+const port = Number(process.env.PORT ?? 5000);
 app.use(
   cors({
     origin: "http://localhost:3000", // Your frontend URL
@@ -145,9 +145,62 @@ io.on("connection", (socket: any) => {
 app.get("/", (req, res) => {
   res.send("Server works");
 });
-server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+
+const startServer = async (preferredPort: number) => {
+  const maxRetries = 20;
+
+  const tryListen = (currentPort: number) =>
+    new Promise<void>((resolve, reject) => {
+      const cleanup = () => {
+        server.off("error", handleError);
+        server.off("listening", handleListening);
+      };
+
+      const handleError = (error: NodeJS.ErrnoException) => {
+        cleanup();
+        reject(error);
+      };
+
+      const handleListening = () => {
+        cleanup();
+        resolve();
+      };
+
+      server.once("error", handleError);
+      server.once("listening", handleListening);
+      server.listen(currentPort);
+    });
+
+  for (let offset = 0; offset <= maxRetries; offset += 1) {
+    const currentPort = preferredPort + offset;
+
+    try {
+      await tryListen(currentPort);
+      console.log(`Server is running on http://localhost:${currentPort}`);
+      return;
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        !("code" in error) ||
+        (error as NodeJS.ErrnoException).code !== "EADDRINUSE" ||
+        offset === maxRetries
+      ) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error(
+    `Unable to start server on ports ${preferredPort}-${preferredPort + maxRetries}`,
+  );
+};
+
+if (process.env.VERCEL !== "1") {
+  void startServer(port).catch((error) => {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  });
+}
 
 // Schedule view count flusher every 5 minutes
 try {
