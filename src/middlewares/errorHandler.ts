@@ -86,25 +86,32 @@ export const errorHandler = (
       message = `Duplicate entry error: The value for '${target}' is already in use.`;
     }
     // Record not found
-    else if (err.code === 'P2025') {
+    else if (err.code === 'P2025' || err.code === 'P2016') {
       statusCode = 404; // Not Found
       message = 'The requested database record could not be found.';
     }
+
+    console.error(`🔥 [PRISMA ERROR] ${req.method} ${req.originalUrl} | Code: ${err.code} |`, err.message, err.meta);
 
     const response: ErrorResponse = {
       ...baseResponse,
       statusCode,
       message,
+      ...(env.NODE_ENV === 'development'
+        ? { errors: { code: [err.code], details: [err.message], meta: [JSON.stringify(err.meta)] } }
+        : {}),
     };
     res.status(statusCode).json(response);
     return;
   }
 
   if (err instanceof Prisma.PrismaClientValidationError) {
+    console.error(`🔥 [PRISMA VALIDATION ERROR] ${req.method} ${req.originalUrl} |`, err.message);
     const response: ErrorResponse = {
       ...baseResponse,
       statusCode: 400,
       message: 'Invalid database query. Please check data types or missing fields.',
+      ...(env.NODE_ENV === 'development' ? { errors: { details: [err.message] } } : {}),
     };
     res.status(400).json(response);
     return;

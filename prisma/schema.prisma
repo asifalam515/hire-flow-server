@@ -72,6 +72,7 @@ model User {
   companyId        String?
   company          Company?          @relation(fields: [companyId], references: [id], onDelete: SetNull)
   candidateProfile CandidateProfile?
+  savedJobs        SavedJob[]
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -91,6 +92,7 @@ model Job {
   companyId    String
   company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
   applications Application[]
+  savedJobs    SavedJob[]
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -162,3 +164,18 @@ model InterviewRoom {
   @@index([applicationId])
   @@map("interview_rooms")
 }
+
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+  @@map("saved_jobs")
+}
+

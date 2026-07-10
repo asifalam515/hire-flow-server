@@ -13,8 +13,9 @@ router.use('/health', healthRoutes);
 
 // Example for upcoming modules:
 import { userRoutes } from './modules/users/users.routes';
-// router.use('/auth', authRoutes);
+import { jobsRoutes } from './modules/jobs/jobs.routes';
 
 router.use('/users', userRoutes);
+router.use('/jobs', jobsRoutes);
 
 export const apiRouter = router;
