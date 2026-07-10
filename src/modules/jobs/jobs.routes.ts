@@ -1,7 +1,16 @@
 import { Router } from 'express';
 import { Role } from '@prisma/client';
-import { JobsController } from './jobs.controller';
-import { requireAuth, requireRole } from '../../middlewares/auth.middleware';
+import {
+  listJobsController,
+  listSavedJobsController,
+  toggleSaveJobController,
+  listMyCompanyJobsController,
+  getJobByIdController,
+  createJobController,
+  updateJobController,
+  deleteJobController,
+} from './jobs.controller';
+import { requireAuth, requireRole, requireRecruiterAuth } from '../../middlewares/auth.middleware';
 import { requireCompany, requireJobTenantOwnership } from '../../middlewares/tenant.middleware';
 import { validateRequest } from '../../middlewares/validateRequest';
 import {
@@ -11,33 +20,34 @@ import {
   listJobsSchema,
 } from './jobs.validation';
 import { catchAsync } from '../../utils/catchAsync';
+import { getJobPipelineController } from '../applications/application.controller';
+import { getApplicationsByJobSchema } from '../applications/application.validation';
 
 const router = Router();
-const jobsController = new JobsController();
 
 // ---------------------------------------------------------------------------
-// Jobs Routes
+// Jobs Routes (/api/v1/jobs)
 // ---------------------------------------------------------------------------
 
 // ── Public / Marketplace Queries ───────────────────────────────────────────
 router.get(
   '/',
   validateRequest(listJobsSchema),
-  catchAsync(jobsController.listJobs),
+  catchAsync(listJobsController),
 );
 
 // ── Authenticated Candidate Actions (Saved Jobs) ───────────────────────────
 router.get(
   '/saved/me',
   requireAuth,
-  catchAsync(jobsController.listSavedJobs),
+  catchAsync(listSavedJobsController),
 );
 
 router.post(
   '/:id/save',
   requireAuth,
   validateRequest(jobIdParamsSchema),
-  catchAsync(jobsController.toggleSaveJob),
+  catchAsync(toggleSaveJobController),
 );
 
 // ── Recruiter Company Dashboard (Strict Tenant Isolation) ──────────────────
@@ -47,14 +57,22 @@ router.get(
   requireRole([Role.RECRUITER, Role.ADMIN]),
   requireCompany,
   validateRequest(listJobsSchema),
-  catchAsync(jobsController.listMyCompanyJobs),
+  catchAsync(listMyCompanyJobsController),
+);
+
+// ── Recruiter Kanban Board Pipeline for Job ────────────────────────────────
+router.get(
+  '/:jobId/applications',
+  requireRecruiterAuth,
+  validateRequest(getApplicationsByJobSchema),
+  catchAsync(getJobPipelineController),
 );
 
 // ── Single Job Detail ──────────────────────────────────────────────────────
 router.get(
   '/:id',
   validateRequest(jobIdParamsSchema),
-  catchAsync(jobsController.getJobById),
+  catchAsync(getJobByIdController),
 );
 
 // ── Job Management (Recruiters & Admins Only) ──────────────────────────────
@@ -64,7 +82,7 @@ router.post(
   requireRole([Role.RECRUITER, Role.ADMIN]),
   requireCompany,
   validateRequest(createJobSchema),
-  catchAsync(jobsController.createJob),
+  catchAsync(createJobController),
 );
 
 router.patch(
@@ -73,7 +91,7 @@ router.patch(
   requireRole([Role.RECRUITER, Role.ADMIN]),
   requireJobTenantOwnership,
   validateRequest(updateJobSchema),
-  catchAsync(jobsController.updateJob),
+  catchAsync(updateJobController),
 );
 
 router.delete(
@@ -82,7 +100,7 @@ router.delete(
   requireRole([Role.RECRUITER, Role.ADMIN]),
   requireJobTenantOwnership,
   validateRequest(jobIdParamsSchema),
-  catchAsync(jobsController.deleteJob),
+  catchAsync(deleteJobController),
 );
 
 export const jobsRoutes = router;

@@ -27,7 +27,7 @@ enum JobStatus {
   CLOSED
 }
 
-enum ApplicationStage {
+enum ApplicationStatus {
   APPLIED
   SCREENING
   INTERVIEW
@@ -124,9 +124,9 @@ model CandidateProfile {
 }
 
 model Application {
-  id      String           @id @default(cuid())
-  stage   ApplicationStage @default(APPLIED)
-  version Int              @default(1) // Optimistic concurrency control
+  id        String            @id @default(uuid())
+  status    ApplicationStatus @default(APPLIED)
+  version   Int               @default(1) // Optimistic concurrency control
 
   // Relations
   jobId String
@@ -137,10 +137,11 @@ model Application {
   interviews  InterviewRoom[]
 
   // Timestamps
+  appliedAt DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([jobId, candidateId]) // A candidate can only apply to a job once
+  @@unique([candidateId, jobId])
   @@index([jobId])
   @@index([candidateId])
   @@map("applications")

@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import { UsersController } from './users.controller';
+import { registerController, loginController } from './users.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { registerSchema, loginSchema } from './users.validation';
 import { catchAsync } from '../../utils/catchAsync';
 
 const router = Router();
-const usersController = new UsersController();
 
 // ---------------------------------------------------------------------------
 // Users Routes
@@ -17,13 +16,13 @@ const usersController = new UsersController();
 router.post(
   '/register',
   validateRequest(registerSchema),
-  catchAsync(usersController.register),
+  catchAsync(registerController),
 );
 
 router.post(
   '/login',
   validateRequest(loginSchema),
-  catchAsync(usersController.login),
+  catchAsync(loginController),
 );
 
 export const userRoutes = router;

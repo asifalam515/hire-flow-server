@@ -82,3 +82,14 @@ export const requireRole = (allowedRoles: Role[]) => {
     next();
   };
 };
+
+/**
+ * Convenience middleware array requiring candidate authentication and CANDIDATE role.
+ */
+export const requireCandidateAuth = [requireAuth, requireRole([Role.CANDIDATE])];
+
+/**
+ * Convenience middleware array requiring recruiter authentication and RECRUITER or ADMIN role.
+ */
+export const requireRecruiterAuth = [requireAuth, requireRole([Role.RECRUITER, Role.ADMIN])];
+
