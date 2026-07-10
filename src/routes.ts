@@ -12,10 +12,9 @@ const router = Router();
 router.use('/health', healthRoutes);
 
 // Example for upcoming modules:
-// import { authRoutes } from './modules/auth/auth.routes';
+import { userRoutes } from './modules/users/users.routes';
 // router.use('/auth', authRoutes);
 
-// import { userRoutes } from './modules/users/users.routes';
-// router.use('/users', userRoutes);
+router.use('/users', userRoutes);
 
 export const apiRouter = router;

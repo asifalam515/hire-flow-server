@@ -38,11 +38,25 @@ export const errorHandler = (
 
   // ── 1. Zod Validation Errors ─────────────────────────────────────────────
   if (err instanceof ZodError) {
+    const formattedErrors: Record<string, string[]> = {};
+    err.issues.forEach((issue) => {
+      // If the path starts with body/query/params and has nested segments, strip the prefix
+      const path =
+        issue.path.length > 1 &&
+        (issue.path[0] === 'body' || issue.path[0] === 'query' || issue.path[0] === 'params')
+          ? issue.path.slice(1).join('.')
+          : issue.path.join('.') || 'general';
+      if (!formattedErrors[path]) {
+        formattedErrors[path] = [];
+      }
+      formattedErrors[path].push(issue.message);
+    });
+
     const response: ErrorResponse = {
       ...baseResponse,
       statusCode: 422,
       message: 'Data validation failed. Please check the provided inputs.',
-      errors: err.flatten().fieldErrors,
+      errors: formattedErrors,
     };
     res.status(422).json(response);
     return;
@@ -65,7 +79,7 @@ export const errorHandler = (
     let statusCode = 400;
     let message = 'Database operation failed';
 
-    // Unique constraint violation (e.g. duplicate email)
+    // Unique constraint violation (e.g. duplicate email or slug)
     if (err.code === 'P2002') {
       statusCode = 409; // Conflict
       const target = (err.meta?.target as string[])?.join(', ') || 'field';
