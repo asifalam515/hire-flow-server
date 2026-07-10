@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [pgvector(map: "vector")]
+}
+
+// ===========================================================================
+// ENUMS
+// ===========================================================================
+
+enum Role {
+  CANDIDATE
+  RECRUITER
+  ADMIN
+}
+
+enum JobStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum ApplicationStage {
+  APPLIED
+  SCREENING
+  INTERVIEW
+  OFFER
+  REJECTED
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ===========================================================================
+// MODELS
+// ===========================================================================
+
+model Company {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
+  // Relations
+  users User[]
+  jobs  Job[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("companies")
+}
+
+model User {
+  id           String @id @default(cuid())
+  email        String @unique
+  passwordHash String
+  role         Role   @default(CANDIDATE)
+
+  // Relations
+  companyId        String?
+  company          Company?          @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  candidateProfile CandidateProfile?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@map("users")
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  status      JobStatus @default(DRAFT)
+
+  // Relations
+  companyId    String
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([companyId])
+  @@map("jobs")
+}
+
+model CandidateProfile {
+  id         String  @id @default(cuid())
+  resumeUrl  String?
+  parsedText String? @db.Text
+
+  // Vector embedding via pgvector extension (1536 dimensions for OpenAI embeddings)
+  embedding Unsupported("vector(1536)")?
+
+  // Relations
+  userId       String        @unique
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("candidate_profiles")
+}
+
+model Application {
+  id      String           @id @default(cuid())
+  stage   ApplicationStage @default(APPLIED)
+  version Int              @default(1) // Optimistic concurrency control
+
+  // Relations
+  jobId String
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  candidateId String
+  candidate   CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  interviews  InterviewRoom[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([jobId, candidateId]) // A candidate can only apply to a job once
+  @@index([jobId])
+  @@index([candidateId])
+  @@map("applications")
+}
+
+model InterviewRoom {
+  id              String          @id @default(cuid())
+  liveKitRoomName String          @unique
+  scheduledAt     DateTime
+  status          InterviewStatus @default(SCHEDULED)
+  recruiterNotes  String?         @db.Text
+
+  // Relations
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([applicationId])
+  @@map("interview_rooms")
+}
