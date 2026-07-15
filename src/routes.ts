@@ -15,9 +15,13 @@ router.use('/health', healthRoutes);
 import { userRoutes } from './modules/users/users.routes';
 import { jobsRoutes } from './modules/jobs/jobs.routes';
 import { applicationRoutes } from './modules/applications/application.routes';
+import { authRoutes } from './modules/auth/auth.routes';
+import { uploadRouter } from './modules/upload/upload.routes';
 
+router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/jobs', jobsRoutes);
 router.use('/applications', applicationRoutes);
+router.use('/upload', uploadRouter);
 
 export const apiRouter = router;

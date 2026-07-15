@@ -47,9 +47,12 @@ enum InterviewStatus {
 // ===========================================================================
 
 model Company {
-  id   String @id @default(cuid())
-  name String
-  slug String @unique
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  field       String?
+  description String? @db.Text
+  logoUrl     String?
 
   // Relations
   users User[]
@@ -63,10 +66,15 @@ model Company {
 }
 
 model User {
-  id           String @id @default(cuid())
-  email        String @unique
-  passwordHash String
-  role         Role   @default(CANDIDATE)
+  id              String    @id @default(cuid())
+  email           String    @unique
+  passwordHash    String
+  firstName       String?
+  lastName        String?
+  role            Role      @default(CANDIDATE)
+  isEmailVerified Boolean   @default(false)
+  otpCode         String?
+  otpExpiresAt    DateTime?
 
   // Relations
   companyId        String?

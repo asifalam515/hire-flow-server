@@ -15,6 +15,11 @@ const envSchema = z.object({
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   WORKER_CONCURRENCY: z.coerce.number().int().positive().default(5),
+  RESEND_API_KEY: z.string().default('re_dummy_test_key_for_development'),
+  EMAIL_FROM: z.string().default('onboarding@resend.dev'),
+  CLOUDINARY_CLOUD_NAME: z.string().default('demo_cloud_name'),
+  CLOUDINARY_API_KEY: z.string().default('123456789012345'),
+  CLOUDINARY_API_SECRET: z.string().default('dummy_secret_for_development'),
 });
 
 const _parsed = envSchema.safeParse(process.env);

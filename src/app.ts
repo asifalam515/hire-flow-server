@@ -20,17 +20,30 @@ const app: Application = express();
 app.use(helmet());
 
 // ── CORS ────────────────────────────────────────────────────────────────────
-const allowedOrigins = env.CORS_ORIGINS.split(',').map((o) => o.trim());
-
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (e.g. mobile apps, curl, Postman)
-      if (origin === undefined || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS: Origin '${origin}' is not allowed`));
+      if (!origin) {
+        return callback(null, true);
       }
+
+      const allowedOrigins = env.CORS_ORIGINS.split(',').map((o) => o.trim().replace(/\/$/, ''));
+      const normalizedOrigin = origin.replace(/\/$/, '');
+
+      // In development, automatically allow any local development server (localhost / 127.0.0.1)
+      if (
+        env.NODE_ENV === 'development' &&
+        (normalizedOrigin.startsWith('http://localhost:') || normalizedOrigin.startsWith('http://127.0.0.1:'))
+      ) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error(`CORS: Origin '${origin}' is not allowed`));
     },
     credentials: true, // Required for HttpOnly cookie refresh tokens
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
