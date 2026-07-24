@@ -6,6 +6,25 @@ export interface CreateJobDTO {
   description: string;
   status: JobStatus;
   companyId: string;
+  category: string;
+  nature: string;
+  vacancies?: number | null;
+  employmentTypes: string[];
+  locationCountry: string;
+  locationCity: string;
+  exactAddress?: string | null;
+  minSalary: number;
+  maxSalary: number;
+  isSalaryNegotiable: boolean;
+  benefits: string[];
+  educationLevel: string;
+  yearsOfExperience: string;
+  gender: string;
+  candidateExperience: string[];
+  languages: string[];
+  softwareSkills: string[];
+  responsibilities: string;
+  requirements: string;
 }
 
 export interface ListJobsParams {
@@ -38,6 +57,25 @@ export const createJobRecord = async (data: CreateJobDTO): Promise<Job> => {
       description: data.description,
       status: data.status,
       companyId: data.companyId,
+      category: data.category,
+      nature: data.nature,
+      vacancies: data.vacancies,
+      employmentTypes: data.employmentTypes,
+      locationCountry: data.locationCountry,
+      locationCity: data.locationCity,
+      exactAddress: data.exactAddress,
+      minSalary: data.minSalary,
+      maxSalary: data.maxSalary,
+      isSalaryNegotiable: data.isSalaryNegotiable,
+      benefits: data.benefits,
+      educationLevel: data.educationLevel,
+      yearsOfExperience: data.yearsOfExperience,
+      gender: data.gender,
+      candidateExperience: data.candidateExperience,
+      languages: data.languages,
+      softwareSkills: data.softwareSkills,
+      responsibilities: data.responsibilities,
+      requirements: data.requirements,
     },
   });
 };

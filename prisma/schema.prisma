@@ -75,6 +75,7 @@ model User {
   isEmailVerified Boolean   @default(false)
   otpCode         String?
   otpExpiresAt    DateTime?
+  avatarUrl       String?
 
   // Relations
   companyId        String?
@@ -91,10 +92,37 @@ model User {
 }
 
 model Job {
-  id          String    @id @default(cuid())
-  title       String
-  description String    @db.Text
-  status      JobStatus @default(DRAFT)
+  id                 String    @id @default(cuid())
+  title              String
+  description        String?   @db.Text
+  status             JobStatus @default(DRAFT)
+
+  // Categorization
+  category           String
+  nature             String    // 'remote', 'hybrid', 'onsite'
+  vacancies          Int?
+  employmentTypes    String[]  // ['Full Time', 'Part Time', ...]
+  
+  // Location
+  locationCountry    String
+  locationCity       String
+  exactAddress       String?
+
+  // Compensation
+  minSalary          Int
+  maxSalary          Int
+  isSalaryNegotiable Boolean   @default(false)
+  benefits           String[]
+
+  // Requirements
+  educationLevel     String
+  yearsOfExperience  String
+  gender             String    // 'Female', 'Male', 'Any'
+  candidateExperience String[] // ['Fresh Graduate', '1-2 Years', ...]
+  languages          String[]
+  softwareSkills     String[]
+  responsibilities   String?   @db.Text
+  requirements       String?   @db.Text
 
   // Relations
   companyId    String

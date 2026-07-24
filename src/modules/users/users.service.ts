@@ -3,11 +3,14 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import { User, Role } from '@prisma/client';
 import {
   findUserByEmailRecord,
+  findUserByIdRecord,
   findCompanyBySlugRecord,
   createCompanyRecord,
   createUserRecord,
+  updateUserRecord,
+  updateCompanyRecord,
 } from './users.repository';
-import { RegisterInput, LoginInput } from './users.validation';
+import { RegisterInput, LoginInput, UpdateEmployerProfileInput } from './users.validation';
 import { AppError } from '../../utils/AppError';
 import { env } from '../../config/env';
 
@@ -132,4 +135,43 @@ export const loginUser = async (input: LoginInput): Promise<AuthResult> => {
     user: sanitizeUser(user),
     ...tokens,
   };
+};
+
+/**
+ * Update user avatar
+ */
+export const updateUserAvatar = async (userId: string, avatarUrl: string): Promise<UserResponse> => {
+  const user = await updateUserRecord(userId, { avatarUrl });
+  return sanitizeUser(user);
+};
+
+/**
+ * Update employer profile (user details + company details)
+ */
+export const updateEmployerProfile = async (
+  userId: string, 
+  input: UpdateEmployerProfileInput
+): Promise<UserResponse> => {
+  const user = await findUserByIdRecord(userId);
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  // 1. Update user fields
+  const updatedUser = await updateUserRecord(userId, {
+    firstName: input.firstName,
+    lastName: input.lastName,
+  });
+
+  // 2. Update company fields
+  if (user.companyId) {
+    await updateCompanyRecord(user.companyId, {
+      name: input.companyName,
+      field: input.companyField,
+      description: input.companyDescription,
+      logoUrl: input.companyLogoUrl,
+    });
+  }
+
+  return sanitizeUser(updatedUser);
 };

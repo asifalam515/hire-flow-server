@@ -70,3 +70,23 @@ export const createUserRecord = async (data: CreateUserDTO): Promise<User> => {
     data: createData,
   });
 };
+
+/**
+ * Update user record.
+ */
+export const updateUserRecord = async (id: string, data: Partial<User>): Promise<User> => {
+  return prisma.user.update({
+    where: { id },
+    data,
+  });
+};
+
+/**
+ * Update company record.
+ */
+export const updateCompanyRecord = async (id: string, data: Partial<Company>): Promise<Company> => {
+  return prisma.company.update({
+    where: { id },
+    data,
+  });
+};

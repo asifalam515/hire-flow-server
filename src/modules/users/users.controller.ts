@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser } from './users.service';
+import { registerUser, loginUser, updateUserAvatar, updateEmployerProfile } from './users.service';
 import { env } from '../../config/env';
 
 // ---------------------------------------------------------------------------
@@ -50,6 +50,49 @@ export const loginController = async (req: Request, res: Response): Promise<void
     data: {
       user: result.user,
       accessToken: result.accessToken,
+    },
+  });
+};
+
+/**
+ * PATCH /me/avatar
+ */
+export const updateAvatarController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  const { avatarUrl } = req.body;
+
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+
+  const result = await updateUserAvatar(userId, avatarUrl);
+
+  res.status(200).json({
+    success: true,
+    message: 'Avatar updated successfully',
+    data: result,
+  });
+};
+
+/**
+ * PATCH /me/employer-profile
+ */
+export const updateEmployerProfileController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+
+  const result = await updateEmployerProfile(userId, req.body);
+
+  res.status(200).json({
+    success: true,
+    message: 'Employer profile updated successfully',
+    data: {
+      user: result,
     },
   });
 };
