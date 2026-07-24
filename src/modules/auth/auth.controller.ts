@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {
   registerEmployerService,
+  registerCandidateService,
   verifyOtpService,
   resendOtpService,
   loginAuthService,
@@ -45,6 +46,29 @@ export const employerRegisterController = async (
       company: result.company,
       accessToken: result.accessToken,
       verification: result.verification, // In dev/test environments, return OTP code for testing convenience
+    },
+  });
+};
+
+/**
+ * POST /auth/candidate/register
+ * Register a candidate.
+ */
+export const candidateRegisterController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const result = await registerCandidateService(req.body);
+
+  setRefreshTokenCookie(res, result.refreshToken);
+
+  res.status(201).json({
+    success: true,
+    message: 'Candidate account registered successfully. Please verify your email with the OTP sent.',
+    data: {
+      user: result.user,
+      accessToken: result.accessToken,
+      verification: result.verification,
     },
   });
 };

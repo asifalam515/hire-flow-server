@@ -6,6 +6,7 @@ import {
   findCompanyBySlugRecord,
   createCompanyRecord,
   createEmployerUserRecord,
+  createCandidateUserRecord,
   updateUserVerificationRecord,
   updateUserOtpRecord,
   findUserByIdRecord,
@@ -15,6 +16,7 @@ import {
   VerifyOtpInput,
   ResendOtpInput,
   LoginInput,
+  CandidateSignUpInput,
 } from './auth.validation';
 import { sendVerificationOtpEmail } from '../../utils/email';
 import { AppError } from '../../utils/AppError';
@@ -31,6 +33,16 @@ export interface AuthTokens {
 export interface EmployerSignUpResult {
   user: UserResponse;
   company: Company;
+  accessToken: string;
+  refreshToken: string;
+  verification: {
+    otpCode: string;
+    expiresIn: number; // in seconds
+  };
+}
+
+export interface CandidateSignUpResult {
+  user: UserResponse;
   accessToken: string;
   refreshToken: string;
   verification: {
@@ -179,6 +191,55 @@ export const registerEmployerService = async (
   return {
     user: sanitizeUser(user),
     company,
+    ...tokens,
+    verification: {
+      otpCode,
+      expiresIn: 600, // 10 minutes in seconds
+    },
+  };
+};
+
+/**
+ * Register a new Candidate with OTP.
+ */
+export const registerCandidateService = async (
+  input: CandidateSignUpInput,
+): Promise<CandidateSignUpResult> => {
+  const email = input.email.toLowerCase().trim();
+  const existingUser = await findUserByEmailRecord(email);
+
+  if (existingUser) {
+    throw new AppError('An account with this email already exists.', 409);
+  }
+
+  const passwordHash = await bcrypt.hash(input.password, 12);
+
+  // Generate OTP (valid for 10 minutes)
+  const otpCode = generateFourDigitOtp();
+  const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+  const user = await createCandidateUserRecord({
+    email,
+    passwordHash,
+    firstName: input.firstName.trim(),
+    lastName: input.lastName.trim(),
+    role: Role.CANDIDATE,
+    isEmailVerified: false,
+    otpCode,
+    otpExpiresAt,
+  });
+
+  // Dispatch email via Resend
+  await sendVerificationOtpEmail({
+    to: user.email,
+    otpCode,
+    firstName: user.firstName ?? undefined,
+  });
+
+  const tokens = generateTokens(user);
+
+  return {
+    user: sanitizeUser(user),
     ...tokens,
     verification: {
       otpCode,

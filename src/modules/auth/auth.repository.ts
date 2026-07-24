@@ -21,6 +21,17 @@ export interface CreateEmployerUserDTO {
   otpExpiresAt?: Date | undefined;
 }
 
+export interface CreateCandidateUserDTO {
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
+  isEmailVerified: boolean;
+  otpCode?: string | undefined;
+  otpExpiresAt?: Date | undefined;
+}
+
 // ---------------------------------------------------------------------------
 // Auth Repository (Pure Arrow Functions)
 // ---------------------------------------------------------------------------
@@ -76,6 +87,29 @@ export const createEmployerUserRecord = async (data: CreateEmployerUserDTO): Pro
         connect: { id: data.companyId },
       },
     }),
+  };
+
+  return prisma.user.create({
+    data: createData,
+  });
+};
+
+/**
+ * Create a new candidate user record and initialize their CandidateProfile.
+ */
+export const createCandidateUserRecord = async (data: CreateCandidateUserDTO): Promise<User> => {
+  const createData: Prisma.UserCreateInput = {
+    email: data.email,
+    passwordHash: data.passwordHash,
+    role: data.role,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    isEmailVerified: data.isEmailVerified,
+    ...(data.otpCode && { otpCode: data.otpCode }),
+    ...(data.otpExpiresAt && { otpExpiresAt: data.otpExpiresAt }),
+    candidateProfile: {
+      create: {}, // Creates an empty CandidateProfile tied to this user
+    },
   };
 
   return prisma.user.create({

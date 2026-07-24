@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   employerRegisterController,
+  candidateRegisterController,
   verifyOtpController,
   resendOtpController,
   loginController,
@@ -11,6 +12,7 @@ import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
 import {
   employerSignUpSchema,
+  candidateSignUpSchema,
   verifyOtpSchema,
   resendOtpSchema,
   loginSchema,
@@ -34,6 +36,12 @@ router.post(
   '/employer/register',
   validateRequest(employerSignUpSchema),
   catchAsync(employerRegisterController),
+);
+
+router.post(
+  '/candidate/register',
+  validateRequest(candidateSignUpSchema),
+  catchAsync(candidateRegisterController),
 );
 
 router.post(
