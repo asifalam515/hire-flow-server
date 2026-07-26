@@ -146,10 +146,27 @@ model CandidateProfile {
   // Vector embedding via pgvector extension (1536 dimensions for OpenAI embeddings)
   embedding Unsupported("vector(1536)")?
 
+  // Profile Details
+  mobileNumber String?
+  maritalStatus String?
+  city         String?
+  yearOfBirth  Int?
+  gender       String?
+  aboutMe      String? @db.Text
+
+  // Arrays and JSONs
+  skills            String[] @default([])
+  languages         String[] @default([])
+  preferredBenefits String[] @default([])
+  jobPreferences    Json?
+  links             Json?
+
   // Relations
   userId       String        @unique
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   applications Application[]
+  workExperiences WorkExperience[]
+  educations      Education[]
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -157,6 +174,38 @@ model CandidateProfile {
 
   @@index([userId])
   @@map("candidate_profiles")
+}
+
+model WorkExperience {
+  id                 String   @id @default(cuid())
+  title              String
+  company            String
+  startDate          DateTime
+  endDate            DateTime?
+  isCurrent          Boolean  @default(false)
+  description        String?  @db.Text
+  
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+
+  @@index([candidateProfileId])
+  @@map("work_experiences")
+}
+
+model Education {
+  id                 String   @id @default(cuid())
+  degree             String
+  fieldOfStudy       String?
+  institution        String
+  startDate          DateTime
+  endDate            DateTime?
+  isCurrent          Boolean  @default(false)
+  
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+
+  @@index([candidateProfileId])
+  @@map("educations")
 }
 
 model Application {

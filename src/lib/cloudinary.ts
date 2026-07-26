@@ -96,7 +96,44 @@ export const uploadToCloudinary = async (
 };
 
 /**
- * Delete an image asset from Cloudinary by its public ID.
+ * Uploads a document (PDF) buffer to Cloudinary.
+ */
+export const uploadDocumentToCloudinary = async (
+  input: Buffer,
+  folder: string = 'hire-flow/resumes',
+): Promise<{ url: string; publicId: string; format: string; bytes: number }> => {
+  if (!isCloudinaryConfigured() && env.NODE_ENV === 'development') {
+    return {
+      url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      publicId: `${folder}/dev_${Date.now()}`,
+      format: 'pdf',
+      bytes: 1024,
+    };
+  }
+
+  return new Promise((resolve, reject) => {
+    const uploadOptions = {
+      folder,
+      resource_type: 'auto' as const,
+    };
+
+    const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result: UploadApiResponse | undefined) => {
+      if (error || !result) {
+        return reject(error || new Error('Cloudinary stream upload returned empty result'));
+      }
+      resolve({
+        url: result.secure_url || result.url,
+        publicId: result.public_id,
+        format: result.format,
+        bytes: result.bytes,
+      });
+    });
+    uploadStream.end(input);
+  });
+};
+
+/**
+ * Delete an asset from Cloudinary by its public ID.
  */
 export const deleteFromCloudinary = async (publicId: string): Promise<boolean> => {
   if (!isCloudinaryConfigured()) return true;

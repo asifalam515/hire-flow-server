@@ -6,10 +6,10 @@ import { AppError } from '../../utils/AppError';
 const storage = multer.memoryStorage();
 
 const fileFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  if (file.mimetype.startsWith('image/')) {
+  if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {
-    cb(new AppError('Invalid file type. Only image files (JPEG, PNG, WEBP, GIF) are permitted.', 400));
+    cb(new AppError('Invalid file type. Only image files and PDFs are permitted.', 400));
   }
 };
 

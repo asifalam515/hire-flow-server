@@ -29,7 +29,7 @@ export const sendVerificationOtpEmail = async (
   ) {
     console.log(`\n=============================================================`);
     console.log(`[Resend Dev Simulation] Email to: ${to}`);
-    console.log(`[Resend Dev Simulation] Subject: Verify your Joblin employer account`);
+    console.log(`[Resend Dev Simulation] Subject: Verify your Hire Flow employer account`);
     console.log(`[Resend Dev Simulation] OTP Code: ${otpCode}`);
     console.log(`=============================================================\n`);
     return {
@@ -43,11 +43,11 @@ export const sendVerificationOtpEmail = async (
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 36px; border: 1px solid #e4e4e7; border-radius: 20px; background-color: #ffffff;">
       <div style="text-align: center; margin-bottom: 24px;">
-        <span style="font-size: 28px; font-weight: 900; letter-spacing: -1px; color: #09090b;">Joblin</span>
+        <span style="font-size: 28px; font-weight: 900; letter-spacing: -1px; color: #09090b;">Hire Flow</span>
       </div>
       <h2 style="color: #09090b; font-size: 22px; font-weight: 800; margin-bottom: 12px; text-align: center;">Verify your email address</h2>
       <p style="color: #52525b; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
-        ${greeting} please use the 4-digit verification code below to verify your recruiter account and complete your onboarding on Joblin:
+        ${greeting} please use the 4-digit verification code below to verify your recruiter account and complete your onboarding on Hire Flow:
       </p>
       <div style="background-color: #f4f4f5; padding: 24px; border-radius: 16px; text-align: center; margin: 28px 0; border: 1px dashed #d4d4d8;">
         <span style="font-size: 36px; font-weight: 900; letter-spacing: 12px; color: #2563eb; margin-left: 12px;">${otpCode}</span>
@@ -63,7 +63,7 @@ export const sendVerificationOtpEmail = async (
     const response = await resend.emails.send({
       from: env.EMAIL_FROM,
       to: [to],
-      subject: `${otpCode} is your Joblin verification code`,
+      subject: `${otpCode} is your Hire Flow verification code`,
       html: htmlContent,
     });
 

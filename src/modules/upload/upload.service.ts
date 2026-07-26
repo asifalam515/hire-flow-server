@@ -27,3 +27,23 @@ export const uploadImageService = async (
     throw new AppError(error.message || 'Cloudinary image upload failed', 502);
   }
 };
+
+/**
+ * Service to process a document upload buffer and push to Cloudinary.
+ */
+export const uploadDocumentService = async (
+  fileBuffer: Buffer,
+  folder: string = 'hire-flow/resumes',
+) => {
+  if (!fileBuffer) {
+    throw new AppError('No file buffer provided for upload', 400);
+  }
+
+  const { uploadDocumentToCloudinary } = await import('../../lib/cloudinary');
+  try {
+    const result = await uploadDocumentToCloudinary(fileBuffer, folder);
+    return result;
+  } catch (error: any) {
+    throw new AppError(error.message || 'Cloudinary document upload failed', 502);
+  }
+};

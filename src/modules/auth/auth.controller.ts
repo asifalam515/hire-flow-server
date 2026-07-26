@@ -85,8 +85,10 @@ export const verifyOtpController = async (
 
   res.status(200).json({
     success: true,
-    message: 'Email verified successfully. Welcome to Joblin!',
-    data: result,
+    message: 'Email verified successfully. Welcome to Hire Flow!',
+    data: {
+      user: result.user,
+    },
   });
 };
 
