@@ -1,16 +1,20 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-// Initialize the Gemini API client. The API key must be provided in the environment variables.
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+import dotenv from 'dotenv';
 
 export const enhanceResumeData = async (profileData: any): Promise<any> => {
-  if (!process.env.GEMINI_API_KEY) {
+  // Reload dotenv to catch any recent changes to .env file without requiring a hard restart
+  dotenv.config();
+  
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
     console.warn('GEMINI_API_KEY is missing. Returning original profile data without enhancement.');
     return profileData;
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: 'gemini-flash-latest' });
 
     // Prepare prompt payload
     const prompt = `
