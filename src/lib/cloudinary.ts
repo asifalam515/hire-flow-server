@@ -114,8 +114,8 @@ export const uploadDocumentToCloudinary = async (
   return new Promise((resolve, reject) => {
     const uploadOptions = {
       folder,
-      resource_type: 'image' as const,
-      format: 'pdf',
+      resource_type: 'raw' as const,
+      public_id: `resume_${Date.now()}.pdf`,
     };
 
     const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result: UploadApiResponse | undefined) => {

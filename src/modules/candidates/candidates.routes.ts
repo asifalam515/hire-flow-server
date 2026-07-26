@@ -9,6 +9,7 @@ import {
   updateEducationController,
   deleteEducationController,
   downloadResumePdfController,
+  generateAiResumePdfController,
 } from './candidates.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
@@ -29,6 +30,7 @@ router.use(requireAuth);
 // Resume / Profile
 router.get('/me/resume', catchAsync(getResumeController));
 router.get('/me/resume/download', catchAsync(downloadResumePdfController));
+router.get('/me/resume/generate-ai', catchAsync(generateAiResumePdfController));
 router.patch(
   '/me/resume',
   validateRequest(updateCandidateProfileSchema),

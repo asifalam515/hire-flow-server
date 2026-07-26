@@ -106,3 +106,23 @@ export const downloadResumePdfController = async (req: Request, res: Response) =
   res.setHeader('Content-Disposition', `attachment; filename="resume_${profile.user.firstName || 'candidate'}.pdf"`);
   res.send(pdfBuffer);
 };
+
+export const generateAiResumePdfController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const profile = await candidateService.getResume(userId);
+
+  if (!profile) {
+    res.status(404).json({ success: false, message: 'Profile not found' });
+    return;
+  }
+
+  const { enhanceResumeData } = await import('./aiResume.service');
+  const enhancedProfile = await enhanceResumeData(profile);
+
+  const { generateResumePdfService } = await import('./pdfGenerator.service');
+  const pdfBuffer = await generateResumePdfService(enhancedProfile as any);
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="ai_resume_${profile.user.firstName || 'candidate'}.pdf"`);
+  res.send(pdfBuffer);
+};

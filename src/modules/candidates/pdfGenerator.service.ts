@@ -45,61 +45,76 @@ export const generateResumePdfService = (profile: FullProfile): Promise<Buffer> 
 
       // --- About Me ---
       if (profile.aboutMe) {
-        doc.font('Helvetica-Bold').fontSize(14).fillColor(primaryColor).text('Professional Summary');
+        doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('PROFESSIONAL SUMMARY');
+        doc.moveDown(0.25);
+        doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
-        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.aboutMe, { align: 'justify' });
+        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.aboutMe, { align: 'justify', lineGap: 3 });
         doc.moveDown(1.5);
       }
 
       // --- Work Experience ---
       if (profile.workExperiences && profile.workExperiences.length > 0) {
-        doc.font('Helvetica-Bold').fontSize(14).fillColor(primaryColor).text('Work Experience');
+        doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('EXPERIENCE');
+        doc.moveDown(0.25);
+        doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
 
-        profile.workExperiences.forEach(we => {
-          doc.font('Helvetica-Bold').fontSize(11).fillColor(textColor).text(we.title);
-          doc.font('Helvetica-Oblique').fontSize(10).fillColor(lightText).text(we.company);
+        profile.workExperiences.forEach((we: any) => {
+          doc.font('Helvetica-Bold').fontSize(11).fillColor(textColor).text(we.title, { continued: true });
+          doc.font('Helvetica').fontSize(11).text(' | ', { continued: true });
+          doc.font('Helvetica-Oblique').fontSize(10).fillColor(primaryColor).text(we.company);
           
-          const start = we.startDate ? new Date(we.startDate).toLocaleDateString() : '';
-          const end = we.isCurrent ? 'Present' : (we.endDate ? new Date(we.endDate).toLocaleDateString() : '');
-          doc.font('Helvetica').fontSize(9).text(`${start} - ${end}`);
+          const start = we.startDate ? new Date(we.startDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : '';
+          const end = we.isCurrent ? 'Present' : (we.endDate ? new Date(we.endDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : '');
+          doc.font('Helvetica').fontSize(9).fillColor(lightText).text(`${start} — ${end}`);
           
-          doc.moveDown(0.5);
+          doc.moveDown(0.25);
+          
+          if (we.description) {
+            doc.font('Helvetica').fontSize(9.5).fillColor(textColor).text(we.description, { align: 'justify', lineGap: 2 });
+          }
+          
+          doc.moveDown(1);
         });
-        doc.moveDown(1);
       }
 
       // --- Education ---
       if (profile.educations && profile.educations.length > 0) {
-        doc.font('Helvetica-Bold').fontSize(14).fillColor(primaryColor).text('Education');
+        doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('EDUCATION');
+        doc.moveDown(0.25);
+        doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
 
         profile.educations.forEach(ed => {
           doc.font('Helvetica-Bold').fontSize(11).fillColor(textColor).text(`${ed.degree} ${ed.fieldOfStudy ? `in ${ed.fieldOfStudy}` : ''}`);
-          doc.font('Helvetica-Oblique').fontSize(10).fillColor(lightText).text(ed.institution);
+          doc.font('Helvetica-Oblique').fontSize(10).fillColor(primaryColor).text(ed.institution);
           
-          const start = ed.startDate ? new Date(ed.startDate).toLocaleDateString() : '';
-          const end = ed.isCurrent ? 'Present' : (ed.endDate ? new Date(ed.endDate).toLocaleDateString() : '');
-          doc.font('Helvetica').fontSize(9).text(`${start} - ${end}`);
+          const start = ed.startDate ? new Date(ed.startDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : '';
+          const end = ed.isCurrent ? 'Present' : (ed.endDate ? new Date(ed.endDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' }) : '');
+          doc.font('Helvetica').fontSize(9).fillColor(lightText).text(`${start} — ${end}`);
           
-          doc.moveDown(0.5);
+          doc.moveDown(1);
         });
-        doc.moveDown(1);
       }
 
       // --- Skills ---
       if (profile.skills && profile.skills.length > 0) {
-        doc.font('Helvetica-Bold').fontSize(14).fillColor(primaryColor).text('Skills');
+        doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('SKILLS');
+        doc.moveDown(0.25);
+        doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
-        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.skills.join(', '));
+        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.skills.join(' • '));
         doc.moveDown(1.5);
       }
 
       // --- Languages ---
       if (profile.languages && profile.languages.length > 0) {
-        doc.font('Helvetica-Bold').fontSize(14).fillColor(primaryColor).text('Languages');
+        doc.font('Helvetica-Bold').fontSize(12).fillColor(primaryColor).text('LANGUAGES');
+        doc.moveDown(0.25);
+        doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
-        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.languages.join(', '));
+        doc.font('Helvetica').fontSize(10).fillColor(textColor).text(profile.languages.join(' • '));
         doc.moveDown(1.5);
       }
 
