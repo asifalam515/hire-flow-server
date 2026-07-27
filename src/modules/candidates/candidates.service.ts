@@ -90,3 +90,62 @@ export const deleteEducation = async (userId: string, educationId: string) => {
     throw new AppError(404, 'Education not found or unauthorized');
   }
 };
+
+export const getCandidateApplications = async (userId: string, status?: any) => {
+  const profile = await getResume(userId);
+  return prisma.application.findMany({
+    where: {
+      candidateId: profile!.id,
+      ...(status && { status })
+    },
+    include: {
+      job: {
+        include: {
+          company: true
+        }
+      }
+    },
+    orderBy: { appliedAt: 'desc' }
+  });
+};
+
+export const getCandidateFollowedCompanies = async (userId: string) => {
+  return prisma.followedCompany.findMany({
+    where: { userId },
+    include: {
+      company: {
+        include: {
+          _count: {
+            select: { jobs: true }
+          }
+        }
+      }
+    },
+    orderBy: { createdAt: 'desc' }
+  });
+};
+
+export const followCompany = async (userId: string, companyId: string) => {
+  return prisma.followedCompany.create({
+    data: { userId, companyId }
+  });
+};
+
+export const unfollowCompany = async (userId: string, companyId: string) => {
+  return prisma.followedCompany.delete({
+    where: {
+      userId_companyId: { userId, companyId }
+    }
+  });
+};
+
+export const updateOfferedJobPreferences = async (userId: string, data: any) => {
+  const profileData: any = {};
+  if (data.favoriteCities !== undefined) profileData.favoriteCities = data.favoriteCities;
+  if (data.preferredJobTitle !== undefined) profileData.preferredJobTitle = data.preferredJobTitle;
+  if (data.preferredJobTypes !== undefined) profileData.preferredJobTypes = data.preferredJobTypes;
+  if (data.tendToRemote !== undefined) profileData.tendToRemote = data.tendToRemote;
+  if (data.receiveEmail !== undefined) profileData.receiveEmail = data.receiveEmail;
+
+  return candidateRepo.createOrUpdateCandidateProfile(userId, profileData);
+};

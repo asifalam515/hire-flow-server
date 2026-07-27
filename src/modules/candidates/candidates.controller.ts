@@ -126,3 +126,56 @@ export const generateAiResumePdfController = async (req: Request, res: Response)
   res.setHeader('Content-Disposition', `attachment; filename="ai_resume_${profile.user.firstName || 'candidate'}.pdf"`);
   res.send(pdfBuffer);
 };
+export const getCandidateApplicationsController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const { status } = req.query;
+  const applications = await candidateService.getCandidateApplications(userId, status as any);
+
+  res.status(200).json({
+    success: true,
+    data: applications,
+  });
+};
+
+export const getCandidateFollowedCompaniesController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const companies = await candidateService.getCandidateFollowedCompanies(userId);
+
+  res.status(200).json({
+    success: true,
+    data: companies,
+  });
+};
+
+export const followCompanyController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const { companyId } = req.body;
+  const followed = await candidateService.followCompany(userId, companyId);
+
+  res.status(201).json({
+    success: true,
+    data: followed,
+  });
+};
+
+export const unfollowCompanyController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const { companyId } = req.params;
+  await candidateService.unfollowCompany(userId, companyId);
+
+  res.status(200).json({
+    success: true,
+    message: 'Unfollowed company',
+  });
+};
+
+export const updateOfferedJobPreferencesController = async (req: Request, res: Response) => {
+  const userId = req.user!.id;
+  const preferences = await candidateService.updateOfferedJobPreferences(userId, req.body);
+
+  res.status(200).json({
+    success: true,
+    message: 'Preferences updated successfully',
+    data: preferences,
+  });
+};

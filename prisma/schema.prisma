@@ -57,6 +57,7 @@ model Company {
   // Relations
   users User[]
   jobs  Job[]
+  followers FollowedCompany[]
 
   // Timestamps
   createdAt DateTime @default(now())
@@ -87,6 +88,7 @@ model User {
   company          Company?          @relation(fields: [companyId], references: [id], onDelete: SetNull)
   candidateProfile CandidateProfile?
   savedJobs        SavedJob[]
+  followedCompanies FollowedCompany[]
   sessions         Session[]
 
   // Timestamps
@@ -166,6 +168,13 @@ model CandidateProfile {
   preferredBenefits String[] @default([])
   jobPreferences    Json?
   links             Json?
+
+  // Offered Job Settings
+  favoriteCities    String[] @default([])
+  preferredJobTitle String?
+  preferredJobTypes String[] @default([])
+  tendToRemote      String?
+  receiveEmail      Boolean  @default(true)
 
   // Relations
   userId       String        @unique
@@ -269,6 +278,20 @@ model SavedJob {
   @@index([userId])
   @@index([jobId])
   @@map("saved_jobs")
+}
+
+model FollowedCompany {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, companyId])
+  @@index([userId])
+  @@index([companyId])
+  @@map("followed_companies")
 }
 
 model Session {

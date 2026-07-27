@@ -10,6 +10,11 @@ import {
   deleteEducationController,
   downloadResumePdfController,
   generateAiResumePdfController,
+  getCandidateApplicationsController,
+  getCandidateFollowedCompaniesController,
+  followCompanyController,
+  unfollowCompanyController,
+  updateOfferedJobPreferencesController,
 } from './candidates.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
@@ -68,5 +73,12 @@ router.delete(
   '/me/education/:id',
   catchAsync(deleteEducationController)
 );
+
+// Activity / Dashboard Data
+router.get('/me/applications', catchAsync(getCandidateApplicationsController));
+router.get('/me/followed-companies', catchAsync(getCandidateFollowedCompaniesController));
+router.post('/me/followed-companies', catchAsync(followCompanyController));
+router.delete('/me/followed-companies/:companyId', catchAsync(unfollowCompanyController));
+router.patch('/me/preferences', catchAsync(updateOfferedJobPreferencesController));
 
 export const candidateRoutes = router;
