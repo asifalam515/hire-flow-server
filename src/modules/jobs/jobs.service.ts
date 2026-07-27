@@ -165,6 +165,13 @@ export const listJobs = async (
     search: query.search,
     status: targetStatus,
     companyId: targetCompanyId,
+    location: query.location,
+    languages: query.languages,
+    educationLevel: query.educationLevel,
+    employmentTypes: query.employmentTypes,
+    nature: query.nature,
+    minSalary: query.minSalary,
+    maxSalary: query.maxSalary,
     page: query.page,
     limit: query.limit,
   });

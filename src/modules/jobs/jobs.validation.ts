@@ -60,6 +60,13 @@ export const jobIdParamsSchema = z.object({
 export const listJobsSchema = z.object({
   query: z.object({
     search: z.string().optional(),
+    location: z.string().optional(),
+    languages: z.string().optional(), // Comma separated string
+    educationLevel: z.string().optional(),
+    employmentTypes: z.string().optional(), // Comma separated string
+    nature: z.string().optional(), // Comma separated string
+    minSalary: z.coerce.number().int().nonnegative().optional(),
+    maxSalary: z.coerce.number().int().nonnegative().optional(),
     status: z
       .nativeEnum(JobStatus, {
         message: 'Invalid status filter. Allowed values: DRAFT, PUBLISHED, CLOSED',

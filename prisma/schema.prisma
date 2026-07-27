@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
@@ -8,12 +5,227 @@ generator client {
 
 datasource db {
   provider   = "postgresql"
-  extensions = [pgvector(map: "vector")]
+  extensions = [vector]
 }
 
-// ===========================================================================
-// ENUMS
-// ===========================================================================
+model Company {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  field       String?
+  description String?
+  logoUrl     String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  followers   FollowedCompany[]
+  jobs        Job[]
+  users       User[]
+
+  @@map("companies")
+}
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  passwordHash      String
+  firstName         String?
+  lastName          String?
+  role              Role              @default(CANDIDATE)
+  isEmailVerified   Boolean           @default(false)
+  otpCode           String?
+  otpExpiresAt      DateTime?
+  avatarUrl         String?
+  companyId         String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  notifyAppResult   Boolean           @default(true)
+  notifyMessages    Boolean           @default(true)
+  notifyNewJob      Boolean           @default(true)
+  candidateProfile  CandidateProfile?
+  followedCompanies FollowedCompany[]
+  savedJobs         SavedJob[]
+  sessions          Session[]
+  company           Company?          @relation(fields: [companyId], references: [id])
+
+  @@index([companyId])
+  @@map("users")
+}
+
+model Job {
+  id                  String        @id @default(cuid())
+  title               String
+  description         String?
+  status              JobStatus     @default(DRAFT)
+  category            String
+  nature              String
+  vacancies           Int?
+  employmentTypes     String[]
+  locationCountry     String
+  locationCity        String
+  exactAddress        String?
+  minSalary           Int
+  maxSalary           Int
+  isSalaryNegotiable  Boolean       @default(false)
+  benefits            String[]
+  educationLevel      String
+  yearsOfExperience   String
+  gender              String
+  candidateExperience String[]
+  languages           String[]
+  softwareSkills      String[]
+  responsibilities    String?
+  requirements        String?
+  companyId           String
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  applications        Application[]
+  company             Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  savedJobs           SavedJob[]
+
+  @@index([companyId])
+  @@map("jobs")
+}
+
+model CandidateProfile {
+  id                String                 @id @default(cuid())
+  resumeUrl         String?
+  parsedText        String?
+  embedding         Unsupported("vector")?
+  userId            String                 @unique
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  aboutMe           String?
+  city              String?
+  gender            String?
+  jobPreferences    Json?
+  languages         String[]               @default([])
+  links             Json?
+  maritalStatus     String?
+  mobileNumber      String?
+  preferredBenefits String[]               @default([])
+  skills            String[]               @default([])
+  yearOfBirth       Int?
+  favoriteCities    String[]               @default([])
+  preferredJobTitle String?
+  preferredJobTypes String[]               @default([])
+  receiveEmail      Boolean                @default(true)
+  tendToRemote      String?
+  applications      Application[]
+  user              User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  educations        Education[]
+  workExperiences   WorkExperience[]
+
+  @@index([userId])
+  @@map("candidate_profiles")
+}
+
+model WorkExperience {
+  id                 String           @id @default(cuid())
+  title              String
+  company            String
+  startDate          DateTime
+  endDate            DateTime?
+  isCurrent          Boolean          @default(false)
+  description        String?
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+
+  @@index([candidateProfileId])
+  @@map("work_experiences")
+}
+
+model Education {
+  id                 String           @id @default(cuid())
+  degree             String
+  fieldOfStudy       String?
+  institution        String
+  startDate          DateTime
+  endDate            DateTime?
+  isCurrent          Boolean          @default(false)
+  candidateProfileId String
+  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
+
+  @@index([candidateProfileId])
+  @@map("educations")
+}
+
+model Application {
+  id          String            @id @default(uuid())
+  status      ApplicationStatus @default(APPLIED)
+  version     Int               @default(1)
+  jobId       String
+  candidateId String
+  appliedAt   DateTime          @default(now())
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  candidate   CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job         Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  interviews  InterviewRoom[]
+
+  @@unique([candidateId, jobId])
+  @@index([jobId])
+  @@index([candidateId])
+  @@map("applications")
+}
+
+model InterviewRoom {
+  id              String          @id @default(cuid())
+  liveKitRoomName String          @unique
+  scheduledAt     DateTime
+  status          InterviewStatus @default(SCHEDULED)
+  recruiterNotes  String?
+  applicationId   String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  application     Application     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("interview_rooms")
+}
+
+model SavedJob {
+  id        String   @id @default(cuid())
+  userId    String
+  jobId     String
+  createdAt DateTime @default(now())
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@index([userId])
+  @@index([jobId])
+  @@map("saved_jobs")
+}
+
+model FollowedCompany {
+  id        String   @id @default(cuid())
+  userId    String
+  companyId String
+  createdAt DateTime @default(now())
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId])
+  @@index([userId])
+  @@index([companyId])
+  @@map("followed_companies")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  refreshToken String   @unique
+  userAgent    String?
+  ipAddress    String?
+  fcmToken     String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
 
 enum Role {
   CANDIDATE
@@ -40,273 +252,4 @@ enum InterviewStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
-}
-
-// ===========================================================================
-// MODELS
-// ===========================================================================
-
-model Company {
-  id          String  @id @default(cuid())
-  name        String
-  slug        String  @unique
-  field       String?
-  description String? @db.Text
-  logoUrl     String?
-
-  // Relations
-  users User[]
-  jobs  Job[]
-  followers FollowedCompany[]
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("companies")
-}
-
-model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  passwordHash    String
-  firstName       String?
-  lastName        String?
-  role            Role      @default(CANDIDATE)
-  isEmailVerified Boolean   @default(false)
-  otpCode         String?
-  otpExpiresAt    DateTime?
-  avatarUrl       String?
-
-  // Notification Preferences
-  notifyNewJob          Boolean   @default(true)
-  notifyAppResult       Boolean   @default(true)
-  notifyMessages        Boolean   @default(true)
-
-  // Relations
-  companyId        String?
-  company          Company?          @relation(fields: [companyId], references: [id], onDelete: SetNull)
-  candidateProfile CandidateProfile?
-  savedJobs        SavedJob[]
-  followedCompanies FollowedCompany[]
-  sessions         Session[]
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([companyId])
-  @@map("users")
-}
-
-model Job {
-  id                 String    @id @default(cuid())
-  title              String
-  description        String?   @db.Text
-  status             JobStatus @default(DRAFT)
-
-  // Categorization
-  category           String
-  nature             String    // 'remote', 'hybrid', 'onsite'
-  vacancies          Int?
-  employmentTypes    String[]  // ['Full Time', 'Part Time', ...]
-  
-  // Location
-  locationCountry    String
-  locationCity       String
-  exactAddress       String?
-
-  // Compensation
-  minSalary          Int
-  maxSalary          Int
-  isSalaryNegotiable Boolean   @default(false)
-  benefits           String[]
-
-  // Requirements
-  educationLevel     String
-  yearsOfExperience  String
-  gender             String    // 'Female', 'Male', 'Any'
-  candidateExperience String[] // ['Fresh Graduate', '1-2 Years', ...]
-  languages          String[]
-  softwareSkills     String[]
-  responsibilities   String?   @db.Text
-  requirements       String?   @db.Text
-
-  // Relations
-  companyId    String
-  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  applications Application[]
-  savedJobs    SavedJob[]
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([companyId])
-  @@map("jobs")
-}
-
-model CandidateProfile {
-  id         String  @id @default(cuid())
-  resumeUrl  String?
-  parsedText String? @db.Text
-
-  // Vector embedding via pgvector extension (1536 dimensions for OpenAI embeddings)
-  embedding Unsupported("vector(1536)")?
-
-  // Profile Details
-  mobileNumber String?
-  maritalStatus String?
-  city         String?
-  yearOfBirth  Int?
-  gender       String?
-  aboutMe      String? @db.Text
-
-  // Arrays and JSONs
-  skills            String[] @default([])
-  languages         String[] @default([])
-  preferredBenefits String[] @default([])
-  jobPreferences    Json?
-  links             Json?
-
-  // Offered Job Settings
-  favoriteCities    String[] @default([])
-  preferredJobTitle String?
-  preferredJobTypes String[] @default([])
-  tendToRemote      String?
-  receiveEmail      Boolean  @default(true)
-
-  // Relations
-  userId       String        @unique
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  applications Application[]
-  workExperiences WorkExperience[]
-  educations      Education[]
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@map("candidate_profiles")
-}
-
-model WorkExperience {
-  id                 String   @id @default(cuid())
-  title              String
-  company            String
-  startDate          DateTime
-  endDate            DateTime?
-  isCurrent          Boolean  @default(false)
-  description        String?  @db.Text
-  
-  candidateProfileId String
-  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
-
-  @@index([candidateProfileId])
-  @@map("work_experiences")
-}
-
-model Education {
-  id                 String   @id @default(cuid())
-  degree             String
-  fieldOfStudy       String?
-  institution        String
-  startDate          DateTime
-  endDate            DateTime?
-  isCurrent          Boolean  @default(false)
-  
-  candidateProfileId String
-  candidateProfile   CandidateProfile @relation(fields: [candidateProfileId], references: [id], onDelete: Cascade)
-
-  @@index([candidateProfileId])
-  @@map("educations")
-}
-
-model Application {
-  id        String            @id @default(uuid())
-  status    ApplicationStatus @default(APPLIED)
-  version   Int               @default(1) // Optimistic concurrency control
-
-  // Relations
-  jobId String
-  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  candidateId String
-  candidate   CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  interviews  InterviewRoom[]
-
-  // Timestamps
-  appliedAt DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([candidateId, jobId])
-  @@index([jobId])
-  @@index([candidateId])
-  @@map("applications")
-}
-
-model InterviewRoom {
-  id              String          @id @default(cuid())
-  liveKitRoomName String          @unique
-  scheduledAt     DateTime
-  status          InterviewStatus @default(SCHEDULED)
-  recruiterNotes  String?         @db.Text
-
-  // Relations
-  applicationId String
-  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([applicationId])
-  @@map("interview_rooms")
-}
-
-model SavedJob {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  jobId     String
-  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, jobId])
-  @@index([userId])
-  @@index([jobId])
-  @@map("saved_jobs")
-}
-
-model FollowedCompany {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  companyId String
-  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, companyId])
-  @@index([userId])
-  @@index([companyId])
-  @@map("followed_companies")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  refreshToken String   @unique // Hashed or raw token to validate
-  userAgent    String?
-  ipAddress    String?
-  fcmToken     String?  // Optional FCM token for push notifications
-  expiresAt    DateTime
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@index([userId])
-  @@map("sessions")
 }

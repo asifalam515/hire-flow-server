@@ -31,6 +31,13 @@ export interface ListJobsParams {
   search?: string | undefined;
   status?: JobStatus | undefined;
   companyId?: string | undefined;
+  location?: string | undefined;
+  languages?: string | undefined;
+  educationLevel?: string | undefined;
+  employmentTypes?: string | undefined;
+  nature?: string | undefined;
+  minSalary?: number | undefined;
+  maxSalary?: number | undefined;
   page: number;
   limit: number;
 }
@@ -127,7 +134,7 @@ export const findJobByIdRecord = async (id: string) => {
  * List jobs with pagination, filtering, and optional GIN full-text search.
  */
 export const listJobsRecord = async (params: ListJobsParams): Promise<PaginatedJobsResult> => {
-  const { search, status, companyId, page, limit } = params;
+  const { search, status, companyId, location, languages, educationLevel, employmentTypes, nature, minSalary, maxSalary, page, limit } = params;
   const skip = (page - 1) * limit;
 
   const whereClause: Prisma.JobWhereInput = {};
@@ -138,6 +145,34 @@ export const listJobsRecord = async (params: ListJobsParams): Promise<PaginatedJ
 
   if (companyId) {
     whereClause.companyId = companyId;
+  }
+
+  if (location && location.trim() !== '') {
+    whereClause.locationCity = { contains: location.trim(), mode: 'insensitive' };
+  }
+
+  if (languages && languages.trim() !== '') {
+    whereClause.languages = { hasSome: languages.split(',').map(s => s.trim()) };
+  }
+
+  if (educationLevel && educationLevel.trim() !== '') {
+    whereClause.educationLevel = { equals: educationLevel.trim() };
+  }
+
+  if (employmentTypes && employmentTypes.trim() !== '') {
+    whereClause.employmentTypes = { hasSome: employmentTypes.split(',').map(s => s.trim()) };
+  }
+
+  if (nature && nature.trim() !== '') {
+    whereClause.nature = { in: nature.split(',').map(s => s.trim()) };
+  }
+
+  if (minSalary !== undefined) {
+    whereClause.minSalary = { gte: minSalary };
+  }
+
+  if (maxSalary !== undefined) {
+    whereClause.maxSalary = { lte: maxSalary };
   }
 
   // ── GIN Full-Text Search Optimization ───────────────────────────────────
