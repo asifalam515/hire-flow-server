@@ -13,6 +13,7 @@ import {
 } from './jobs.repository';
 import { CreateJobInput, UpdateJobInput, ListJobsQuery } from './jobs.validation';
 import { AppError } from '../../utils/AppError';
+import { getCandidateProfileByUserId } from '../candidates/candidates.repository';
 
 export interface UserContext {
   id: string;
@@ -210,4 +211,112 @@ export const toggleSaveJob = async (userId: string, jobId: string): Promise<Togg
  */
 export const listSavedJobs = async (userId: string) => {
   return listSavedJobsRecord(userId);
+};
+
+/**
+ * Calculate a heuristic match score (0-100) between a candidate and a job.
+ */
+export const calculateJobMatch = async (userId: string, jobId: string) => {
+  const job = await findJobByIdRecord(jobId);
+  if (!job) {
+    throw new AppError('Job not found.', 404);
+  }
+
+  const profile = await getCandidateProfileByUserId(userId);
+  if (!profile) {
+    return { matchScore: 0, profileMissing: true };
+  }
+
+  let totalScore = 0;
+  const breakdown = {
+    skills: 0,
+    experience: 0,
+    location: 0,
+    education: 0,
+  };
+
+  // 1. Skills Match (40% weight)
+  const jobSkills = new Set([...(job.softwareSkills || []), ...(job.languages || [])].map(s => s.toLowerCase().trim()));
+  const candidateSkills = new Set([...(profile.skills || []), ...(profile.languages || [])].map(s => s.toLowerCase().trim()));
+  
+  if (jobSkills.size === 0) {
+    totalScore += 40; // Free points if job doesn't specify skills
+    breakdown.skills = 40;
+  } else {
+    let matchedSkills = 0;
+    for (const skill of jobSkills) {
+      if (candidateSkills.has(skill)) {
+        matchedSkills++;
+      }
+    }
+    const skillScore = (matchedSkills / jobSkills.size) * 40;
+    totalScore += skillScore;
+    breakdown.skills = Math.round(skillScore);
+  }
+
+  // 2. Experience Match (30% weight)
+  // Calculate total months of experience for candidate
+  let candidateMonthsExp = 0;
+  if (profile.workExperiences) {
+    for (const exp of profile.workExperiences) {
+      const start = new Date(exp.startDate);
+      const end = exp.endDate ? new Date(exp.endDate) : new Date();
+      candidateMonthsExp += (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30);
+    }
+  }
+
+  let targetMonthsExp = 0;
+  if (job.yearsOfExperience) {
+    // Rough heuristic for extracting numbers from strings like "2-3 Years"
+    const numbers = job.yearsOfExperience.match(/\d+/g);
+    if (numbers && numbers.length > 0) {
+      targetMonthsExp = parseInt(numbers[0], 10) * 12; // take lower bound
+    }
+  }
+
+  if (targetMonthsExp === 0) {
+    totalScore += 30; // Free points if no experience needed
+    breakdown.experience = 30;
+  } else {
+    const expRatio = Math.min(candidateMonthsExp / targetMonthsExp, 1.0);
+    const expScore = expRatio * 30;
+    totalScore += expScore;
+    breakdown.experience = Math.round(expScore);
+  }
+
+  // 3. Location / Nature Match (15% weight)
+  if (job.nature?.toLowerCase() === 'remote' && profile.tendToRemote?.toLowerCase() === 'yes') {
+    totalScore += 15;
+    breakdown.location = 15;
+  } else if (job.locationCity && profile.city && job.locationCity.toLowerCase().includes(profile.city.toLowerCase())) {
+    totalScore += 15;
+    breakdown.location = 15;
+  }
+
+  // 4. Education Match (15% weight)
+  if (!job.educationLevel) {
+    totalScore += 15;
+    breakdown.education = 15;
+  } else {
+    let hasEduMatch = false;
+    if (profile.educations) {
+      const targetEdu = job.educationLevel.toLowerCase();
+      for (const edu of profile.educations) {
+        if (edu.degree && edu.degree.toLowerCase().includes(targetEdu)) {
+          hasEduMatch = true;
+          break;
+        }
+      }
+    }
+    if (hasEduMatch) {
+      totalScore += 15;
+      breakdown.education = 15;
+    }
+  }
+
+  return {
+    matchScore: Math.round(totalScore),
+    profileMissing: false,
+    breakdown,
+  };
 };

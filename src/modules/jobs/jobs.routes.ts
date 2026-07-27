@@ -9,6 +9,7 @@ import {
   createJobController,
   updateJobController,
   deleteJobController,
+  getJobMatchController,
 } from './jobs.controller';
 import { requireAuth, requireRole, requireRecruiterAuth } from '../../middlewares/auth.middleware';
 import { requireCompany, requireJobTenantOwnership } from '../../middlewares/tenant.middleware';
@@ -73,6 +74,13 @@ router.get(
   '/:id',
   validateRequest(jobIdParamsSchema),
   catchAsync(getJobByIdController),
+);
+
+router.get(
+  '/:id/match',
+  requireAuth,
+  validateRequest(jobIdParamsSchema),
+  catchAsync(getJobMatchController),
 );
 
 // ── Job Management (Recruiters & Admins Only) ──────────────────────────────

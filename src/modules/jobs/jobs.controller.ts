@@ -7,6 +7,7 @@ import {
   listJobs,
   toggleSaveJob,
   listSavedJobs,
+  calculateJobMatch,
 } from './jobs.service';
 import { AppError } from '../../utils/AppError';
 
@@ -85,6 +86,23 @@ export const getJobByIdController = async (req: Request, res: Response): Promise
   res.status(200).json({
     success: true,
     data: { job },
+  });
+};
+
+/**
+ * GET /api/v1/jobs/:id/match
+ */
+export const getJobMatchController = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) {
+    throw new AppError('Authentication required.', 401);
+  }
+
+  const jobId = extractJobId(req);
+  const result = await calculateJobMatch(req.user.id, jobId);
+
+  res.status(200).json({
+    success: true,
+    data: result,
   });
 };
 
