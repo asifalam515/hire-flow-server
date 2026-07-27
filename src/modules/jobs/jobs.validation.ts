@@ -65,6 +65,8 @@ export const listJobsSchema = z.object({
     educationLevel: z.string().optional(),
     employmentTypes: z.string().optional(), // Comma separated string
     nature: z.string().optional(), // Comma separated string
+    category: z.string().optional(),
+    excludeId: z.string().optional(),
     minSalary: z.coerce.number().int().nonnegative().optional(),
     maxSalary: z.coerce.number().int().nonnegative().optional(),
     status: z

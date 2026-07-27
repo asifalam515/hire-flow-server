@@ -36,6 +36,8 @@ export interface ListJobsParams {
   educationLevel?: string | undefined;
   employmentTypes?: string | undefined;
   nature?: string | undefined;
+  category?: string | undefined;
+  excludeId?: string | undefined;
   minSalary?: number | undefined;
   maxSalary?: number | undefined;
   page: number;
@@ -43,7 +45,7 @@ export interface ListJobsParams {
 }
 
 export interface PaginatedJobsResult {
-  jobs: Array<Job & { company: { id: string; name: string; slug: string }; _count?: { applications: number; savedJobs: number } }>;
+  jobs: Array<Job & { company: { id: string; name: string; slug: string; logoUrl?: string | null; description?: string | null }; _count?: { applications: number; savedJobs: number } }>;
   total: number;
   page: number;
   limit: number;
@@ -118,6 +120,8 @@ export const findJobByIdRecord = async (id: string) => {
           id: true,
           name: true,
           slug: true,
+          logoUrl: true,
+          description: true,
         },
       },
       _count: {
@@ -134,7 +138,7 @@ export const findJobByIdRecord = async (id: string) => {
  * List jobs with pagination, filtering, and optional GIN full-text search.
  */
 export const listJobsRecord = async (params: ListJobsParams): Promise<PaginatedJobsResult> => {
-  const { search, status, companyId, location, languages, educationLevel, employmentTypes, nature, minSalary, maxSalary, page, limit } = params;
+  const { search, status, companyId, location, languages, educationLevel, employmentTypes, nature, category, excludeId, minSalary, maxSalary, page, limit } = params;
   const skip = (page - 1) * limit;
 
   const whereClause: Prisma.JobWhereInput = {};
@@ -145,6 +149,14 @@ export const listJobsRecord = async (params: ListJobsParams): Promise<PaginatedJ
 
   if (companyId) {
     whereClause.companyId = companyId;
+  }
+
+  if (excludeId) {
+    whereClause.id = { not: excludeId };
+  }
+
+  if (category && category.trim() !== '') {
+    whereClause.category = { equals: category.trim() };
   }
 
   if (location && location.trim() !== '') {

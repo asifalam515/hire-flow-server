@@ -170,6 +170,8 @@ export const listJobs = async (
     educationLevel: query.educationLevel,
     employmentTypes: query.employmentTypes,
     nature: query.nature,
+    category: query.category,
+    excludeId: query.excludeId,
     minSalary: query.minSalary,
     maxSalary: query.maxSalary,
     page: query.page,
