@@ -7,6 +7,9 @@ import {
   loginController,
   meController,
   logoutController,
+  getSessionsController,
+  deleteSessionController,
+  deleteAllOtherSessionsController,
 } from './auth.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
@@ -30,6 +33,9 @@ const router = Router();
 // POST /auth/login             - Log in user with email & password and set refresh cookie
 // GET  /auth/me                - Get currently authenticated user & company profile
 // POST /auth/logout            - Log out current user and clear refresh token cookie
+// GET  /auth/sessions          - Get active sessions for the current user
+// DELETE /auth/sessions/:id    - Terminate a specific session
+// DELETE /auth/sessions        - Terminate all other sessions except the current one
 // ---------------------------------------------------------------------------
 
 router.post(
@@ -71,6 +77,24 @@ router.get(
 router.post(
   '/logout',
   catchAsync(logoutController),
+);
+
+router.get(
+  '/sessions',
+  requireAuth,
+  catchAsync(getSessionsController),
+);
+
+router.delete(
+  '/sessions/:id',
+  requireAuth,
+  catchAsync(deleteSessionController),
+);
+
+router.delete(
+  '/sessions',
+  requireAuth,
+  catchAsync(deleteAllOtherSessionsController),
 );
 
 export const authRoutes = router;

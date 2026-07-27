@@ -47,7 +47,31 @@ export const updateEmployerProfileSchema = z.object({
   }),
 });
 
+export const updateEmailSchema = z.object({
+  body: z.object({
+    newEmail: z.string().email('Invalid email format.'),
+  }),
+});
+
+export const updatePasswordSchema = z.object({
+  body: z.object({
+    oldPassword: z.string().min(6, 'Old password must be at least 6 characters.'),
+    newPassword: z.string().min(6, 'New password must be at least 6 characters.'),
+  }),
+});
+
+export const updateNotificationsSchema = z.object({
+  body: z.object({
+    notifyNewJob: z.boolean().optional(),
+    notifyAppResult: z.boolean().optional(),
+    notifyMessages: z.boolean().optional(),
+  }),
+});
+
 // Type inferences
 export type RegisterInput = z.infer<typeof registerSchema>['body'];
 export type LoginInput = z.infer<typeof loginSchema>['body'];
 export type UpdateEmployerProfileInput = z.infer<typeof updateEmployerProfileSchema>['body'];
+export type UpdateEmailInput = z.infer<typeof updateEmailSchema>['body'];
+export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>['body'];
+export type UpdateNotificationsInput = z.infer<typeof updateNotificationsSchema>['body'];

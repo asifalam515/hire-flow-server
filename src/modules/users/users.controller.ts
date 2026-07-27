@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser, updateUserAvatar, updateEmployerProfile } from './users.service';
+import { registerUser, loginUser, updateUserAvatar, updateEmployerProfile, updateEmail, updatePassword, updateNotifications, deleteUser } from './users.service';
 import { env } from '../../config/env';
 
 // ---------------------------------------------------------------------------
@@ -94,5 +94,72 @@ export const updateEmployerProfileController = async (req: Request, res: Respons
     data: {
       user: result,
     },
+  });
+};
+
+/**
+ * PATCH /me/email
+ */
+export const updateEmailController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  const result = await updateEmail(userId, req.body);
+  res.status(200).json({
+    success: true,
+    message: 'Email updated successfully',
+    data: { user: result },
+  });
+};
+
+/**
+ * PATCH /me/password
+ */
+export const updatePasswordController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  const result = await updatePassword(userId, req.body);
+  res.status(200).json({
+    success: true,
+    message: 'Password updated successfully',
+    data: { user: result },
+  });
+};
+
+/**
+ * PATCH /me/notifications
+ */
+export const updateNotificationsController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  const result = await updateNotifications(userId, req.body);
+  res.status(200).json({
+    success: true,
+    message: 'Notification preferences updated',
+    data: { user: result },
+  });
+};
+
+/**
+ * DELETE /me
+ */
+export const deleteUserController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  await deleteUser(userId);
+  res.status(200).json({
+    success: true,
+    message: 'Account deleted successfully',
   });
 };

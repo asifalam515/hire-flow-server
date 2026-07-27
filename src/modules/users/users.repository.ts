@@ -90,3 +90,12 @@ export const updateCompanyRecord = async (id: string, data: Partial<Company>): P
     data,
   });
 };
+
+/**
+ * Delete a user record.
+ */
+export const deleteUserRecord = async (id: string): Promise<User> => {
+  return prisma.user.delete({
+    where: { id },
+  });
+};

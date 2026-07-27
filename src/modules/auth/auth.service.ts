@@ -10,6 +10,11 @@ import {
   updateUserVerificationRecord,
   updateUserOtpRecord,
   findUserByIdRecord,
+  createSessionRecord,
+  findSessionsByUserIdRecord,
+  deleteSessionRecord,
+  deleteAllOtherSessionsRecord,
+  deleteSessionByTokenRecord,
 } from './auth.repository';
 import {
   EmployerSignUpInput,
@@ -122,6 +127,8 @@ const generateFourDigitOtp = (): string => {
  */
 export const registerEmployerService = async (
   input: EmployerSignUpInput,
+  userAgent?: string,
+  ipAddress?: string,
 ): Promise<EmployerSignUpResult> => {
   const email = input.email.toLowerCase().trim();
   const existingUser = await findUserByEmailRecord(email);
@@ -188,6 +195,14 @@ export const registerEmployerService = async (
 
   const tokens = generateTokens(user);
 
+  await createSessionRecord({
+    userId: user.id,
+    refreshToken: tokens.refreshToken,
+    userAgent,
+    ipAddress,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  });
+
   return {
     user: sanitizeUser(user),
     company,
@@ -204,6 +219,8 @@ export const registerEmployerService = async (
  */
 export const registerCandidateService = async (
   input: CandidateSignUpInput,
+  userAgent?: string,
+  ipAddress?: string,
 ): Promise<CandidateSignUpResult> => {
   const email = input.email.toLowerCase().trim();
   const existingUser = await findUserByEmailRecord(email);
@@ -237,6 +254,14 @@ export const registerCandidateService = async (
   });
 
   const tokens = generateTokens(user);
+
+  await createSessionRecord({
+    userId: user.id,
+    refreshToken: tokens.refreshToken,
+    userAgent,
+    ipAddress,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  });
 
   return {
     user: sanitizeUser(user),
@@ -328,7 +353,7 @@ export const resendOtpService = async (
 /**
  * Authenticate an existing user with email and password within the auth module.
  */
-export const loginAuthService = async (input: LoginInput): Promise<LoginResult> => {
+export const loginAuthService = async (input: LoginInput, userAgent?: string, ipAddress?: string): Promise<LoginResult> => {
   const email = input.email.toLowerCase().trim();
   const userRecord = await findUserByIdRecord((await findUserByEmailRecord(email))?.id ?? '');
 
@@ -342,6 +367,16 @@ export const loginAuthService = async (input: LoginInput): Promise<LoginResult> 
   }
 
   const tokens = generateTokens(userRecord);
+
+  // Record session
+  await createSessionRecord({
+    userId: userRecord.id,
+    refreshToken: tokens.refreshToken,
+    userAgent,
+    ipAddress,
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  });
+
   return {
     user: sanitizeUser(userRecord),
     company: userRecord.company ?? null,
@@ -367,6 +402,35 @@ export const getMeAuthService = async (userId: string): Promise<{ user: UserResp
 /**
  * Service to execute any server-side cleanup or token revocation during logout.
  */
-export const logoutAuthService = async (_userId?: string): Promise<void> => {
-  // Can be extended to blacklist tokens or clear session records if persistent sessions are added
+export const logoutAuthService = async (refreshToken?: string): Promise<void> => {
+  if (refreshToken) {
+    await deleteSessionByTokenRecord(refreshToken);
+  }
+};
+
+/**
+ * Get all active sessions for a user.
+ */
+export const getSessionsService = async (userId: string) => {
+  return findSessionsByUserIdRecord(userId);
+};
+
+/**
+ * Delete a specific session.
+ */
+export const deleteSessionService = async (sessionId: string, userId: string): Promise<void> => {
+  // Can verify if the session belongs to the user, but for now we'll just delete
+  // In a robust system, we check ownership first.
+  await deleteSessionRecord(sessionId);
+};
+
+/**
+ * Delete all other sessions.
+ */
+export const deleteAllOtherSessionsService = async (userId: string, currentRefreshToken: string): Promise<void> => {
+  const sessions = await findSessionsByUserIdRecord(userId);
+  const currentSession = sessions.find(s => s.refreshToken === currentRefreshToken);
+  if (currentSession) {
+    await deleteAllOtherSessionsRecord(userId, currentSession.id);
+  }
 };

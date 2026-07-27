@@ -10,7 +10,7 @@ import {
   updateUserRecord,
   updateCompanyRecord,
 } from './users.repository';
-import { RegisterInput, LoginInput, UpdateEmployerProfileInput } from './users.validation';
+import { RegisterInput, LoginInput, UpdateEmployerProfileInput, UpdateEmailInput, UpdatePasswordInput, UpdateNotificationsInput } from './users.validation';
 import { AppError } from '../../utils/AppError';
 import { env } from '../../config/env';
 
@@ -174,4 +174,64 @@ export const updateEmployerProfile = async (
   }
 
   return sanitizeUser(updatedUser);
+};
+
+/**
+ * Update user email
+ */
+export const updateEmail = async (userId: string, input: UpdateEmailInput): Promise<UserResponse> => {
+  const email = input.newEmail.toLowerCase().trim();
+  const existingUser = await findUserByEmailRecord(email);
+
+  if (existingUser && existingUser.id !== userId) {
+    throw new AppError('Email is already in use by another account.', 409);
+  }
+
+  const updatedUser = await updateUserRecord(userId, { email });
+  return sanitizeUser(updatedUser);
+};
+
+/**
+ * Update user password
+ */
+export const updatePassword = async (userId: string, input: UpdatePasswordInput): Promise<UserResponse> => {
+  const user = await findUserByIdRecord(userId);
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  const isPasswordValid = await bcrypt.compare(input.oldPassword, user.passwordHash);
+  if (!isPasswordValid) {
+    throw new AppError('Incorrect old password.', 401);
+  }
+
+  const passwordHash = await bcrypt.hash(input.newPassword, 12);
+  const updatedUser = await updateUserRecord(userId, { passwordHash });
+  
+  return sanitizeUser(updatedUser);
+};
+
+/**
+ * Update user notification preferences
+ */
+export const updateNotifications = async (userId: string, input: UpdateNotificationsInput): Promise<UserResponse> => {
+  const updatedUser = await updateUserRecord(userId, {
+    ...(input.notifyNewJob !== undefined && { notifyNewJob: input.notifyNewJob }),
+    ...(input.notifyAppResult !== undefined && { notifyAppResult: input.notifyAppResult }),
+    ...(input.notifyMessages !== undefined && { notifyMessages: input.notifyMessages }),
+  });
+  
+  return sanitizeUser(updatedUser);
+};
+
+/**
+ * Delete user account
+ */
+export const deleteUser = async (userId: string): Promise<void> => {
+  const user = await findUserByIdRecord(userId);
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+  
+  await import('./users.repository').then(repo => repo.deleteUserRecord(userId));
 };

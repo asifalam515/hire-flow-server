@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { registerController, loginController, updateAvatarController, updateEmployerProfileController } from './users.controller';
+import { registerController, loginController, updateAvatarController, updateEmployerProfileController, updateEmailController, updatePasswordController, updateNotificationsController, deleteUserController } from './users.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
-import { registerSchema, loginSchema, updateEmployerProfileSchema } from './users.validation';
+import { registerSchema, loginSchema, updateEmployerProfileSchema, updateEmailSchema, updatePasswordSchema, updateNotificationsSchema } from './users.validation';
 import { catchAsync } from '../../utils/catchAsync';
 
 const router = Router();
@@ -37,6 +37,33 @@ router.patch(
   requireAuth,
   validateRequest(updateEmployerProfileSchema),
   catchAsync(updateEmployerProfileController),
+);
+
+router.patch(
+  '/me/email',
+  requireAuth,
+  validateRequest(updateEmailSchema),
+  catchAsync(updateEmailController),
+);
+
+router.patch(
+  '/me/password',
+  requireAuth,
+  validateRequest(updatePasswordSchema),
+  catchAsync(updatePasswordController),
+);
+
+router.patch(
+  '/me/notifications',
+  requireAuth,
+  validateRequest(updateNotificationsSchema),
+  catchAsync(updateNotificationsController),
+);
+
+router.delete(
+  '/me',
+  requireAuth,
+  catchAsync(deleteUserController),
 );
 
 export const userRoutes = router;

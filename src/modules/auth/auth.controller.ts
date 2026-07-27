@@ -7,6 +7,9 @@ import {
   loginAuthService,
   getMeAuthService,
   logoutAuthService,
+  getSessionsService,
+  deleteSessionService,
+  deleteAllOtherSessionsService,
 } from './auth.service';
 import { env } from '../../config/env';
 
@@ -34,7 +37,10 @@ export const employerRegisterController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const result = await registerEmployerService(req.body);
+  const userAgent = req.headers['user-agent'] || 'Unknown Device';
+  const ipAddress = req.ip || req.connection.remoteAddress || 'Unknown IP';
+
+  const result = await registerEmployerService(req.body, userAgent, ipAddress);
 
   setRefreshTokenCookie(res, result.refreshToken);
 
@@ -58,7 +64,10 @@ export const candidateRegisterController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const result = await registerCandidateService(req.body);
+  const userAgent = req.headers['user-agent'] || 'Unknown Device';
+  const ipAddress = req.ip || req.connection.remoteAddress || 'Unknown IP';
+
+  const result = await registerCandidateService(req.body, userAgent, ipAddress);
 
   setRefreshTokenCookie(res, result.refreshToken);
 
@@ -117,7 +126,10 @@ export const loginController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const result = await loginAuthService(req.body);
+  const userAgent = req.headers['user-agent'] || 'Unknown Device';
+  const ipAddress = req.ip || req.connection.remoteAddress || 'Unknown IP';
+  
+  const result = await loginAuthService(req.body, userAgent, ipAddress);
 
   setRefreshTokenCookie(res, result.refreshToken);
 
@@ -167,8 +179,8 @@ export const logoutController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const userId = (req as any).user?.id;
-  await logoutAuthService(userId);
+  const refreshToken = req.cookies?.refreshToken;
+  await logoutAuthService(refreshToken);
 
   // Clear the HttpOnly refreshToken cookie exactly matching cookie options set during login/register
   res.clearCookie('refreshToken', {
@@ -181,5 +193,79 @@ export const logoutController = async (
     success: true,
     message: 'Logged out successfully.',
     data: null,
+  });
+};
+
+/**
+ * GET /auth/sessions
+ */
+export const getSessionsController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const userId = (req as any).user?.id;
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized access.' });
+    return;
+  }
+
+  const sessions = await getSessionsService(userId);
+  
+  // Identify the current session
+  const currentRefreshToken = req.cookies?.refreshToken;
+  const sessionsWithCurrent = sessions.map(s => ({
+    ...s,
+    isCurrent: s.refreshToken === currentRefreshToken,
+  }));
+
+  res.status(200).json({
+    success: true,
+    data: sessionsWithCurrent.map(({ refreshToken, ...rest }) => rest), // don't expose refresh token directly to client
+  });
+};
+
+/**
+ * DELETE /auth/sessions/:id
+ */
+export const deleteSessionController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const userId = (req as any).user?.id;
+  const { id } = req.params;
+  
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized access.' });
+    return;
+  }
+
+  await deleteSessionService(id, userId);
+
+  res.status(200).json({
+    success: true,
+    message: 'Session terminated successfully.',
+  });
+};
+
+/**
+ * DELETE /auth/sessions
+ */
+export const deleteAllOtherSessionsController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const userId = (req as any).user?.id;
+  const currentRefreshToken = req.cookies?.refreshToken;
+  
+  if (!userId || !currentRefreshToken) {
+    res.status(401).json({ success: false, message: 'Unauthorized access.' });
+    return;
+  }
+
+  await deleteAllOtherSessionsService(userId, currentRefreshToken);
+
+  res.status(200).json({
+    success: true,
+    message: 'All other sessions terminated successfully.',
   });
 };

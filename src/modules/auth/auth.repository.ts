@@ -160,3 +160,52 @@ export const findUserByIdRecord = async (id: string): Promise<(User & { company?
     },
   });
 };
+
+/**
+ * Create a new session.
+ */
+export const createSessionRecord = async (data: { userId: string, refreshToken: string, userAgent?: string, ipAddress?: string, expiresAt: Date }) => {
+  return prisma.session.create({
+    data,
+  });
+};
+
+/**
+ * Find all sessions for a user.
+ */
+export const findSessionsByUserIdRecord = async (userId: string) => {
+  return prisma.session.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+/**
+ * Delete a specific session.
+ */
+export const deleteSessionRecord = async (sessionId: string) => {
+  return prisma.session.delete({
+    where: { id: sessionId },
+  });
+};
+
+/**
+ * Delete a session by refresh token.
+ */
+export const deleteSessionByTokenRecord = async (refreshToken: string) => {
+  return prisma.session.delete({
+    where: { refreshToken },
+  });
+};
+
+/**
+ * Delete all sessions for a user except the current one.
+ */
+export const deleteAllOtherSessionsRecord = async (userId: string, currentSessionId: string) => {
+  return prisma.session.deleteMany({
+    where: { 
+      userId,
+      id: { not: currentSessionId }
+    },
+  });
+};
