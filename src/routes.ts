@@ -6,6 +6,7 @@ import { applicationRoutes } from './modules/applications/application.routes';
 import { authRoutes } from './modules/auth/auth.routes';
 import { uploadRouter } from './modules/upload/upload.routes';
 import { candidateRoutes } from './modules/candidates/candidates.routes';
+import { companiesRoutes } from './modules/companies/companies.routes';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/jobs', jobsRoutes);
 router.use('/applications', applicationRoutes);
 router.use('/upload', uploadRouter);
 router.use('/candidates', candidateRoutes);
+router.use('/companies', companiesRoutes);
 
 export const apiRouter = router;
