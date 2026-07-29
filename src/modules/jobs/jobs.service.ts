@@ -14,6 +14,8 @@ import {
 import { CreateJobInput, UpdateJobInput, ListJobsQuery } from './jobs.validation';
 import { AppError } from '../../utils/AppError';
 import { getCandidateProfileByUserId } from '../candidates/candidates.repository';
+import { prisma } from '../../config/prisma';
+import { triggerNewJobNotification } from '../notifications/notifications.service';
 
 export interface UserContext {
   id: string;
@@ -81,6 +83,24 @@ export const createJob = async (user: UserContext, input: CreateJobInput): Promi
     responsibilities: input.responsibilities,
     requirements: input.requirements,
   });
+
+  // Trigger New Job Notification to all candidates following the company
+  const company = await prisma.company.findUnique({ where: { id: targetCompanyId } });
+  if (company) {
+    const followers = await prisma.followedCompany.findMany({
+      where: { companyId: targetCompanyId },
+      select: { userId: true }
+    });
+    if (followers.length > 0) {
+      const userIds = followers.map(f => f.userId);
+      // Fire and forget
+      triggerNewJobNotification(userIds, company.name, job.title, `/jobs/${job.id}`).catch(err => {
+        console.error('Failed to trigger job notifications:', err);
+      });
+    }
+  }
+
+  return job;
 };
 
 /**

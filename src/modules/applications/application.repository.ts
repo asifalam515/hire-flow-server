@@ -90,10 +90,17 @@ export const findApplicationByIdWithJob = async (applicationId: string) => {
   return prisma.application.findUnique({
     where: { id: applicationId },
     include: {
+      candidate: {
+        select: { userId: true }
+      },
       job: {
         select: {
           id: true,
           companyId: true,
+          title: true,
+          company: {
+            select: { name: true }
+          }
         },
       },
     },

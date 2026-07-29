@@ -8,6 +8,7 @@ import {
 } from './application.repository';
 import { ApplyToJobInput, UpdateApplicationStatusInput } from './application.validation';
 import { AppError } from '../../utils/AppError';
+import { triggerApplicationUpdateNotification } from '../notifications/notifications.service';
 import { prisma } from '../../config/prisma';
 import { JwtPayload } from '../../middlewares/auth.middleware';
 
@@ -119,5 +120,20 @@ export const moveCandidateStage = async (
     throw new AppError('Access denied. Only recruiters and admins can update application stages.', 403);
   }
 
-  return updateApplicationStatus(applicationId, input.status);
+  const updatedApplication = await updateApplicationStatus(applicationId, input.status);
+
+  // Trigger Notification
+  if (application.candidate?.userId) {
+    triggerApplicationUpdateNotification(
+      application.candidate.userId,
+      application.job.company.name,
+      application.job.title,
+      input.status,
+      `/candidates/applications`
+    ).catch(err => {
+      console.error('Failed to trigger application update notification', err);
+    });
+  }
+
+  return updatedApplication;
 };

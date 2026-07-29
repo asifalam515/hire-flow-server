@@ -43,6 +43,7 @@ model User {
   notifyNewJob      Boolean           @default(true)
   candidateProfile  CandidateProfile?
   followedCompanies FollowedCompany[]
+  notifications     Notification[]
   savedJobs         SavedJob[]
   sessions          Session[]
   company           Company?          @relation(fields: [companyId], references: [id])
@@ -209,6 +210,28 @@ model FollowedCompany {
   @@index([userId])
   @@index([companyId])
   @@map("followed_companies")
+}
+
+enum NotificationType {
+  NEW_JOB
+  APPLICATION_UPDATE
+  MESSAGE
+  SYSTEM
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  content   String
+  isRead    Boolean          @default(false)
+  actionUrl String?
+  createdAt DateTime         @default(now())
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("notifications")
 }
 
 model Session {
