@@ -225,6 +225,7 @@ export const listJobsRecord = async (params: ListJobsParams): Promise<PaginatedJ
             id: true,
             name: true,
             slug: true,
+            logoUrl: true,
           },
         },
         _count: {
@@ -308,6 +309,7 @@ export const listSavedJobsRecord = async (userId: string) => {
               id: true,
               name: true,
               slug: true,
+              logoUrl: true,
             },
           },
         },

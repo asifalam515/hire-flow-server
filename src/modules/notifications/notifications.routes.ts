@@ -5,7 +5,7 @@ import {
   getUnreadCountController
 } from './notifications.controller';
 import { catchAsync } from '../../utils/catchAsync';
-import { requireAuth } from '../auth/auth.middleware';
+import { requireAuth } from '../../middlewares/auth.middleware';
 
 const router = Router();
 

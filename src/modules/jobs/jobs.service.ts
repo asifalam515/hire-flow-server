@@ -58,7 +58,7 @@ export const createJob = async (user: UserContext, input: CreateJobInput): Promi
     throw new AppError('Unable to resolve company ID for this job posting.', 400);
   }
 
-  return createJobRecord({
+  const job = await createJobRecord({
     title: input.title.trim(),
     description: input.description.trim(),
     status: input.status || JobStatus.PUBLISHED,

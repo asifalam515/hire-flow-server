@@ -24,7 +24,7 @@ export const getUnreadCountController = async (req: Request, res: Response) => {
 
 export const markAsReadController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { id } = req.params;
+  const id = req.params.id as string;
   
   const notification = await service.markAsRead(id, userId);
   
