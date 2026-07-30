@@ -9,44 +9,48 @@ datasource db {
 }
 
 model Company {
-  id          String            @id @default(cuid())
-  name        String
-  slug        String            @unique
-  field       String?
-  description String?
-  logoUrl     String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  followers   FollowedCompany[]
-  jobs        Job[]
-  users       User[]
+  id            String            @id @default(cuid())
+  name          String
+  slug          String            @unique
+  field         String?
+  description   String?
+  logoUrl       String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  followers     FollowedCompany[]
+  jobs          Job[]
+  users         User[]
+  conversations Conversation[]
 
   @@map("companies")
 }
 
 model User {
-  id                String            @id @default(cuid())
-  email             String            @unique
-  passwordHash      String
-  firstName         String?
-  lastName          String?
-  role              Role              @default(CANDIDATE)
-  isEmailVerified   Boolean           @default(false)
-  otpCode           String?
-  otpExpiresAt      DateTime?
-  avatarUrl         String?
-  companyId         String?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  notifyAppResult   Boolean           @default(true)
-  notifyMessages    Boolean           @default(true)
-  notifyNewJob      Boolean           @default(true)
-  candidateProfile  CandidateProfile?
-  followedCompanies FollowedCompany[]
-  notifications     Notification[]
-  savedJobs         SavedJob[]
-  sessions          Session[]
-  company           Company?          @relation(fields: [companyId], references: [id])
+  id                     String            @id @default(cuid())
+  email                  String            @unique
+  passwordHash           String
+  firstName              String?
+  lastName               String?
+  role                   Role              @default(CANDIDATE)
+  isEmailVerified        Boolean           @default(false)
+  otpCode                String?
+  otpExpiresAt           DateTime?
+  avatarUrl              String?
+  companyId              String?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  notifyAppResult        Boolean           @default(true)
+  notifyMessages         Boolean           @default(true)
+  notifyNewJob           Boolean           @default(true)
+  candidateProfile       CandidateProfile?
+  followedCompanies      FollowedCompany[]
+  notifications          Notification[]
+  savedJobs              SavedJob[]
+  sessions               Session[]
+  candidateConversations Conversation[]    @relation("CandidateConversations")
+  recruiterConversations Conversation[]    @relation("RecruiterConversations")
+  sentMessages           Message[]         @relation("SentMessages")
+  company                Company?          @relation(fields: [companyId], references: [id])
 
   @@index([companyId])
   @@map("users")
@@ -275,4 +279,53 @@ enum InterviewStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  AUDIO
+}
+
+model Conversation {
+  id            String   @id @default(cuid())
+  candidateId   String
+  recruiterId   String
+  companyId     String?
+  lastMessageAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  candidate User      @relation("CandidateConversations", fields: [candidateId], references: [id], onDelete: Cascade)
+  recruiter User      @relation("RecruiterConversations", fields: [recruiterId], references: [id], onDelete: Cascade)
+  company   Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@unique([candidateId, recruiterId])
+  @@index([candidateId])
+  @@index([recruiterId])
+  @@index([companyId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  senderId       String
+  type           MessageType @default(TEXT)
+  content        String?
+  fileUrl        String?
+  fileName       String?
+  fileSize       String?
+  audioDuration  String?
+  isRead         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
 }
