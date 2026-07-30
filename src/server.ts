@@ -3,6 +3,7 @@ import { env } from './config/env';
 import { app } from './app';
 import { prisma } from './config/prisma';
 import { redis } from './config/redis';
+import { initializeSocket } from './websockets/socket';
 
 // ---------------------------------------------------------------------------
 // HTTP Server
@@ -84,6 +85,9 @@ async function bootstrap(): Promise<void> {
 
     // Connect Redis.
     await redis.connect();
+
+    // Initialize Socket.IO
+    initializeSocket(server);
 
     // Start listening.
     server.listen(env.PORT, () => {

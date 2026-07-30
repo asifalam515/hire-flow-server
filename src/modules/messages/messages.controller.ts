@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as messageService from './messages.service';
 import { AppError } from '../../utils/AppError';
+import { io } from '../../websockets/socket';
 
 export const getConversations = async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -53,6 +54,9 @@ export const sendMessage = async (req: Request, res: Response) => {
     conversationId: id,
     ...req.body
   });
+
+  // Emit the message in real-time to everyone in the room
+  io.to(id).emit('receive_message', message);
 
   res.status(201).json({ success: true, data: message });
 };
