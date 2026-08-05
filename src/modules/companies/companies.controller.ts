@@ -3,10 +3,16 @@ import * as companiesService from './companies.service';
 
 export const listCompaniesController = async (req: Request, res: Response) => {
   const { search, limit } = req.query;
-  const companies = await companiesService.listCompanies({
-    search: search as string,
-    limit: limit ? parseInt(limit as string) : undefined
-  });
+  
+  const filters: { search?: string; limit?: number } = {};
+  if (typeof search === 'string') {
+    filters.search = search;
+  }
+  if (typeof limit === 'string') {
+    filters.limit = parseInt(limit, 10);
+  }
+
+  const companies = await companiesService.listCompanies(filters);
 
   res.status(200).json({
     success: true,
@@ -16,6 +22,12 @@ export const listCompaniesController = async (req: Request, res: Response) => {
 
 export const getCompanyBySlugController = async (req: Request, res: Response) => {
   const { slug } = req.params;
+  
+  if (!slug || typeof slug !== 'string') {
+    res.status(400).json({ success: false, message: 'Valid slug is required' });
+    return;
+  }
+
   const company = await companiesService.getCompanyBySlug(slug);
 
   if (!company) {
