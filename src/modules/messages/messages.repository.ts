@@ -1,8 +1,9 @@
 import { prisma } from '../../config/prisma';
 import { MessageType } from '@prisma/client';
+import { encryptMessage, decryptMessage } from '../../utils/crypto';
 
 export const getConversationsByUserId = async (userId: string) => {
-  return prisma.conversation.findMany({
+  const conversations = await prisma.conversation.findMany({
     where: {
       OR: [
         { candidateId: userId },
@@ -56,12 +57,20 @@ export const getConversationsByUserId = async (userId: string) => {
       lastMessageAt: 'desc'
     }
   });
+
+  return conversations.map(conv => ({
+    ...conv,
+    messages: conv.messages.map(msg => ({
+      ...msg,
+      content: decryptMessage(msg.content)
+    }))
+  }));
 };
 
 export const getMessagesByConversationId = async (conversationId: string) => {
   // Optionally, we could verify that the user is part of the conversation here, 
   // but we can also do it in the service layer.
-  return prisma.message.findMany({
+  const messages = await prisma.message.findMany({
     where: {
       conversationId
     },
@@ -69,6 +78,11 @@ export const getMessagesByConversationId = async (conversationId: string) => {
       createdAt: 'asc'
     }
   });
+
+  return messages.map(msg => ({
+    ...msg,
+    content: decryptMessage(msg.content)
+  }));
 };
 
 export const getConversationById = async (conversationId: string) => {
@@ -109,9 +123,13 @@ export const createMessage = async (data: {
   audioDuration?: string;
 }) => {
   return prisma.$transaction(async (tx) => {
+    // Encrypt the content before saving to DB
+    const encryptedContent = encryptMessage(data.content);
+
     const message = await tx.message.create({
       data: {
         ...data,
+        content: encryptedContent,
         type: data.type || MessageType.TEXT
       }
     });
@@ -121,7 +139,11 @@ export const createMessage = async (data: {
       data: { lastMessageAt: message.createdAt }
     });
 
-    return message;
+    // Decrypt it before returning so the real-time socket emit gets the plaintext
+    return {
+      ...message,
+      content: decryptMessage(message.content)
+    };
   });
 };
 
