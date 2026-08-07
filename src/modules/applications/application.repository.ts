@@ -65,8 +65,13 @@ export const getApplicationsByJobId = async (jobId: string, companyId: string): 
             select: {
               id: true,
               email: true,
+              firstName: true,
+              lastName: true,
+              avatarUrl: true,
             },
           },
+          educations: true,
+          workExperiences: true,
         },
       },
       job: {
