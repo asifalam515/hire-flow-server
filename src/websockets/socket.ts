@@ -33,6 +33,11 @@ export const initializeSocket = (server: HttpServer) => {
   io.on('connection', (socket: Socket) => {
     console.log(`🔌  Client connected: ${socket.id} (User: ${socket.data.user?.id})`);
 
+    // Join personal user room for global notifications
+    if (socket.data.user?.id) {
+      socket.join(socket.data.user.id);
+    }
+
     // Join a specific conversation room
     socket.on('join_room', (conversationId: string) => {
       socket.join(conversationId);
