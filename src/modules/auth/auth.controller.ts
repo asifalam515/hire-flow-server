@@ -78,6 +78,7 @@ export const candidateRegisterController = async (
       user: result.user,
       accessToken: result.accessToken,
       verification: result.verification,
+      candidateProfile: (result as any).candidateProfile ?? null,
     },
   });
 };
@@ -139,6 +140,7 @@ export const loginController = async (
     data: {
       user: result.user,
       company: result.company,
+      candidateProfile: result.candidateProfile,
       accessToken: result.accessToken,
     },
   });

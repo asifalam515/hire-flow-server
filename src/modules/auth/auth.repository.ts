@@ -157,6 +157,7 @@ export const findUserByIdRecord = async (id: string): Promise<(User & { company?
     where: { id },
     include: {
       company: true,
+      candidateProfile: true,
     },
   });
 };

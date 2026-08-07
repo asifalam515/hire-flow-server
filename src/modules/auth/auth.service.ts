@@ -71,6 +71,7 @@ export interface ResendOtpResult {
 export interface LoginResult {
   user: UserResponse;
   company?: Company | null | undefined;
+  candidateProfile?: any;
   accessToken: string;
   refreshToken: string;
 }
@@ -380,6 +381,7 @@ export const loginAuthService = async (input: LoginInput, userAgent?: string, ip
   return {
     user: sanitizeUser(userRecord),
     company: userRecord.company ?? null,
+    candidateProfile: (userRecord as any).candidateProfile ?? null,
     ...tokens,
   };
 };
@@ -387,7 +389,7 @@ export const loginAuthService = async (input: LoginInput, userAgent?: string, ip
 /**
  * Get current authenticated user profile and company data.
  */
-export const getMeAuthService = async (userId: string): Promise<{ user: UserResponse; company?: Company | null | undefined }> => {
+export const getMeAuthService = async (userId: string): Promise<{ user: UserResponse; company?: Company | null | undefined; candidateProfile?: any }> => {
   const userRecord = await findUserByIdRecord(userId);
   if (!userRecord) {
     throw new AppError('User session expired or user not found.', 404);
@@ -396,6 +398,7 @@ export const getMeAuthService = async (userId: string): Promise<{ user: UserResp
   return {
     user: sanitizeUser(userRecord),
     company: userRecord.company ?? null,
+    candidateProfile: (userRecord as any).candidateProfile ?? null,
   };
 };
 
