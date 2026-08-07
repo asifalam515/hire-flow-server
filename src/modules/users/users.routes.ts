@@ -66,4 +66,22 @@ router.delete(
   catchAsync(deleteUserController),
 );
 
+router.post(
+  '/me/fcm-token',
+  requireAuth,
+  catchAsync(async (req, res, next) => {
+    const { addFcmTokenController } = await import('./users.controller');
+    return addFcmTokenController(req, res);
+  }),
+);
+
+router.delete(
+  '/me/fcm-token',
+  requireAuth,
+  catchAsync(async (req, res, next) => {
+    const { removeFcmTokenController } = await import('./users.controller');
+    return removeFcmTokenController(req, res);
+  }),
+);
+
 export const userRoutes = router;

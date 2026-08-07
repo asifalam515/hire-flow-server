@@ -153,13 +153,60 @@ export const updateNotificationsController = async (req: Request, res: Response)
  */
 export const deleteUserController = async (req: Request, res: Response): Promise<void> => {
   const userId = req.user?.id;
+
   if (!userId) {
     res.status(401).json({ success: false, message: 'Unauthorized' });
     return;
   }
-  await deleteUser(userId);
+
+  await import('./users.service').then(s => s.deleteUser(userId));
+
   res.status(200).json({
     success: true,
-    message: 'Account deleted successfully',
+    message: 'User deleted successfully',
+  });
+};
+
+export const addFcmTokenController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  const { token } = req.body;
+
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  if (!token) {
+    res.status(400).json({ success: false, message: 'FCM token is required' });
+    return;
+  }
+
+  const result = await import('./users.service').then(s => s.addFcmToken(userId, token));
+
+  res.status(200).json({
+    success: true,
+    message: 'FCM token added successfully',
+    data: result,
+  });
+};
+
+export const removeFcmTokenController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  const { token } = req.body;
+
+  if (!userId) {
+    res.status(401).json({ success: false, message: 'Unauthorized' });
+    return;
+  }
+  if (!token) {
+    res.status(400).json({ success: false, message: 'FCM token is required' });
+    return;
+  }
+
+  const result = await import('./users.service').then(s => s.removeFcmToken(userId, token));
+
+  res.status(200).json({
+    success: true,
+    message: 'FCM token removed successfully',
+    data: result,
   });
 };

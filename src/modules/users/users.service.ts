@@ -145,6 +145,24 @@ export const updateUserAvatar = async (userId: string, avatarUrl: string): Promi
   return sanitizeUser(user);
 };
 
+export const addFcmToken = async (userId: string, token: string): Promise<{ success: boolean }> => {
+  try {
+    await import('./users.repository').then(repo => repo.addFcmTokenRecord(userId, token));
+    return { success: true };
+  } catch (error) {
+    throw new AppError('Failed to add FCM token', 500);
+  }
+};
+
+export const removeFcmToken = async (userId: string, token: string): Promise<{ success: boolean }> => {
+  try {
+    await import('./users.repository').then(repo => repo.removeFcmTokenRecord(userId, token));
+    return { success: true };
+  } catch (error) {
+    throw new AppError('Failed to remove FCM token', 500);
+  }
+};
+
 /**
  * Update employer profile (user details + company details)
  */

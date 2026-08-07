@@ -100,3 +100,34 @@ export const deleteUserRecord = async (id: string): Promise<User> => {
     where: { id },
   });
 };
+
+/**
+ * Add FCM token to user
+ */
+export const addFcmTokenRecord = async (userId: string, token: string): Promise<User> => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new Error('User not found');
+  
+  const tokens = new Set(user.fcmTokens || []);
+  tokens.add(token);
+  
+  return prisma.user.update({
+    where: { id: userId },
+    data: { fcmTokens: Array.from(tokens) }
+  });
+};
+
+/**
+ * Remove FCM token from user
+ */
+export const removeFcmTokenRecord = async (userId: string, token: string): Promise<User> => {
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new Error('User not found');
+  
+  const tokens = (user.fcmTokens || []).filter(t => t !== token);
+  
+  return prisma.user.update({
+    where: { id: userId },
+    data: { fcmTokens: tokens }
+  });
+};
