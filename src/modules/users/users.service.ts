@@ -173,7 +173,10 @@ export const updateEmployerProfile = async (
     });
   }
 
-  return sanitizeUser(updatedUser);
+  // 3. Fetch the full updated user with company to return
+  const fullUser = await import('./users.repository').then(repo => repo.findUserByIdRecord(userId));
+
+  return sanitizeUser(fullUser!);
 };
 
 /**

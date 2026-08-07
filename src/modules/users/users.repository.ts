@@ -24,9 +24,10 @@ export const findUserByEmailRecord = async (email: string): Promise<User | null>
 /**
  * Find a user by ID.
  */
-export const findUserByIdRecord = async (id: string): Promise<User | null> => {
+export const findUserByIdRecord = async (id: string): Promise<(User & { company?: Company | null }) | null> => {
   return prisma.user.findUnique({
     where: { id },
+    include: { company: true }
   });
 };
 
