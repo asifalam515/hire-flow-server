@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerController, loginController, updateAvatarController, updateEmployerProfileController, updateEmailController, updatePasswordController, updateNotificationsController, deleteUserController } from './users.controller';
+import { registerController, loginController, updateAvatarController, updateEmployerProfileController, updateEmailController, updatePasswordController, updateNotificationsController, deleteUserController, addFcmTokenController, removeFcmTokenController } from './users.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
 import { registerSchema, loginSchema, updateEmployerProfileSchema, updateEmailSchema, updatePasswordSchema, updateNotificationsSchema } from './users.validation';
@@ -69,19 +69,13 @@ router.delete(
 router.post(
   '/me/fcm-token',
   requireAuth,
-  catchAsync(async (req, res, next) => {
-    const { addFcmTokenController } = await import('./users.controller');
-    return addFcmTokenController(req, res);
-  }),
+  catchAsync(addFcmTokenController),
 );
 
 router.delete(
   '/me/fcm-token',
   requireAuth,
-  catchAsync(async (req, res, next) => {
-    const { removeFcmTokenController } = await import('./users.controller');
-    return removeFcmTokenController(req, res);
-  }),
+  catchAsync(removeFcmTokenController),
 );
 
 export const userRoutes = router;
