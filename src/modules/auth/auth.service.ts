@@ -199,8 +199,8 @@ export const registerEmployerService = async (
   await createSessionRecord({
     userId: user.id,
     refreshToken: tokens.refreshToken,
-    userAgent,
-    ipAddress,
+    ...(userAgent !== undefined && { userAgent }),
+    ...(ipAddress !== undefined && { ipAddress }),
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
@@ -259,8 +259,8 @@ export const registerCandidateService = async (
   await createSessionRecord({
     userId: user.id,
     refreshToken: tokens.refreshToken,
-    userAgent,
-    ipAddress,
+    ...(userAgent !== undefined && { userAgent }),
+    ...(ipAddress !== undefined && { ipAddress }),
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
@@ -373,8 +373,8 @@ export const loginAuthService = async (input: LoginInput, userAgent?: string, ip
   await createSessionRecord({
     userId: userRecord.id,
     refreshToken: tokens.refreshToken,
-    userAgent,
-    ipAddress,
+    ...(userAgent !== undefined && { userAgent }),
+    ...(ipAddress !== undefined && { ipAddress }),
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 

@@ -241,6 +241,11 @@ export const deleteSessionController = async (
     return;
   }
 
+  if (!id || typeof id !== 'string') {
+    res.status(400).json({ success: false, message: 'Invalid session ID provided.' });
+    return;
+  }
+
   await deleteSessionService(id, userId);
 
   res.status(200).json({
