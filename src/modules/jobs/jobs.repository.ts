@@ -3,19 +3,19 @@ import { prisma } from '../../config/prisma';
 
 export interface CreateJobDTO {
   title: string;
-  description: string;
+  description?: string | null | undefined;
   status: JobStatus;
   companyId: string;
   category: string;
   nature: string;
-  vacancies?: number | null;
+  vacancies?: number | null | undefined;
   employmentTypes: string[];
   locationCountry: string;
   locationCity: string;
-  exactAddress?: string | null;
+  exactAddress?: string | null | undefined;
   minSalary: number;
   maxSalary: number;
-  isSalaryNegotiable: boolean;
+  isSalaryNegotiable?: boolean | undefined;
   benefits: string[];
   educationLevel: string;
   yearsOfExperience: string;
@@ -23,8 +23,8 @@ export interface CreateJobDTO {
   candidateExperience: string[];
   languages: string[];
   softwareSkills: string[];
-  responsibilities: string;
-  requirements: string;
+  responsibilities?: string | null | undefined;
+  requirements?: string | null | undefined;
 }
 
 export interface ListJobsParams {
@@ -63,19 +63,19 @@ export const createJobRecord = async (data: CreateJobDTO): Promise<Job> => {
   return prisma.job.create({
     data: {
       title: data.title,
-      description: data.description,
+      description: data.description ?? null,
       status: data.status,
       companyId: data.companyId,
       category: data.category,
       nature: data.nature,
-      vacancies: data.vacancies,
+      vacancies: data.vacancies ?? null,
       employmentTypes: data.employmentTypes,
       locationCountry: data.locationCountry,
       locationCity: data.locationCity,
-      exactAddress: data.exactAddress,
+      exactAddress: data.exactAddress ?? null,
       minSalary: data.minSalary,
       maxSalary: data.maxSalary,
-      isSalaryNegotiable: data.isSalaryNegotiable,
+      isSalaryNegotiable: data.isSalaryNegotiable ?? false,
       benefits: data.benefits,
       educationLevel: data.educationLevel,
       yearsOfExperience: data.yearsOfExperience,
@@ -83,8 +83,8 @@ export const createJobRecord = async (data: CreateJobDTO): Promise<Job> => {
       candidateExperience: data.candidateExperience,
       languages: data.languages,
       softwareSkills: data.softwareSkills,
-      responsibilities: data.responsibilities,
-      requirements: data.requirements,
+      responsibilities: data.responsibilities ?? null,
+      requirements: data.requirements ?? null,
     },
   });
 };

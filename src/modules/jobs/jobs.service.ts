@@ -14,8 +14,9 @@ import {
 import { CreateJobInput, UpdateJobInput, ListJobsQuery } from './jobs.validation';
 import { AppError } from '../../utils/AppError';
 import { getCandidateProfileByUserId } from '../candidates/candidates.repository';
-import { prisma } from '../../config/prisma';
+import { findCompanyByIdRecord, findCompanyFollowerUserIdsRecord } from '../companies/companies.repository';
 import { triggerNewJobNotification } from '../notifications/notifications.service';
+import { evaluateAtsMatch } from '../candidates/atsScorer.service';
 
 export interface UserContext {
   id: string;
@@ -60,7 +61,7 @@ export const createJob = async (user: UserContext, input: CreateJobInput): Promi
 
   const job = await createJobRecord({
     title: input.title.trim(),
-    description: input.description.trim(),
+    description: input.description?.trim() ?? null,
     status: input.status || JobStatus.PUBLISHED,
     companyId: targetCompanyId,
     category: input.category,
@@ -72,7 +73,7 @@ export const createJob = async (user: UserContext, input: CreateJobInput): Promi
     exactAddress: input.exactAddress,
     minSalary: input.minSalary,
     maxSalary: input.maxSalary,
-    isSalaryNegotiable: input.isSalaryNegotiable,
+    isSalaryNegotiable: input.isSalaryNegotiable ?? false,
     benefits: input.benefits,
     educationLevel: input.educationLevel,
     yearsOfExperience: input.yearsOfExperience,
@@ -80,21 +81,17 @@ export const createJob = async (user: UserContext, input: CreateJobInput): Promi
     candidateExperience: input.candidateExperience,
     languages: input.languages,
     softwareSkills: input.softwareSkills,
-    responsibilities: input.responsibilities,
-    requirements: input.requirements,
+    responsibilities: input.responsibilities?.trim() ?? null,
+    requirements: input.requirements?.trim() ?? null,
   });
 
   // Trigger New Job Notification to all candidates following the company
-  const company = await prisma.company.findUnique({ where: { id: targetCompanyId } });
+  const company = await findCompanyByIdRecord(targetCompanyId);
   if (company) {
-    const followers = await prisma.followedCompany.findMany({
-      where: { companyId: targetCompanyId },
-      select: { userId: true }
-    });
-    if (followers.length > 0) {
-      const userIds = followers.map(f => f.userId);
+    const userIds = await findCompanyFollowerUserIdsRecord(targetCompanyId);
+    if (userIds.length > 0) {
       // Fire and forget
-      triggerNewJobNotification(userIds, company.name, job.title, `/jobs/${job.id}`).catch(err => {
+      triggerNewJobNotification(userIds, company.name, job.title, `/jobs/${job.id}`).catch((err) => {
         console.error('Failed to trigger job notifications:', err);
       });
     }
@@ -130,7 +127,7 @@ export const updateJob = async (user: UserContext, jobId: string, input: UpdateJ
 };
 
 /**
- * Delete an existing job posting with strict tenant ownership checks.
+ * Delete a job posting with strict tenant ownership checks.
  */
 export const deleteJob = async (user: UserContext, jobId: string): Promise<Job> => {
   const job = await findJobByIdRecord(jobId);
@@ -150,7 +147,7 @@ export const deleteJob = async (user: UserContext, jobId: string): Promise<Job> 
 };
 
 /**
- * Fetch a job by exact ID.
+ * Fetch a single job by its ID.
  */
 export const getJobById = async (jobId: string) => {
   const job = await findJobByIdRecord(jobId);
@@ -161,30 +158,26 @@ export const getJobById = async (jobId: string) => {
 };
 
 /**
- * List jobs across the marketplace, or strictly isolated by recruiter's company.
+ * List jobs for the public marketplace with multi-filter and full-text search.
  */
 export const listJobs = async (
   query: ListJobsQuery,
-  user?: UserContext,
-  options: { myCompanyOnly?: boolean } = {},
+  currentUser?: UserContext | undefined,
+  options?: { myCompanyOnly?: boolean },
 ): Promise<PaginatedJobsResult> => {
-  let targetCompanyId = query.companyId;
-  let targetStatus = query.status;
+  let statusFilter: JobStatus | undefined = JobStatus.PUBLISHED;
 
-  if (options.myCompanyOnly) {
-    if (!user || !user.companyId) {
-      throw new AppError('You must belong to a company to access company job dashboards.', 403);
-    }
-    targetCompanyId = user.companyId;
-  } else {
-    if (!targetStatus && (!user || (user.role === Role.RECRUITER && targetCompanyId !== user.companyId))) {
-      targetStatus = JobStatus.PUBLISHED;
-    }
+  if (currentUser?.role === Role.ADMIN) {
+    statusFilter = query.status;
+  } else if (currentUser?.role === Role.RECRUITER && (query.companyId === currentUser.companyId || options?.myCompanyOnly)) {
+    statusFilter = query.status;
   }
+
+  const targetCompanyId = options?.myCompanyOnly ? currentUser?.companyId || undefined : query.companyId;
 
   return listJobsRecord({
     search: query.search,
-    status: targetStatus,
+    status: statusFilter,
     companyId: targetCompanyId,
     location: query.location,
     languages: query.languages,
@@ -195,15 +188,18 @@ export const listJobs = async (
     excludeId: query.excludeId,
     minSalary: query.minSalary,
     maxSalary: query.maxSalary,
-    page: query.page,
-    limit: query.limit,
+    page: query.page ?? 1,
+    limit: query.limit ?? 20,
   });
 };
 
 /**
- * Toggle saving/unsaving a job for a candidate.
+ * Toggle saving a job for the authenticated candidate.
  */
-export const toggleSaveJob = async (userId: string, jobId: string): Promise<ToggleSaveResult> => {
+export const toggleSaveJob = async (
+  userId: string,
+  jobId: string,
+): Promise<ToggleSaveResult> => {
   const job = await findJobByIdRecord(jobId);
   if (!job) {
     throw new AppError('Job not found.', 404);
@@ -215,15 +211,15 @@ export const toggleSaveJob = async (userId: string, jobId: string): Promise<Togg
     await unsaveJobRecord(userId, jobId);
     return {
       saved: false,
-      message: 'Job removed from your saved jobs.',
-    };
-  } else {
-    await saveJobRecord(userId, jobId);
-    return {
-      saved: true,
-      message: 'Job successfully saved for later.',
+      message: 'Job removed from saved list.',
     };
   }
+
+  await saveJobRecord(userId, jobId);
+  return {
+    saved: true,
+    message: 'Job saved successfully.',
+  };
 };
 
 /**
@@ -234,7 +230,8 @@ export const listSavedJobs = async (userId: string) => {
 };
 
 /**
- * Calculate a heuristic match score (0-100) between a candidate and a job.
+ * Calculate the comprehensive ATS match score (0-100) and gap analysis between a candidate and a job.
+ * Evaluates semantic vector similarity, software skills overlap, and experience duration.
  */
 export const calculateJobMatch = async (userId: string, jobId: string) => {
   const job = await findJobByIdRecord(jobId);
@@ -244,99 +241,46 @@ export const calculateJobMatch = async (userId: string, jobId: string) => {
 
   const profile = await getCandidateProfileByUserId(userId);
   if (!profile) {
-    return { matchScore: 0, profileMissing: true };
+    return {
+      matchScore: 0,
+      profileMissing: true,
+      breakdown: {
+        overallScore: 0,
+        semanticScore: 0,
+        skillsScore: 0,
+        experienceScore: 0,
+        matchedSkills: [],
+        missingSkills: job.softwareSkills || [],
+        recommendation: 'LOW_MATCH',
+        summary: 'Candidate profile not found. Please complete your profile to view your ATS score.',
+      },
+    };
   }
 
-  let totalScore = 0;
-  const breakdown = {
-    skills: 0,
-    experience: 0,
-    location: 0,
-    education: 0,
-  };
-
-  // 1. Skills Match (40% weight)
-  const jobSkills = new Set([...(job.softwareSkills || []), ...(job.languages || [])].map(s => s.toLowerCase().trim()));
-  const candidateSkills = new Set([...(profile.skills || []), ...(profile.languages || [])].map(s => s.toLowerCase().trim()));
-  
-  if (jobSkills.size === 0) {
-    totalScore += 40; // Free points if job doesn't specify skills
-    breakdown.skills = 40;
-  } else {
-    let matchedSkills = 0;
-    for (const skill of jobSkills) {
-      if (candidateSkills.has(skill)) {
-        matchedSkills++;
-      }
+  const atsResult = await evaluateAtsMatch(
+    {
+      skills: profile.skills,
+      aboutMe: profile.aboutMe,
+      workExperiences: profile.workExperiences,
+      educations: profile.educations,
+    },
+    {
+      id: job.id,
+      title: job.title,
+      description: job.description,
+      category: job.category,
+      requirements: job.requirements,
+      responsibilities: job.responsibilities,
+      softwareSkills: job.softwareSkills,
+      candidateExperience: job.candidateExperience,
+      yearsOfExperience: job.yearsOfExperience,
+      educationLevel: job.educationLevel,
     }
-    const skillScore = (matchedSkills / jobSkills.size) * 40;
-    totalScore += skillScore;
-    breakdown.skills = Math.round(skillScore);
-  }
-
-  // 2. Experience Match (30% weight)
-  // Calculate total months of experience for candidate
-  let candidateMonthsExp = 0;
-  if (profile.workExperiences) {
-    for (const exp of profile.workExperiences) {
-      const start = new Date(exp.startDate);
-      const end = exp.endDate ? new Date(exp.endDate) : new Date();
-      candidateMonthsExp += (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 30);
-    }
-  }
-
-  let targetMonthsExp = 0;
-  if (job.yearsOfExperience) {
-    // Rough heuristic for extracting numbers from strings like "2-3 Years"
-    const numbers = job.yearsOfExperience.match(/\d+/g);
-    if (numbers && numbers.length > 0) {
-      targetMonthsExp = parseInt(numbers[0], 10) * 12; // take lower bound
-    }
-  }
-
-  if (targetMonthsExp === 0) {
-    totalScore += 30; // Free points if no experience needed
-    breakdown.experience = 30;
-  } else {
-    const expRatio = Math.min(candidateMonthsExp / targetMonthsExp, 1.0);
-    const expScore = expRatio * 30;
-    totalScore += expScore;
-    breakdown.experience = Math.round(expScore);
-  }
-
-  // 3. Location / Nature Match (15% weight)
-  if (job.nature?.toLowerCase() === 'remote' && profile.tendToRemote?.toLowerCase() === 'yes') {
-    totalScore += 15;
-    breakdown.location = 15;
-  } else if (job.locationCity && profile.city && job.locationCity.toLowerCase().includes(profile.city.toLowerCase())) {
-    totalScore += 15;
-    breakdown.location = 15;
-  }
-
-  // 4. Education Match (15% weight)
-  if (!job.educationLevel) {
-    totalScore += 15;
-    breakdown.education = 15;
-  } else {
-    let hasEduMatch = false;
-    if (profile.educations) {
-      const targetEdu = job.educationLevel.toLowerCase();
-      for (const edu of profile.educations) {
-        if (edu.degree && edu.degree.toLowerCase().includes(targetEdu)) {
-          hasEduMatch = true;
-          break;
-        }
-      }
-    }
-    if (hasEduMatch) {
-      totalScore += 15;
-      breakdown.education = 15;
-    }
-  }
+  );
 
   return {
-    matchScore: Math.round(totalScore),
+    matchScore: atsResult.overallScore,
     profileMissing: false,
-    breakdown,
+    breakdown: atsResult,
   };
 };

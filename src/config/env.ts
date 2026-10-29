@@ -21,6 +21,7 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: z.string().default('123456789012345'),
   CLOUDINARY_API_SECRET: z.string().default('dummy_secret_for_development'),
   MESSAGE_ENCRYPTION_KEY: z.string().min(32, 'MESSAGE_ENCRYPTION_KEY must be at least 32 characters').default('0123456789abcdef0123456789abcdef'),
+  GEMINI_API_KEY: z.string().optional(),
 });
 
 const _parsed = envSchema.safeParse(process.env);

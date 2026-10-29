@@ -84,6 +84,7 @@ model Job {
   softwareSkills      String[]
   responsibilities    String?
   requirements        String?
+  embedding           Unsupported("vector")?
   companyId           String
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
@@ -159,17 +160,19 @@ model Education {
 }
 
 model Application {
-  id          String            @id @default(uuid())
-  status      ApplicationStatus @default(APPLIED)
-  version     Int               @default(1)
-  jobId       String
-  candidateId String
-  appliedAt   DateTime          @default(now())
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  candidate   CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  job         Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  interviews  InterviewRoom[]
+  id             String            @id @default(uuid())
+  status         ApplicationStatus @default(APPLIED)
+  version        Int               @default(1)
+  jobId          String
+  candidateId    String
+  matchScore     Float?
+  matchBreakdown Json?
+  appliedAt      DateTime          @default(now())
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  candidate      CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  interviews     InterviewRoom[]
 
   @@unique([candidateId, jobId])
   @@index([jobId])

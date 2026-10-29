@@ -1,4 +1,4 @@
-import { Application, JobStatus, Role } from '@prisma/client';
+import { Application, JobStatus, Role, Prisma } from '@prisma/client';
 import {
   createApplicationRecord,
   checkExistingApplication,
@@ -9,8 +9,10 @@ import {
 import { ApplyToJobInput, UpdateApplicationStatusInput } from './application.validation';
 import { AppError } from '../../utils/AppError';
 import { triggerApplicationUpdateNotification } from '../notifications/notifications.service';
-import { prisma } from '../../config/prisma';
+import { findJobByIdRecord } from '../jobs/jobs.repository';
+import { getCandidateProfileByUserId, createOrUpdateCandidateProfile } from '../candidates/candidates.repository';
 import { JwtPayload } from '../../middlewares/auth.middleware';
+import { evaluateAtsMatch } from '../candidates/atsScorer.service';
 
 // ---------------------------------------------------------------------------
 // Application Service (Pure Arrow Functions)
@@ -18,7 +20,8 @@ import { JwtPayload } from '../../middlewares/auth.middleware';
 
 /**
  * Candidate applies for a job.
- * Resolves/creates CandidateProfile, checks if job is PUBLISHED, and prevents duplicates.
+ * Resolves/creates CandidateProfile, checks if job is PUBLISHED, prevents duplicates,
+ * and automatically computes & persists the ATS match score.
  */
 export const applyForJob = async (user: JwtPayload, input: ApplyToJobInput): Promise<Application> => {
   if (user.role !== Role.CANDIDATE && user.role !== Role.ADMIN) {
@@ -26,10 +29,7 @@ export const applyForJob = async (user: JwtPayload, input: ApplyToJobInput): Pro
   }
 
   // 1. Check if target job exists and is open for applications
-  const job = await prisma.job.findUnique({
-    where: { id: input.jobId },
-    select: { id: true, status: true, title: true },
-  });
+  const job = await findJobByIdRecord(input.jobId);
 
   if (!job) {
     throw new AppError('Job not found.', 404);
@@ -40,16 +40,18 @@ export const applyForJob = async (user: JwtPayload, input: ApplyToJobInput): Pro
   }
 
   // 2. Resolve CandidateProfile for the user (auto-create if candidate has not filled resume yet)
-  let candidateProfile = await prisma.candidateProfile.findUnique({
-    where: { userId: user.id },
-    select: { id: true },
-  });
+  let candidateProfile = await getCandidateProfileByUserId(user.id);
 
   if (!candidateProfile) {
-    candidateProfile = await prisma.candidateProfile.create({
-      data: { userId: user.id },
-      select: { id: true },
-    });
+    const newProfile = await createOrUpdateCandidateProfile(user.id, {});
+    candidateProfile = await getCandidateProfileByUserId(user.id);
+    if (!candidateProfile) {
+      candidateProfile = newProfile as any;
+    }
+  }
+
+  if (!candidateProfile) {
+    throw new AppError('Candidate profile could not be resolved.', 500);
   }
 
   // 3. Check for existing application (Conflict rule)
@@ -59,10 +61,43 @@ export const applyForJob = async (user: JwtPayload, input: ApplyToJobInput): Pro
     throw new AppError('You have already applied for this job posting.', 409);
   }
 
-  // 4. Create the application
+  // 4. Calculate real-time ATS match score & rubric breakdown
+  let matchScore: number | null = null;
+  let matchBreakdown: Prisma.InputJsonValue | undefined = undefined;
+
+  try {
+    const atsResult = await evaluateAtsMatch(
+      {
+        skills: candidateProfile.skills,
+        aboutMe: candidateProfile.aboutMe,
+        workExperiences: candidateProfile.workExperiences,
+        educations: candidateProfile.educations,
+      },
+      {
+        id: job.id,
+        title: job.title,
+        description: job.description,
+        category: job.category,
+        requirements: job.requirements,
+        responsibilities: job.responsibilities,
+        softwareSkills: job.softwareSkills,
+        candidateExperience: job.candidateExperience,
+        yearsOfExperience: job.yearsOfExperience,
+        educationLevel: job.educationLevel,
+      }
+    );
+    matchScore = atsResult.overallScore;
+    matchBreakdown = atsResult as unknown as Prisma.InputJsonValue;
+  } catch (err) {
+    console.error('Failed to compute ATS score during application:', err);
+  }
+
+  // 5. Create the application with persisted ATS score
   return createApplicationRecord({
     candidateId: candidateProfile.id,
     jobId: input.jobId,
+    matchScore,
+    matchBreakdown,
   });
 };
 
@@ -78,10 +113,7 @@ export const getJobPipeline = async (user: JwtPayload, jobId: string): Promise<A
       throw new AppError('You must belong to a company to access job pipelines.', 403);
     }
   } else if (user.role === Role.ADMIN) {
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
-      select: { companyId: true },
-    });
+    const job = await findJobByIdRecord(jobId);
     if (!job) {
       throw new AppError('Job not found.', 404);
     }

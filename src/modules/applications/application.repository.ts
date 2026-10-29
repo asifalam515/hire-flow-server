@@ -1,9 +1,11 @@
-import { Application, ApplicationStatus } from '@prisma/client';
+import { Application, ApplicationStatus, Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
 
 export interface CreateApplicationDTO {
   candidateId: string;
   jobId: string;
+  matchScore?: number | null | undefined;
+  matchBreakdown?: Prisma.InputJsonValue | undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -11,7 +13,7 @@ export interface CreateApplicationDTO {
 // ---------------------------------------------------------------------------
 
 /**
- * Create a new application record.
+ * Create a new application record with optional ATS match score and rubric breakdown.
  */
 export const createApplicationRecord = async (data: CreateApplicationDTO): Promise<Application> => {
   return prisma.application.create({
@@ -19,6 +21,8 @@ export const createApplicationRecord = async (data: CreateApplicationDTO): Promi
       candidateId: data.candidateId,
       jobId: data.jobId,
       status: ApplicationStatus.APPLIED,
+      matchScore: data.matchScore ?? null,
+      matchBreakdown: data.matchBreakdown ?? Prisma.JsonNull,
     },
     include: {
       job: {
@@ -49,6 +53,7 @@ export const checkExistingApplication = async (candidateId: string, jobId: strin
 /**
  * Fetch all applications for a specific job, strictly enforcing tenant isolation
  * by joining the Job table and filtering by `job.companyId === companyId`.
+ * Orders applicants primarily by ATS matchScore (descending), then appliedAt (descending).
  */
 export const getApplicationsByJobId = async (jobId: string, companyId: string): Promise<Application[]> => {
   return prisma.application.findMany({
@@ -82,9 +87,10 @@ export const getApplicationsByJobId = async (jobId: string, companyId: string): 
         },
       },
     },
-    orderBy: {
-      appliedAt: 'desc',
-    },
+    orderBy: [
+      { matchScore: 'desc' },
+      { appliedAt: 'desc' },
+    ],
   });
 };
 
@@ -96,7 +102,7 @@ export const findApplicationByIdWithJob = async (applicationId: string) => {
     where: { id: applicationId },
     include: {
       candidate: {
-        select: { userId: true }
+        select: { userId: true },
       },
       job: {
         select: {
@@ -104,8 +110,8 @@ export const findApplicationByIdWithJob = async (applicationId: string) => {
           companyId: true,
           title: true,
           company: {
-            select: { name: true }
-          }
+            select: { name: true },
+          },
         },
       },
     },

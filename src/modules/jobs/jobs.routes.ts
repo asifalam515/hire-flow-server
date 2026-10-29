@@ -76,8 +76,16 @@ router.get(
   catchAsync(getJobByIdController),
 );
 
+// ── Candidate ATS Match Score & Gap Analysis ───────────────────────────────
 router.get(
   '/:id/match',
+  requireAuth,
+  validateRequest(jobIdParamsSchema),
+  catchAsync(getJobMatchController),
+);
+
+router.get(
+  '/:id/match-score',
   requireAuth,
   validateRequest(jobIdParamsSchema),
   catchAsync(getJobMatchController),
