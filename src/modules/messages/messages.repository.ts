@@ -16,6 +16,7 @@ export const getConversationsByUserId = async (userId: string) => {
           id: true,
           firstName: true,
           lastName: true,
+          email: true,
           avatarUrl: true
         }
       },
@@ -24,7 +25,8 @@ export const getConversationsByUserId = async (userId: string) => {
           id: true,
           firstName: true,
           lastName: true,
-          avatarUrl: true
+          avatarUrl: true,
+          companyId: true,
         }
       },
       company: {
@@ -58,13 +60,80 @@ export const getConversationsByUserId = async (userId: string) => {
     }
   });
 
-  return conversations.map(conv => ({
-    ...conv,
-    messages: conv.messages.map(msg => ({
-      ...msg,
-      content: decryptMessage(msg.content)
-    }))
-  }));
+  return Promise.all(
+    conversations.map(async (conv) => {
+      let atsContext: {
+        matchScore: number | null;
+        jobTitle: string | null;
+        applicationId: string;
+        status: string;
+      } | null = null;
+
+      if (conv.recruiterId === userId && (conv.companyId || conv.recruiter.companyId)) {
+        const app = await findCandidateApplicationForCompany(
+          conv.candidateId,
+          (conv.companyId || conv.recruiter.companyId) as string
+        );
+        if (app) {
+          atsContext = {
+            matchScore: app.matchScore ?? null,
+            jobTitle: app.job?.title ?? null,
+            applicationId: app.id,
+            status: app.status,
+          };
+        }
+      }
+
+      return {
+        ...conv,
+        atsContext,
+        messages: conv.messages.map((msg) => ({
+          ...msg,
+          content: decryptMessage(msg.content),
+        })),
+      };
+    })
+  );
+};
+
+export const findFirstRecruiterForCompany = async (companyId: string) => {
+  return prisma.user.findFirst({
+    where: {
+      companyId,
+      role: 'RECRUITER',
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      avatarUrl: true,
+    },
+  });
+};
+
+export const findCandidateApplicationForCompany = async (candidateUserId: string, companyId: string) => {
+  return prisma.application.findFirst({
+    where: {
+      candidate: {
+        userId: candidateUserId,
+      },
+      job: {
+        companyId,
+      },
+    },
+    orderBy: {
+      appliedAt: 'desc',
+    },
+    include: {
+      job: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
 };
 
 export const getMessagesByConversationId = async (conversationId: string) => {

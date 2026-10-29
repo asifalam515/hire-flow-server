@@ -1,8 +1,13 @@
 import PDFDocument from 'pdfkit';
-import { CandidateProfile, User, WorkExperience, Education } from '@prisma/client';
+import { CandidateProfile, WorkExperience, Education } from '@prisma/client';
 
-type FullProfile = CandidateProfile & {
-  user: User;
+export type FullProfile = CandidateProfile & {
+  user: {
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+    avatarUrl: string | null;
+  };
   workExperiences: WorkExperience[];
   educations: Education[];
 };
@@ -86,7 +91,7 @@ export const generateResumePdfService = (profile: FullProfile): Promise<Buffer> 
         doc.moveTo(50, doc.y).lineTo(545, doc.y).strokeColor('#E2E8F0').stroke();
         doc.moveDown(0.5);
 
-        profile.educations.forEach(ed => {
+        profile.educations.forEach((ed: Education) => {
           doc.font('Helvetica-Bold').fontSize(11).fillColor(textColor).text(`${ed.degree} ${ed.fieldOfStudy ? `in ${ed.fieldOfStudy}` : ''}`);
           doc.font('Helvetica-Oblique').fontSize(10).fillColor(primaryColor).text(ed.institution);
           

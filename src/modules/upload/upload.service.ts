@@ -1,4 +1,4 @@
-import { uploadToCloudinary } from '../../lib/cloudinary';
+import { uploadToCloudinary, uploadDocumentToCloudinary } from '../../lib/cloudinary';
 import { AppError } from '../../utils/AppError';
 
 export interface ImageUploadResult {
@@ -39,7 +39,6 @@ export const uploadDocumentService = async (
     throw new AppError('No file buffer provided for upload', 400);
   }
 
-  const { uploadDocumentToCloudinary } = await import('../../lib/cloudinary');
   try {
     const result = await uploadDocumentToCloudinary(fileBuffer, folder);
     return result;

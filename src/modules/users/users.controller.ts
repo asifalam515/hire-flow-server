@@ -1,5 +1,16 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser, updateUserAvatar, updateEmployerProfile, updateEmail, updatePassword, updateNotifications, deleteUser } from './users.service';
+import {
+  registerUser,
+  loginUser,
+  updateUserAvatar,
+  updateEmployerProfile,
+  updateEmail,
+  updatePassword,
+  updateNotifications,
+  deleteUser,
+  addFcmToken,
+  removeFcmToken,
+} from './users.service';
 import { env } from '../../config/env';
 
 // ---------------------------------------------------------------------------
@@ -159,7 +170,7 @@ export const deleteUserController = async (req: Request, res: Response): Promise
     return;
   }
 
-  await import('./users.service').then(s => s.deleteUser(userId));
+  await deleteUser(userId);
 
   res.status(200).json({
     success: true,
@@ -180,7 +191,7 @@ export const addFcmTokenController = async (req: Request, res: Response): Promis
     return;
   }
 
-  const result = await import('./users.service').then(s => s.addFcmToken(userId, token));
+  const result = await addFcmToken(userId, token);
 
   res.status(200).json({
     success: true,
@@ -202,7 +213,7 @@ export const removeFcmTokenController = async (req: Request, res: Response): Pro
     return;
   }
 
-  const result = await import('./users.service').then(s => s.removeFcmToken(userId, token));
+  const result = await removeFcmToken(userId, token);
 
   res.status(200).json({
     success: true,

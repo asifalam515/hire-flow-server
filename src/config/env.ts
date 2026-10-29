@@ -22,6 +22,9 @@ const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string().default('dummy_secret_for_development'),
   MESSAGE_ENCRYPTION_KEY: z.string().min(32, 'MESSAGE_ENCRYPTION_KEY must be at least 32 characters').default('0123456789abcdef0123456789abcdef'),
   GEMINI_API_KEY: z.string().optional(),
+  LIVEKIT_API_KEY: z.string().default('devkey'),
+  LIVEKIT_API_SECRET: z.string().default('secret_mock_key_for_development_livekit_12345'),
+  LIVEKIT_URL: z.string().default('wss://demo.livekit.cloud'),
 });
 
 const _parsed = envSchema.safeParse(process.env);

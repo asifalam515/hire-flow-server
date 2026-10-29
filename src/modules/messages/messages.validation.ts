@@ -31,3 +31,11 @@ export const conversationParamSchema = z.object({
     }),
   }),
 });
+
+export const aiPitchSchema = z.object({
+  body: z.object({
+    jobId: z.string().min(1, 'jobId is required'),
+  }),
+});
+
+export type AiPitchInput = z.infer<typeof aiPitchSchema>['body'];

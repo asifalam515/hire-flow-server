@@ -15,6 +15,7 @@ import {
   followCompanyController,
   unfollowCompanyController,
   updateOfferedJobPreferencesController,
+  tailorAiCvController,
 } from './candidates.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import { requireAuth } from '../../middlewares/auth.middleware';
@@ -24,6 +25,7 @@ import {
   updateWorkExperienceSchema,
   addEducationSchema,
   updateEducationSchema,
+  tailorAiCvSchema,
 } from './candidates.validation';
 import { catchAsync } from '../../utils/catchAsync';
 
@@ -36,6 +38,11 @@ router.use(requireAuth);
 router.get('/me/resume', catchAsync(getResumeController));
 router.get('/me/resume/download', catchAsync(downloadResumePdfController));
 router.get('/me/resume/generate-ai', catchAsync(generateAiResumePdfController));
+router.post(
+  '/me/cv/tailor-ai',
+  validateRequest(tailorAiCvSchema),
+  catchAsync(tailorAiCvController)
+);
 router.patch(
   '/me/resume',
   validateRequest(updateCandidateProfileSchema),

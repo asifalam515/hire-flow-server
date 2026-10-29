@@ -85,7 +85,7 @@ export const updateUserRecord = async (id: string, data: Partial<User>): Promise
 /**
  * Update company record.
  */
-export const updateCompanyRecord = async (id: string, data: Partial<Company>): Promise<Company> => {
+export const updateCompanyRecord = async (id: string, data: Prisma.CompanyUpdateInput): Promise<Company> => {
   return prisma.company.update({
     where: { id },
     data,

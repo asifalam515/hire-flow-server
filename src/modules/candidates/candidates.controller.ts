@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import * as candidateService from './candidates.service';
+import { generateResumePdfService } from './pdfGenerator.service';
+import { enhanceResumeData } from './aiResume.service';
 
 export const getResumeController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
@@ -35,7 +37,7 @@ export const addWorkExperienceController = async (req: Request, res: Response) =
 
 export const updateWorkExperienceController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { id } = req.params;
+  const id = req.params.id as string;
   const experience = await candidateService.updateWorkExperience(userId, id, req.body);
 
   res.status(200).json({
@@ -47,7 +49,7 @@ export const updateWorkExperienceController = async (req: Request, res: Response
 
 export const deleteWorkExperienceController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { id } = req.params;
+  const id = req.params.id as string;
   await candidateService.deleteWorkExperience(userId, id);
 
   res.status(200).json({
@@ -69,7 +71,7 @@ export const addEducationController = async (req: Request, res: Response) => {
 
 export const updateEducationController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { id } = req.params;
+  const id = req.params.id as string;
   const education = await candidateService.updateEducation(userId, id, req.body);
 
   res.status(200).json({
@@ -81,7 +83,7 @@ export const updateEducationController = async (req: Request, res: Response) => 
 
 export const deleteEducationController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { id } = req.params;
+  const id = req.params.id as string;
   await candidateService.deleteEducation(userId, id);
 
   res.status(200).json({
@@ -99,7 +101,6 @@ export const downloadResumePdfController = async (req: Request, res: Response) =
     return;
   }
 
-  const { generateResumePdfService } = await import('./pdfGenerator.service');
   const pdfBuffer = await generateResumePdfService(profile as any);
 
   res.setHeader('Content-Type', 'application/pdf');
@@ -116,10 +117,7 @@ export const generateAiResumePdfController = async (req: Request, res: Response)
     return;
   }
 
-  const { enhanceResumeData } = await import('./aiResume.service');
   const enhancedProfile = await enhanceResumeData(profile);
-
-  const { generateResumePdfService } = await import('./pdfGenerator.service');
   const pdfBuffer = await generateResumePdfService(enhancedProfile as any);
 
   res.setHeader('Content-Type', 'application/pdf');
@@ -160,7 +158,7 @@ export const followCompanyController = async (req: Request, res: Response) => {
 
 export const unfollowCompanyController = async (req: Request, res: Response) => {
   const userId = req.user!.id;
-  const { companyId } = req.params;
+  const companyId = req.params.companyId as string;
   await candidateService.unfollowCompany(userId, companyId);
 
   res.status(200).json({
@@ -177,5 +175,16 @@ export const updateOfferedJobPreferencesController = async (req: Request, res: R
     success: true,
     message: 'Preferences updated successfully',
     data: preferences,
+  });
+};
+
+export const tailorAiCvController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user!.id;
+  const result = await candidateService.tailorAiCv(userId, req.body);
+
+  res.status(200).json({
+    success: true,
+    message: 'CV tailored successfully with AI',
+    data: result,
   });
 };

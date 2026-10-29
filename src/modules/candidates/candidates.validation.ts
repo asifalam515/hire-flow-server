@@ -69,3 +69,13 @@ export const updateEducationSchema = z.object({
     isCurrent: z.boolean().optional(),
   }),
 });
+
+export const tailorAiCvSchema = z.object({
+  body: z.object({
+    targetJobTitle: z.string().min(1, 'Target job title is required'),
+    targetJobDescription: z.string().optional(),
+    syncToProfile: z.boolean().optional().default(false),
+  }),
+});
+
+export type TailorAiCvInput = z.infer<typeof tailorAiCvSchema>['body'];

@@ -1,5 +1,6 @@
-import { admin, isFirebaseInitialized } from '../../config/firebase';
-import { prisma } from '../../config/prisma';
+import { MulticastMessage } from 'firebase-admin/messaging';
+import { messaging, isFirebaseInitialized } from '../../config/firebase';
+import { findUserFcmTokensRecord, updateUserFcmTokensRecord } from './notifications.repository';
 
 /**
  * Send a push notification to a specific user across all their registered devices.
@@ -15,51 +16,45 @@ export const sendPushNotificationToUser = async (
   body: string, 
   data?: Record<string, string>
 ) => {
-  if (!isFirebaseInitialized) {
+  if (!isFirebaseInitialized || !messaging) {
     console.log(`[FCM Mock] Push notification intended for ${userId}: ${title} - ${body}`);
     return;
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { fcmTokens: true }
-    });
+    const fcmTokens = await findUserFcmTokensRecord(userId);
 
-    if (!user || !user.fcmTokens || user.fcmTokens.length === 0) {
+    if (fcmTokens.length === 0) {
       // User has no registered devices for notifications
       return;
     }
 
-    const message = {
+    const message: MulticastMessage = {
       notification: {
         title,
         body
       },
-      data,
-      tokens: user.fcmTokens
+      tokens: fcmTokens,
+      ...(data && { data }),
     };
 
-    const response = await admin.messaging().sendEachForMulticast(message);
+    const response = await messaging.sendEachForMulticast(message);
     
     // Optional: Clean up stale/invalid tokens
     if (response.failureCount > 0) {
       const failedTokens: string[] = [];
-      response.responses.forEach((resp, idx) => {
-        if (!resp.success) {
-          failedTokens.push(user.fcmTokens[idx]);
+      response.responses.forEach((resp: { success: boolean }, idx: number) => {
+        const token = fcmTokens[idx];
+        if (!resp.success && token) {
+          failedTokens.push(token);
         }
       });
       
       if (failedTokens.length > 0) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            fcmTokens: {
-              set: user.fcmTokens.filter(t => !failedTokens.includes(t))
-            }
-          }
-        });
+        await updateUserFcmTokensRecord(
+          userId,
+          fcmTokens.filter((t: string) => !failedTokens.includes(t))
+        );
       }
     }
   } catch (error) {

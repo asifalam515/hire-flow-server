@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Role } from '@prisma/client';
-import { prisma } from '../config/prisma';
+import { findJobByIdRecord } from '../modules/jobs/jobs.repository';
 import { AppError } from '../utils/AppError';
 
 /**
@@ -57,10 +57,7 @@ export const requireJobTenantOwnership = async (
   }
 
   try {
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
-      select: { companyId: true },
-    });
+    const job = await findJobByIdRecord(jobId);
 
     if (!job) {
       return next(new AppError('Job not found.', 404));

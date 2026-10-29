@@ -173,6 +173,7 @@ model Application {
   candidate      CandidateProfile  @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
   interviews     InterviewRoom[]
+  aiSessions     AiInterviewSession[]
 
   @@unique([candidateId, jobId])
   @@index([jobId])
@@ -193,6 +194,28 @@ model InterviewRoom {
 
   @@index([applicationId])
   @@map("interview_rooms")
+}
+
+model AiInterviewSession {
+  id                   String            @id @default(cuid())
+  applicationId        String
+  status               AiInterviewStatus @default(PENDING)
+  currentQuestionIndex Int               @default(0)
+  questions            Json
+  transcript           Json
+  overallScore         Float?
+  technicalScore       Float?
+  communicationScore   Float?
+  problemSolvingScore  Float?
+  rubricFeedback       Json?
+  startedAt            DateTime?
+  completedAt          DateTime?
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  application          Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("ai_interview_sessions")
 }
 
 model SavedJob {
@@ -286,6 +309,13 @@ enum InterviewStatus {
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum AiInterviewStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
 }
 
 enum MessageType {

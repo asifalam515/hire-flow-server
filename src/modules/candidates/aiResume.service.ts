@@ -44,7 +44,7 @@ Please return a JSON object with this exact structure:
     
     // Extract JSON if wrapped in markdown
     const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-    const jsonStr = jsonMatch ? jsonMatch[1] : text;
+    const jsonStr = (jsonMatch && jsonMatch[1]) ? jsonMatch[1] : text;
     const enhancedData = JSON.parse(jsonStr);
 
     // Merge enhanced data back into profile

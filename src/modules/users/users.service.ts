@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { User, Role } from '@prisma/client';
+import { User, Role, Prisma } from '@prisma/client';
 import {
   findUserByEmailRecord,
   findUserByIdRecord,
@@ -9,6 +9,9 @@ import {
   createUserRecord,
   updateUserRecord,
   updateCompanyRecord,
+  addFcmTokenRecord,
+  removeFcmTokenRecord,
+  deleteUserRecord,
 } from './users.repository';
 import { RegisterInput, LoginInput, UpdateEmployerProfileInput, UpdateEmailInput, UpdatePasswordInput, UpdateNotificationsInput } from './users.validation';
 import { AppError } from '../../utils/AppError';
@@ -147,7 +150,7 @@ export const updateUserAvatar = async (userId: string, avatarUrl: string): Promi
 
 export const addFcmToken = async (userId: string, token: string): Promise<{ success: boolean }> => {
   try {
-    await import('./users.repository').then(repo => repo.addFcmTokenRecord(userId, token));
+    await addFcmTokenRecord(userId, token);
     return { success: true };
   } catch (error) {
     throw new AppError('Failed to add FCM token', 500);
@@ -156,7 +159,7 @@ export const addFcmToken = async (userId: string, token: string): Promise<{ succ
 
 export const removeFcmToken = async (userId: string, token: string): Promise<{ success: boolean }> => {
   try {
-    await import('./users.repository').then(repo => repo.removeFcmTokenRecord(userId, token));
+    await removeFcmTokenRecord(userId, token);
     return { success: true };
   } catch (error) {
     throw new AppError('Failed to remove FCM token', 500);
@@ -176,23 +179,25 @@ export const updateEmployerProfile = async (
   }
 
   // 1. Update user fields
-  const updatedUser = await updateUserRecord(userId, {
+  await updateUserRecord(userId, {
     firstName: input.firstName,
     lastName: input.lastName,
   });
 
   // 2. Update company fields
   if (user.companyId) {
-    await updateCompanyRecord(user.companyId, {
+    const companyUpdateData: Prisma.CompanyUpdateInput = {
       name: input.companyName,
-      field: input.companyField,
-      description: input.companyDescription,
-      logoUrl: input.companyLogoUrl,
-    });
+    };
+    if (input.companyField !== undefined) companyUpdateData.field = input.companyField;
+    if (input.companyDescription !== undefined) companyUpdateData.description = input.companyDescription;
+    if (input.companyLogoUrl !== undefined) companyUpdateData.logoUrl = input.companyLogoUrl;
+
+    await updateCompanyRecord(user.companyId, companyUpdateData);
   }
 
   // 3. Fetch the full updated user with company to return
-  const fullUser = await import('./users.repository').then(repo => repo.findUserByIdRecord(userId));
+  const fullUser = await findUserByIdRecord(userId);
 
   return sanitizeUser(fullUser!);
 };
@@ -254,5 +259,5 @@ export const deleteUser = async (userId: string): Promise<void> => {
     throw new AppError('User not found', 404);
   }
   
-  await import('./users.repository').then(repo => repo.deleteUserRecord(userId));
+  await deleteUserRecord(userId);
 };

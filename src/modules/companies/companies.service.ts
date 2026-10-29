@@ -1,41 +1,23 @@
-import { prisma } from '../../config/prisma';
+import {
+  findCompaniesRecord,
+  findCompanyBySlugRecord,
+  ListCompaniesFilter,
+  CompanyWithCount,
+  CompanyDetail,
+} from './companies.repository';
 
-export const listCompanies = async (filters: { search?: string, limit?: number }) => {
-  const where: any = {};
-  
-  if (filters.search) {
-    where.OR = [
-      { name: { contains: filters.search, mode: 'insensitive' } },
-      { field: { contains: filters.search, mode: 'insensitive' } },
-    ];
-  }
-
-  return prisma.company.findMany({
-    where,
-    take: filters.limit || 50,
-    include: {
-      _count: {
-        select: { jobs: true }
-      }
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
+/**
+ * List companies with optional search query and limit.
+ */
+export const listCompanies = async (
+  filters: ListCompaniesFilter,
+): Promise<CompanyWithCount[]> => {
+  return findCompaniesRecord(filters);
 };
 
-export const getCompanyBySlug = async (slug: string) => {
-  return prisma.company.findUnique({
-    where: { slug },
-    include: {
-      jobs: {
-        where: { status: 'PUBLISHED' },
-        orderBy: { createdAt: 'desc' },
-        take: 5
-      },
-      _count: {
-        select: { jobs: true, followers: true }
-      }
-    }
-  });
+/**
+ * Get company details and published jobs by unique slug.
+ */
+export const getCompanyBySlug = async (slug: string): Promise<CompanyDetail | null> => {
+  return findCompanyBySlugRecord(slug);
 };

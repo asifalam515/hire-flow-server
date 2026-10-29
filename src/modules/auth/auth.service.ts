@@ -421,7 +421,7 @@ export const getSessionsService = async (userId: string) => {
 /**
  * Delete a specific session.
  */
-export const deleteSessionService = async (sessionId: string, userId: string): Promise<void> => {
+export const deleteSessionService = async (sessionId: string, _userId: string): Promise<void> => {
   // Can verify if the session belongs to the user, but for now we'll just delete
   // In a robust system, we check ownership first.
   await deleteSessionRecord(sessionId);

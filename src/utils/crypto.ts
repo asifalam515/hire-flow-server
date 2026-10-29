@@ -3,18 +3,17 @@ import { env } from '../config/env';
 
 const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 16;
-const AUTH_TAG_LENGTH = 16;
 
 // The key must be exactly 32 bytes for aes-256-gcm
 // We use a Buffer to ensure standard character encoding doesn't break byte length
-const key = Buffer.from(env.MESSAGE_ENCRYPTION_KEY, 'utf-8').slice(0, 32);
+const key = Buffer.from(env.MESSAGE_ENCRYPTION_KEY, 'utf-8').subarray(0, 32);
 
 /**
  * Encrypts a plaintext string using AES-256-GCM.
  * Returns a single string formatted as: iv:authTag:encryptedText
  */
 export const encryptMessage = (text: string | null | undefined): string | null => {
-  if (!text) return text as any;
+  if (!text) return null;
 
   try {
     const iv = crypto.randomBytes(IV_LENGTH);
@@ -29,8 +28,6 @@ export const encryptMessage = (text: string | null | undefined): string | null =
     return `${iv.toString('hex')}:${authTag}:${encrypted}`;
   } catch (error) {
     console.error('Encryption failed:', error);
-    // In production, you might want to throw. For safety, we fallback to original if encryption catastrophically fails.
-    // However, for strict security, it's better to return a failed state.
     throw new Error('Failed to encrypt message content');
   }
 };
@@ -40,7 +37,7 @@ export const encryptMessage = (text: string | null | undefined): string | null =
  * The input must be formatted as: iv:authTag:encryptedText
  */
 export const decryptMessage = (encryptedText: string | null | undefined): string | null => {
-  if (!encryptedText) return encryptedText as any;
+  if (!encryptedText) return null;
   
   // If the text doesn't look like our encrypted format (legacy messages), return as is
   const parts = encryptedText.split(':');
@@ -48,8 +45,15 @@ export const decryptMessage = (encryptedText: string | null | undefined): string
     return encryptedText;
   }
 
+  const ivHex = parts[0];
+  const authTagHex = parts[1];
+  const encryptedHex = parts[2];
+
+  if (!ivHex || !authTagHex || !encryptedHex) {
+    return encryptedText;
+  }
+
   try {
-    const [ivHex, authTagHex, encryptedHex] = parts;
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(authTagHex, 'hex');
     

@@ -5,7 +5,8 @@ import { validateRequest as validate } from '../../middlewares/validateRequest';
 import {
   startConversationSchema,
   sendMessageSchema,
-  conversationParamSchema
+  conversationParamSchema,
+  aiPitchSchema,
 } from './messages.validation';
 
 const router = Router();
@@ -37,6 +38,12 @@ router.put(
   '/conversations/:id/read',
   validate(conversationParamSchema),
   messageController.markAsRead
+);
+
+router.post(
+  '/ai-pitch',
+  validate(aiPitchSchema),
+  messageController.generateAiPitchController
 );
 
 export const messageRoutes = router;

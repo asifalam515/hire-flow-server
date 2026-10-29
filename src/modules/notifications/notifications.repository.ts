@@ -37,3 +37,23 @@ export const getUnreadNotificationCountRecord = async (userId: string): Promise<
     where: { userId, isRead: false }
   });
 };
+
+export const findUserFcmTokensRecord = async (userId: string): Promise<string[]> => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { fcmTokens: true },
+  });
+  return user?.fcmTokens ?? [];
+};
+
+export const updateUserFcmTokensRecord = async (userId: string, tokens: string[]): Promise<void> => {
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      fcmTokens: {
+        set: tokens,
+      },
+    },
+  });
+};
+

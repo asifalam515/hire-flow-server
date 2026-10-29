@@ -9,6 +9,8 @@ import { notificationsRoutes } from './modules/notifications/notifications.route
 import { candidateRoutes } from './modules/candidates/candidates.routes';
 import { companiesRoutes } from './modules/companies/companies.routes';
 import { messageRoutes } from './modules/messages/messages.routes';
+import { interviewsRoutes } from './modules/interviews/interviews.routes';
+import aiInterviewsRoutes from './modules/aiInterviews/aiInterviews.routes';
 
 const router = Router();
 
@@ -28,5 +30,7 @@ router.use('/notifications', notificationsRoutes);
 router.use('/candidates', candidateRoutes);
 router.use('/companies', companiesRoutes);
 router.use('/messages', messageRoutes);
+router.use('/interviews', interviewsRoutes);
+router.use('/ai-interviews', aiInterviewsRoutes);
 
 export const apiRouter = router;

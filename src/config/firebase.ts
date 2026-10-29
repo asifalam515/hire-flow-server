@@ -1,17 +1,22 @@
-import * as admin from 'firebase-admin';
+import { initializeApp, cert, getApps, App } from 'firebase-admin/app';
+import { getMessaging, Messaging } from 'firebase-admin/messaging';
 
 // We attempt to parse the service account from an environment variable.
 // If it is not provided, we won't throw immediately, but we will log a warning
 // so the server doesn't instantly crash in development.
 let isFirebaseInitialized = false;
+let firebaseApp: App | undefined;
+let messaging: Messaging | undefined;
 
 try {
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT;
   if (serviceAccountKey) {
     const serviceAccount = JSON.parse(serviceAccountKey);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+    const existingApps = getApps();
+    firebaseApp = existingApps.length > 0 && existingApps[0] ? existingApps[0] : initializeApp({
+      credential: cert(serviceAccount)
     });
+    messaging = getMessaging(firebaseApp);
     isFirebaseInitialized = true;
     console.log('✅ Firebase Admin SDK initialized successfully.');
   } else {
@@ -21,4 +26,4 @@ try {
   console.error('❌ Failed to initialize Firebase Admin SDK:', error);
 }
 
-export { admin, isFirebaseInitialized };
+export { firebaseApp, messaging, isFirebaseInitialized };

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import * as messageService from './messages.service';
+import { getConversationById } from './messages.repository';
 import { AppError } from '../../utils/AppError';
 import { io } from '../../websockets/socket';
 import { sendPushNotificationToUser } from '../notifications/fcm.service';
-import { prisma } from '../../config/prisma';
 
 export const getConversations = async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -62,10 +62,7 @@ export const sendMessage = async (req: Request, res: Response) => {
 
   // Send Firebase Push Notification to the offline user
   try {
-    const conversation = await prisma.conversation.findUnique({
-      where: { id },
-      select: { candidateId: true, recruiterId: true }
-    });
+    const conversation = await getConversationById(id);
 
     if (conversation) {
       const targetUserId = conversation.candidateId === userId ? conversation.recruiterId : conversation.candidateId;
@@ -91,4 +88,18 @@ export const markAsRead = async (req: Request, res: Response) => {
   const result = await messageService.markAsRead(userId, id);
 
   res.status(200).json({ success: true, data: result });
+};
+
+export const generateAiPitchController = async (req: Request, res: Response): Promise<void> => {
+  const userId = req.user?.id;
+  if (!userId) throw new AppError('Unauthorized', 401);
+
+  const { jobId } = req.body;
+  const result = await messageService.generateAiPitch(userId, jobId);
+
+  res.status(200).json({
+    success: true,
+    message: 'AI pitch generated successfully',
+    data: result,
+  });
 };
