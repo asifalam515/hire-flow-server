@@ -5,6 +5,7 @@ import {
   generateTokenController,
   updateNotesController,
   updateStatusController,
+  reviewCodeController,
 } from './interviews.controller';
 import { requireAuth, requireRecruiterAuth } from '../../middlewares/auth.middleware';
 import { validateRequest } from '../../middlewares/validateRequest';
@@ -14,6 +15,7 @@ import {
   updateNotesSchema,
   updateStatusSchema,
   applicationIdParamSchema,
+  codeReviewSchema,
 } from './interviews.validation';
 import { catchAsync } from '../../utils/catchAsync';
 
@@ -61,6 +63,14 @@ router.patch(
   requireRecruiterAuth,
   validateRequest(updateStatusSchema),
   catchAsync(updateStatusController),
+);
+
+// ── Gemini AI Real-Time Code Review & Complexity Analysis ───────────────────
+router.post(
+  '/code-review',
+  requireAuth,
+  validateRequest(codeReviewSchema),
+  catchAsync(reviewCodeController),
 );
 
 export const interviewsRoutes = router;

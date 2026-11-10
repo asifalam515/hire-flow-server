@@ -60,6 +60,36 @@ export const initializeSocket = (server: HttpServer) => {
       });
     });
 
+    // Collaborative Code Sandbox events for Interview Chambers
+    socket.on('code_change', (data: { roomId: string; code: string; language?: string }) => {
+      socket.to(data.roomId).emit('code_update', {
+        code: data.code,
+        language: data.language,
+        senderId: socket.data.user?.id,
+        timestamp: Date.now(),
+      });
+    });
+
+    socket.on('code_language_change', (data: { roomId: string; language: string }) => {
+      socket.to(data.roomId).emit('code_language_update', {
+        language: data.language,
+        senderId: socket.data.user?.id,
+      });
+    });
+
+    socket.on('code_run_result', (data: { roomId: string; output: string; status: 'success' | 'error' }) => {
+      socket.to(data.roomId).emit('code_run_broadcast', {
+        output: data.output,
+        status: data.status,
+        senderId: socket.data.user?.id,
+        timestamp: Date.now(),
+      });
+    });
+
+    socket.on('leave_room', (roomId: string) => {
+      socket.leave(roomId);
+    });
+
     socket.on('disconnect', () => {
       console.log(`🔌  Client disconnected: ${socket.id}`);
     });

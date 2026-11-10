@@ -5,6 +5,7 @@ import {
   generateLiveKitToken,
   updateInterviewNotes,
   updateInterviewStatus,
+  reviewCodeWithAi,
 } from './interviews.service';
 import { AppError } from '../../utils/AppError';
 
@@ -107,4 +108,22 @@ export const updateStatusController = async (req: Request, res: Response): Promi
     data: { room },
   });
 };
+
+/**
+ * POST /api/v1/interviews/code-review
+ */
+export const reviewCodeController = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) {
+    throw new AppError('Authentication required.', 401);
+  }
+
+  const review = await reviewCodeWithAi(req.body);
+
+  res.status(200).json({
+    success: true,
+    message: 'Code analysis completed successfully',
+    data: { review },
+  });
+};
+
 

@@ -45,8 +45,18 @@ export const interviewIdParamSchema = z.object({
   }),
 });
 
+export const codeReviewSchema = z.object({
+  body: z.object({
+    code: z.string().min(1, 'Code snippet is required'),
+    language: z.string().min(1, 'Programming language is required'),
+    problemTitle: z.string().optional(),
+  }),
+});
+
 export type ScheduleInterviewInput = z.infer<typeof scheduleInterviewSchema>['body'];
 export type GenerateTokenInput = z.infer<typeof generateTokenSchema>['body'];
 export type UpdateNotesInput = z.infer<typeof updateNotesSchema>['body'];
 export type UpdateStatusInput = z.infer<typeof updateStatusSchema>['body'];
+export type CodeReviewInput = z.infer<typeof codeReviewSchema>['body'];
+
 
